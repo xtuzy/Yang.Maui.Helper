@@ -22,6 +22,7 @@ namespace Xamarin.Helper.Controllers
         /// 为生命周期事件添加弱引用,避免在忘记取消订阅时内存泄漏
         /// </summary>
         public readonly WeakEventManager _eventManager = new WeakEventManager();
+        
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
@@ -59,6 +60,26 @@ namespace Xamarin.Helper.Controllers
         {
             base.OnStop();
             _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnStopEvent));
+        }
+
+        /// <summary>
+        /// /// <summary>
+        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
+        /// </summary>
+        /// </summary>
+        public event EventHandler OnPauseEvent
+        {
+            add => _eventManager.AddEventHandler(value, nameof(OnPauseEvent));
+            remove => _eventManager.RemoveEventHandler(value, nameof(OnPauseEvent));
+        }
+
+        /// <summary>
+        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
+        /// </summary>
+        protected override void OnPause()
+        {
+            base.OnPause();
+            _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnPauseEvent));
         }
 
         protected void InitSoftKeyboard()

@@ -42,6 +42,26 @@ namespace Xamarin.Helper.Controllers
         }
 
         /// <summary>
+        /// /// <summary>
+        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
+        /// </summary>
+        /// </summary>
+        public event EventHandler OnPauseEvent
+        {
+            add => _eventManager.AddEventHandler(value, nameof(OnPauseEvent));
+            remove => _eventManager.RemoveEventHandler(value, nameof(OnPauseEvent));
+        }
+
+        /// <summary>
+        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
+        /// </summary>
+        public override void OnPause()
+        {
+            base.OnPause();
+            _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnPauseEvent));
+        }
+
+        /// <summary>
         /// <see cref="OnStop"/> event, you can unsubscribe event in it.<br/>
         /// Itself use WeakReference.
         /// </summary>
@@ -50,6 +70,7 @@ namespace Xamarin.Helper.Controllers
             add => _eventManager.AddEventHandler(value, nameof(OnStopEvent));
             remove => _eventManager.RemoveEventHandler(value, nameof(OnStopEvent));
         }
+
         public override void OnStop()
         {
             base.OnStop();
