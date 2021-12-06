@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>536a393e-0bf3-4549-bba2-5f7378578548</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.Helper.Tools</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AsyncLazy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DelegateWeakEventManager.shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventHandlers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InvalidHandleEventException.shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageClientApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageServerApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RandomHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RecordTimeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Subscription.shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TimeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEventManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEventManager.shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WeakEventManagerService.shared.cs" />
+  </ItemGroup>
+</Project>

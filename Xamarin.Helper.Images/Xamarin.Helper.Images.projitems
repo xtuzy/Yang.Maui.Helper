@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>17d5de66-3736-4b8f-890e-4056f329b3ab</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Xamarin.Helper.Images</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)FontAwesomeIcons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontHelper.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontHelper.iOS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontHelper.Mac.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageHelper.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SKImageHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageHelper.iOS.Mac.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageHelper.WPF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgHelper.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgHelper.iOS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgHelper.Mac.cs" />
+  </ItemGroup>
+</Project>

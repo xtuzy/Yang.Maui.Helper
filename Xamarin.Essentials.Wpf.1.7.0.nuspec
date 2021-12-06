@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Xamarin.Essentials.Wpf</id>
+    <version>1.7.0</version>
+    <authors>@zhouyang</authors>
+    <description>Xamarin.Essentials for wpf, not complete ,no test</description>
+    <dependencies>
+      <group targetFramework="net5.0-windows7.0">
+        <dependency id="System.Drawing.Common" version="5.0.2" exclude="Build,Analyzers" />
+        <dependency id="System.Management" version="5.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net5.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WPF" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="D:\Work\Helper\Xamarin.Essentials\bin\Debug\net5.0-windows\Xamarin.Essentials.dll" target="lib\net5.0-windows7.0\Xamarin.Essentials.dll" />
+    <file src="D:\Work\Helper\Xamarin.Essentials\bin\Debug\net5.0-windows\Xamarin.Essentials.xml" target="lib\net5.0-windows7.0\Xamarin.Essentials.xml" />
+  </files>
+</package>

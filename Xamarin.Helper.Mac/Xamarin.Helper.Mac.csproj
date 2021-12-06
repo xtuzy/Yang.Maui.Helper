@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B83BCC8A-CA02-4630-97C6-C0C648CB9087}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.Helper.Mac</RootNamespace>
+    <AssemblyName>Xamarin.Helper.Mac</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <HttpClientHandler>
+    </HttpClientHandler>
+    <DocumentationFile>bin\Debug\Xamarin.Helper.Mac.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <HttpClientHandler>
+    </HttpClientHandler>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="netstandard" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.Mac" />
+    <Compile Include="..\Xamarin.Helper.Share\Applications\MainThreadHelper.cs">
+      <Link>Applications\MainThreadHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\ScreenHelper.Android.cs">
+      <Link>Devices\ScreenHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\ScreenHelper.cs">
+      <Link>Devices\ScreenHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\ScreenHelper.Wpf.cs">
+      <Link>Devices\ScreenHelper.Wpf.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\UnitHelper.Android.cs">
+      <Link>Devices\UnitHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\UnitHelper.cs">
+      <Link>Devices\UnitHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Devices\UnitHelper.Wpf.cs">
+      <Link>Devices\UnitHelper.Wpf.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Files\FileHelper.Android.cs">
+      <Link>Files\FileHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Files\FileHelper.cs">
+      <Link>Files\FileHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Files\FileHelper.iOS.Mac.cs">
+      <Link>Files\FileHelper.iOS.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Files\FileStoreFolderService.cs">
+      <Link>Files\FileStoreFolderService.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Files\IFileStoreFolderService.cs">
+      <Link>Files\IFileStoreFolderService.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\FontAwesomeIcons.cs">
+      <Link>Images\FontAwesomeIcons.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\FontHelper.Android.cs">
+      <Link>Images\FontHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\FontHelper.iOS.cs">
+      <Link>Images\FontHelper.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\FontHelper.Mac.cs">
+      <Link>Images\FontHelper.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\ImageHelper.Android.cs">
+      <Link>Images\ImageHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\ImageHelper.cs">
+      <Link>Images\ImageHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\ImageHelper.iOS.Mac.cs">
+      <Link>Images\ImageHelper.iOS.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\ImageHelper.WPF.cs">
+      <Link>Images\ImageHelper.WPF.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\SvgHelper.Android.cs">
+      <Link>Images\SvgHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\SvgHelper.iOS.cs">
+      <Link>Images\SvgHelper.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Images\SvgHelper.Mac.cs">
+      <Link>Images\SvgHelper.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Layouts\EasyLayout.Android.cs">
+      <Link>Layouts\EasyLayout.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Layouts\LayoutHelper.Android.cs">
+      <Link>Layouts\LayoutHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Layouts\LayoutHelper.iOS.cs">
+      <Link>Layouts\LayoutHelper.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Layouts\LayoutHelper.Mac.cs">
+      <Link>Layouts\LayoutHelper.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Logs\LogHelper.Android.cs">
+      <Link>Logs\LogHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Logs\LogHelper.iOS.cs">
+      <Link>Logs\LogHelper.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Logs\LogHelper.Mac.cs">
+      <Link>Logs\LogHelper.Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Logs\LogHelper.Wpf.cs">
+      <Link>Logs\LogHelper.Wpf.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Logs\RecordTimeHelper.cs">
+      <Link>Logs\RecordTimeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Nets\FileDownloadHelper.cs">
+      <Link>Nets\FileDownloadHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Tools\AsyncLazy.cs">
+      <Link>Tools\AsyncLazy.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Tools\RandomHelper.cs">
+      <Link>Tools\RandomHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Tools\TaskExtensions.cs">
+      <Link>Tools\TaskExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Tools\TimeHelper.cs">
+      <Link>Tools\TimeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\KeyboardHelper.Android.cs">
+      <Link>Views\KeyboardHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\MaterialColorsHelper.Android.cs">
+      <Link>Views\MaterialColorsHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\MaterialColorsHelper.cs">
+      <Link>Views\MaterialColorsHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\MaterialColorsHelper.iOS.cs">
+      <Link>Views\MaterialColorsHelper.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\MaterialGuideHelper.Android.cs">
+      <Link>Views\MaterialGuideHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\Toast.iOS.cs">
+      <Link>Views\Toast.iOS.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\ViewHelper.Android.cs">
+      <Link>Views\ViewHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="..\Xamarin.Helper.Share\Views\ViewIdHelper.Android.cs">
+      <Link>Views\ViewIdHelper.Android.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp">
+      <Version>2.80.3</Version>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp.Views">
+      <Version>2.80.3</Version>
+    </PackageReference>
+    <PackageReference Include="Svg.Skia">
+      <Version>0.5.8.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Essentials">
+      <Version>1.7.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>
