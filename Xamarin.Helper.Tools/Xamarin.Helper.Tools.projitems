@@ -15,8 +15,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)InvalidHandleEventException.shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MessageClientApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MessageServerApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MVVM\IViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RandomHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RecordTimeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reload\IReloadView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Subscription.shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TaskExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />

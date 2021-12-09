@@ -17,7 +17,7 @@
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
@@ -55,14 +55,19 @@
     <Compile Include="Actions\IKeyboardAction.cs" />
     <Compile Include="Adapters\BaseSimpleAdapter.cs" />
     <Compile Include="Controllers\BaseActivity.cs" />
+    <Compile Include="Controllers\BaseApplication.cs" />
     <Compile Include="Controllers\BaseFragment.cs" />
     <Compile Include="Controllers\BaseTabBarActivity.cs" />
+    <Compile Include="Controllers\IBarController.cs" />
+    <Compile Include="Controllers\IReloadableFragment.cs" />
+    <Compile Include="Controllers\IFragmentNavigation.cs" />
     <Compile Include="Design\LayoutGuide.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\EventHandlers.cs" />
     <Compile Include="Views\BasePage.cs" />
     <Compile Include="Views\BaseView.cs" />
+    <Compile Include="Views\IBaseView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -75,17 +80,17 @@
       <Version>2.80.3</Version>
     </PackageReference>
     <PackageReference Include="Svg.Skia">
-      <Version>0.5.8.3</Version>
+      <Version>0.5.10</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.3.1.3" />
+    <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.3.1.4" />
     <PackageReference Include="Xamarin.AndroidX.ConstraintLayout">
-      <Version>2.1.1.2</Version>
+      <Version>2.1.1.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Google.Android.Material">
-      <Version>1.4.0.4</Version>
+      <Version>1.4.0.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +170,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\base_tabbar_activity.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\base_fragment.xml" />
   </ItemGroup>
   <Import Project="..\..\..\Xamarin.Helper.Applications\Xamarin.Helper.Applications.projitems" Label="Shared" />
   <Import Project="..\..\..\Xamarin.Helper.Devices\Xamarin.Helper.Devices.projitems" Label="Shared" />

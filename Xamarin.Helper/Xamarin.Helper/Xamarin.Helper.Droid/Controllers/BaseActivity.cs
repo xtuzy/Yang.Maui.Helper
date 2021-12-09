@@ -23,7 +23,6 @@ namespace Xamarin.Helper.Controllers
         /// </summary>
         public readonly WeakEventManager _eventManager = new WeakEventManager();
         
-
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -106,6 +106,11 @@ namespace Xamarin.Helper.Views
             BasePage_Initialize();
         }
 
+        public BasePage(Context context, IBaseView baseView) : base(context, baseView)
+        {
+            BasePage_Initialize();
+        }
+
         private void BasePage_Initialize()
         {
             this.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
