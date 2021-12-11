@@ -11,29 +11,45 @@ using Xamarin.Helper.Views;
 using Fragment = AndroidX.Fragment.App.Fragment;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 using Xamarin.Helper.Layouts.Constraint;
+using Xamarin.Helper.Logs;
+
 namespace Xamarin.Helper.Controllers
 {
-    public abstract class BaseFragment : Fragment, IBarController,IFragmentNavigation
+    public class BaseFragment : Fragment, IBarController, IFragmentNavigation
     {
         public readonly WeakEventManager _eventManager;
         WeakReference<IReloadableFragment> _fragmentManager;
+        /// <summary>
+        /// RootLayout = ToolBar+ContentView
+        /// </summary>
         private ConstraintLayout RootLayout;
 
-        protected BaseFragment()
+        /// <summary>
+        /// 执行事件定义的生命周期,其与接口定义的生命周期互斥
+        /// </summary>
+        public BaseFragment()
         {
             _eventManager = new WeakEventManager();
         }
 
-        protected BaseFragment(IReloadableFragment reloadableFragment)
+        /// <summary>
+        /// 执行接口对象中的生命周期,其与生命周期事件互斥
+        /// </summary>
+        /// <param name="reloadableFragment"></param>
+        public BaseFragment(IReloadableFragment reloadableFragment)
         {
-            _fragmentManager = new WeakReference<IReloadableFragment> (reloadableFragment);
+            _fragmentManager = new WeakReference<IReloadableFragment>(reloadableFragment);
         }
 
 
         /// <summary>
-        /// Fragment的Toolbar,区别于Activity的Toolbar(即SupportActionBar),可以使用它去自定义与Fragment相关的内容(返回按钮,标题,Menu)。
+        /// Fragment的Toolbar,区别于Activity的Toolbar(即SupportActionBar),可以使用它去自定义与Fragment相关的内容(返回按钮,标题,Menu)。<br/>
+        /// 其在OnCreateView中创建.,可在OnCreated中获取对象.
         /// </summary>
         public Toolbar ToolBar { get; private set; }
+        /// <summary>
+        /// 除ToolBar外的区域,可在该Layout内添加控件,其在OnCreateView中创建,可在OnCreated中获取对象.
+        /// </summary>
         public ConstraintLayout ContentView { get; private set; }
 
         #region 生命周期
@@ -51,6 +67,7 @@ namespace Xamarin.Helper.Controllers
             RootLayout = inflater.Inflate(Resource.Layout.base_fragment, null, false) as ConstraintLayout;
             ToolBar = RootLayout.FindViewById<Toolbar>(Resource.Id.fragment_toolbar);
             ContentView = RootLayout.FindViewById<ConstraintLayout>(Resource.Id.fragment_content);
+            GetReloadableFragment(_fragmentManager)?.OnCreatedView();
             return RootLayout;
         }
 
@@ -79,7 +96,7 @@ namespace Xamarin.Helper.Controllers
         public override void OnDestroy()
         {
             base.OnDestroy();
-            GetReloadableFragment(_fragmentManager)?.OnSDestroy();
+            GetReloadableFragment(_fragmentManager)?.OnDestroy();
         }
 
         public new void Dispose()
@@ -133,7 +150,7 @@ namespace Xamarin.Helper.Controllers
 
 
         /// <summary>
-        ///  Fragment 按键事件派发
+        ///  Fragment 按键事件派发(我也不知道哪里复制来的,不懂,先不删)
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
@@ -218,8 +235,14 @@ namespace Xamarin.Helper.Controllers
                 //transaction.Hide(this);//使用Add时需要隐藏
                 transaction.Commit();
             }
+            else
+                throw new NotImplementedException("当前仅在TabBar中实现前进");
         }
 
+        /// <summary>
+        /// 回退
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
 
         public void PopViewController()
         {
@@ -230,8 +253,14 @@ namespace Xamarin.Helper.Controllers
                 //activity.SupportFragmentManager.PopBackStack();
                 activity.FragmentsStack.Pop().Dispose();//移除自定义栈,释放资源
             }
+            else
+                throw new NotImplementedException("当前仅在TabBar中实现回退");
         }
 
+        /// <summary>
+        /// 回退到某Fragment,必须在栈内,否则会导致退出程序或其他Bug
+        /// </summary>
+        /// <param name="toFragment"></param>
         public void PopToViewController(BaseFragment toFragment)
         {
             if (Activity is BaseTabBarActivity)
@@ -251,8 +280,13 @@ namespace Xamarin.Helper.Controllers
                     fragment?.PopToViewController(toFragment);
                 }
             }
+            else
+                throw new NotImplementedException("当前仅在TabBar中实现回退");
         }
 
+        /// <summary>
+        /// 回退到Tab的Fragment,Tab的Fragment必须是不在栈内的,Tab的Fragment和Activity一起存亡
+        /// </summary>
         public void PopToRootViewController()
         {
             if (Activity is BaseTabBarActivity)
@@ -272,6 +306,49 @@ namespace Xamarin.Helper.Controllers
                     fragment?.PopToRootViewController();
                 }
             }
+            else if (Activity == null)//Reload 时遇到的
+            {
+                LogHelper.Debug($"Error: In {this.GetType().Name}, Activity is null");
+            }
+            else
+                throw new NotImplementedException("当前仅在TabBar中实现回退");
+        }
+
+
+
+        /// <summary>
+        /// 隐藏Fragment的ToolBar
+        /// </summary>
+        /// <returns></returns>
+        public bool HidenToolBar()
+        {
+            ToolBar.Visibility = ViewStates.Gone;
+            return true;
+        }
+
+        /// <summary>
+        /// 显示Fragment的ToolBar
+        /// </summary>
+        /// <returns></returns>
+        public bool ShowToolBar()
+        {
+            ToolBar.Visibility = ViewStates.Visible;
+            return true;
+        }
+
+        /// <summary>
+        /// 显示Activity的TabBar
+        /// </summary>
+        /// <returns></returns>
+        public bool ShowBottomTabBar()
+        {
+            if (Activity is IBarController)
+            {
+                var activity = Activity as IBarController;
+                activity.ShowBottomTabBar();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -290,37 +367,7 @@ namespace Xamarin.Helper.Controllers
         }
 
         /// <summary>
-        /// ToolBar.Visibility=Gone
-        /// </summary>
-        /// <returns></returns>
-        public bool HidenToolBar()
-        {
-            ToolBar.Visibility = ViewStates.Gone;
-            return true;
-        }
-
-        public bool ShowToolBar()
-        {
-            ToolBar.Visibility = ViewStates.Visible;
-            return true;
-        }
-        /// <summary>
-        /// 显示Activity的TabBar
-        /// </summary>
-        /// <returns></returns>
-        public bool ShowBottomTabBar()
-        {
-            if (Activity is IBarController)
-            {
-                var activity = Activity as IBarController;
-                activity.ShowBottomTabBar();
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// ToolBar在ContentView顶部,不遮挡
+        /// 设置ToolBar在ContentView顶部,但不遮挡
         /// </summary>
         public void SetContentViewAtToolBarBottom()
         {
@@ -334,7 +381,7 @@ namespace Xamarin.Helper.Controllers
         }
 
         /// <summary>
-        /// ToolBar会遮住ContentView
+        /// 设置ToolBar在顶部遮住ContentView
         /// </summary>
         public void SetContentViewAtToolBarBelow()
         {
@@ -347,6 +394,12 @@ namespace Xamarin.Helper.Controllers
             set.ApplyTo(RootLayout);
         }
         #endregion
+
+        /// <summary>
+        /// 从弱引用中提取对象
+        /// </summary>
+        /// <param name="weakReference"></param>
+        /// <returns></returns>
 
         IReloadableFragment? GetReloadableFragment(WeakReference<IReloadableFragment> weakReference)
         {

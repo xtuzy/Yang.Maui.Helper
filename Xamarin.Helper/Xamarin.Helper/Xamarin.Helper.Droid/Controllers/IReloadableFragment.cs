@@ -13,9 +13,13 @@ namespace Xamarin.Helper.Controllers
 {
     public interface IReloadableFragment
     {
+        /// <summary>
+        /// 定义在OnCreateView中,可以设置ContentView.
+        /// </summary>
+        void OnCreatedView();
         void OnStart();
         void OnPause();
         void OnStop();
-        void OnSDestroy();
+        void OnDestroy();
     }
 }

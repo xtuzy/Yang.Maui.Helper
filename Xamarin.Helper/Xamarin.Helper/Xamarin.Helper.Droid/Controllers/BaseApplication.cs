@@ -17,9 +17,17 @@ namespace Xamarin.Helper.Controllers
 
         public static BaseApplication Current;
 
+        /// <summary>
+        /// 用来注册服务,包括ViewModel.Service
+        /// </summary>
         public IServiceProvider Services;
 
+        /// <summary>
+        /// 替代Ioc来暂时存储ViewModel
+        /// </summary>
+
         public Dictionary<string,object> ViewModels = new Dictionary<string, object>();
+
         public BaseApplication(IntPtr handle, JniHandleOwnership ownerShip) : base(handle, ownerShip)
         {
         }
@@ -29,5 +37,6 @@ namespace Xamarin.Helper.Controllers
             Current = this;
             base.OnCreate();
         }
+
     }
 }
