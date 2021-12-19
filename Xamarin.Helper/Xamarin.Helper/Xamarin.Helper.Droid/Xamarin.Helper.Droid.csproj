@@ -59,8 +59,8 @@
     <Compile Include="Controllers\BaseFragment.cs" />
     <Compile Include="Controllers\BaseTabBarActivity.cs" />
     <Compile Include="Controllers\IBarController.cs" />
-    <Compile Include="Controllers\IReloadableFragment.cs" />
     <Compile Include="Controllers\IFragmentNavigation.cs" />
+    <Compile Include="Controllers\LifeCycle.cs" />
     <Compile Include="Design\LayoutGuide.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

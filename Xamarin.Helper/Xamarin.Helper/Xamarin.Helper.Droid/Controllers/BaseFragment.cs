@@ -17,31 +17,16 @@ namespace Xamarin.Helper.Controllers
 {
     public class BaseFragment : Fragment, IBarController, IFragmentNavigation
     {
+        #region 域和属性
+        /// <summary>
+        /// 管理事件,这里为何使用弱事件管理,因为外部订阅周期事件时,里面可能存在更长周期的引用,例如引用了更长周期的ViewModel,则会导致Fragment无法回收.
+        /// </summary>
         public readonly WeakEventManager _eventManager;
-        WeakReference<IReloadableFragment> _fragmentManager;
+
         /// <summary>
         /// RootLayout = ToolBar+ContentView
         /// </summary>
         private ConstraintLayout RootLayout;
-
-        /// <summary>
-        /// 执行事件定义的生命周期,其与接口定义的生命周期互斥
-        /// </summary>
-        public BaseFragment()
-        {
-            _eventManager = new WeakEventManager();
-        }
-
-        /// <summary>
-        /// 执行接口对象中的生命周期,其与生命周期事件互斥
-        /// </summary>
-        /// <param name="reloadableFragment"></param>
-        public BaseFragment(IReloadableFragment reloadableFragment)
-        {
-            _fragmentManager = new WeakReference<IReloadableFragment>(reloadableFragment);
-        }
-
-
         /// <summary>
         /// Fragment的Toolbar,区别于Activity的Toolbar(即SupportActionBar),可以使用它去自定义与Fragment相关的内容(返回按钮,标题,Menu)。<br/>
         /// 其在OnCreateView中创建.,可在OnCreated中获取对象.
@@ -51,13 +36,27 @@ namespace Xamarin.Helper.Controllers
         /// 除ToolBar外的区域,可在该Layout内添加控件,其在OnCreateView中创建,可在OnCreated中获取对象.
         /// </summary>
         public ConstraintLayout ContentView { get; private set; }
+        #endregion
 
+        #region 构造函数
+        /// <summary>
+        /// 执行事件定义的生命周期,其与接口定义的生命周期互斥
+        /// </summary>
+        public BaseFragment()
+        {
+            _eventManager = new WeakEventManager();
+        }
+
+
+        #endregion
+        
         #region 生命周期
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             // Create your fragment here
+            _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnCreate), nameof(LifeCycleEvent));
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,36 +66,27 @@ namespace Xamarin.Helper.Controllers
             RootLayout = inflater.Inflate(Resource.Layout.base_fragment, null, false) as ConstraintLayout;
             ToolBar = RootLayout.FindViewById<Toolbar>(Resource.Id.fragment_toolbar);
             ContentView = RootLayout.FindViewById<ConstraintLayout>(Resource.Id.fragment_content);
-            GetReloadableFragment(_fragmentManager)?.OnCreatedView();
+            _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnCreateView), nameof(LifeCycleEvent));
             return RootLayout;
         }
 
         public override void OnStart()
         {
             base.OnStart();
-            _eventManager?.RaiseEvent(this, EventArgs.Empty, nameof(OnStartEvent));
-            GetReloadableFragment(_fragmentManager)?.OnStart();
-        }
-
-        public override void OnPause()
-        {
-            base.OnPause();
-            _eventManager?.RaiseEvent(this, EventArgs.Empty, nameof(OnPauseEvent));
-            GetReloadableFragment(_fragmentManager)?.OnPause();
+            _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStart), nameof(LifeCycleEvent));
         }
 
         public override void OnStop()
         {
             base.OnStop();
-            _eventManager?.RaiseEvent(this, EventArgs.Empty, nameof(OnStopEvent));
-            GetReloadableFragment(_fragmentManager)?.OnStop();
+            _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStop), nameof(LifeCycleEvent));
         }
 
 
         public override void OnDestroy()
         {
             base.OnDestroy();
-            GetReloadableFragment(_fragmentManager)?.OnDestroy();
+            _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnDestroy), nameof(LifeCycleEvent));
         }
 
         public new void Dispose()
@@ -111,43 +101,14 @@ namespace Xamarin.Helper.Controllers
         #region 事件
 
         /// <summary>
-        /// <see cref="OnStart"/> event, you can subscribe event in it.<br/>
+        /// 模仿Android的Lifcycle组件,将生命周期可以四处使用<br/>
         /// Itself use WeakReference.
         /// </summary>
-        public event EventHandler OnStartEvent
+        public event EventHandler LifeCycleEvent
         {
-            add => _eventManager?.AddEventHandler(value, nameof(OnStartEvent));
-            remove => _eventManager?.RemoveEventHandler(value, nameof(OnStartEvent));
+            add => _eventManager?.AddEventHandler(value, nameof(LifeCycleEvent));
+            remove => _eventManager?.RemoveEventHandler(value, nameof(LifeCycleEvent));
         }
-
-
-        /// <summary>
-        /// /// <summary>
-        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
-        /// </summary>
-        /// </summary>
-        public event EventHandler OnPauseEvent
-        {
-            add => _eventManager?.AddEventHandler(value, nameof(OnPauseEvent));
-            remove => _eventManager?.RemoveEventHandler(value, nameof(OnPauseEvent));
-        }
-
-        /// <summary>
-        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
-        /// </summary>
-
-
-        /// <summary>
-        /// <see cref="OnStop"/> event, you can unsubscribe event in it.<br/>
-        /// Itself use WeakReference.
-        /// </summary>
-        public event EventHandler OnStopEvent
-        {
-            add => _eventManager?.AddEventHandler(value, nameof(OnStopEvent));
-            remove => _eventManager?.RemoveEventHandler(value, nameof(OnStopEvent));
-        }
-
-
 
         /// <summary>
         ///  Fragment 按键事件派发(我也不知道哪里复制来的,不懂,先不删)
@@ -181,6 +142,7 @@ namespace Xamarin.Helper.Controllers
                     return false;
             }
         }
+
         public virtual bool onKeyDown(Keycode keyCode, KeyEvent e)
         {
             // 默认不拦截按键事件
@@ -202,23 +164,6 @@ namespace Xamarin.Helper.Controllers
         {
             add => _eventManager?.AddEventHandler(value, nameof(ThemeChangedEvent));
             remove => _eventManager?.RemoveEventHandler(value, nameof(ThemeChangedEvent));
-        }
-
-        public override void OnConfigurationChanged(Configuration newConfig)
-        {
-            base.OnConfigurationChanged(newConfig);
-            var currentNightMode = newConfig.UiMode & UiMode.NightMask;
-            switch (currentNightMode)
-            {
-                case UiMode.NightNo:
-                    // 夜间模式未启用，使用浅色主题
-                    _eventManager?.RaiseEvent(this, Xamarin.Helper.Tools.Theme.Light, nameof(ThemeChangedEvent));
-                    break;
-                case UiMode.NightYes:
-                    // 夜间模式启用，使用深色主题
-                    _eventManager?.RaiseEvent(this, Xamarin.Helper.Tools.Theme.Dark, nameof(ThemeChangedEvent));
-                    break;
-            }
         }
         #endregion
 
@@ -395,20 +340,29 @@ namespace Xamarin.Helper.Controllers
         }
         #endregion
 
-        /// <summary>
-        /// 从弱引用中提取对象
-        /// </summary>
-        /// <param name="weakReference"></param>
-        /// <returns></returns>
 
-        IReloadableFragment? GetReloadableFragment(WeakReference<IReloadableFragment> weakReference)
+        #region 辅助方法
+        
+
+        public override void OnConfigurationChanged(Configuration newConfig)
         {
-            IReloadableFragment fragment = null;
-            weakReference?.TryGetTarget(out fragment);
-            if (fragment == null)
-                return null;
-            else
-                return fragment;
+            base.OnConfigurationChanged(newConfig);
+            var currentNightMode = newConfig.UiMode & UiMode.NightMask;
+            switch (currentNightMode)
+            {
+                case UiMode.NightNo:
+                    // 夜间模式未启用，使用浅色主题
+                    _eventManager?.RaiseEvent(this, Xamarin.Helper.Tools.Theme.Light, nameof(ThemeChangedEvent));
+                    break;
+                case UiMode.NightYes:
+                    // 夜间模式启用，使用深色主题
+                    _eventManager?.RaiseEvent(this, Xamarin.Helper.Tools.Theme.Dark, nameof(ThemeChangedEvent));
+                    break;
+            }
         }
+
+
+        #endregion
+
     }
 }

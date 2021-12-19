@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
 using AndroidX.AppCompat.App;
@@ -17,79 +18,84 @@ namespace Xamarin.Helper.Controllers
     [Activity(Label = "BaseActivity")]
     public abstract class BaseActivity : AppCompatActivity, IKeyboardAction
     {
-       
+        #region 域和属性
         /// <summary>
-        /// 为生命周期事件添加弱引用,避免在忘记取消订阅时内存泄漏
+        /// 为生命周期事件添加弱引用,避免在忘记取消订阅时内存泄漏.
+        /// 这里为何使用弱事件管理,因为外部订阅周期事件时,里面可能存在更长周期的引用,例如引用了更长周期的ViewModel,则会导致Activity无法回收.
         /// </summary>
         public readonly WeakEventManager _eventManager = new WeakEventManager();
+
+
+        #endregion
+
+        #region 构造函数
+        #endregion
         
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
-        {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        #region 生命周期
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnCreate), nameof(LifeCycleEvent));
         }
 
-        /// <summary>
-        /// <see cref="OnStart"/> event, you can subscribe event in it.<br/>
-        /// Itself use WeakReference.
-        /// </summary>
-        public event EventHandler OnStartEvent
+        public override View OnCreateView(View parent, string name, Context context, IAttributeSet attrs)
         {
-            add => _eventManager.AddEventHandler(value, nameof(OnStartEvent));
-            remove => _eventManager.RemoveEventHandler(value, nameof(OnStartEvent));
+            _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnCreateView), nameof(LifeCycleEvent));
+            return base.OnCreateView(parent, name, context, attrs);
         }
+
         protected override void OnStart()
         {
             base.OnStart();
             InitSoftKeyboard();
-            _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnStartEvent));
+            _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStart), nameof(LifeCycleEvent));
         }
 
-        /// <summary>
-        /// <see cref="OnStop"/> event, you can unsubscribe event in it.<br/>
-        /// Itself use WeakReference.
-        /// </summary>
-        public event EventHandler OnStopEvent
-        {
-            add => _eventManager.AddEventHandler(value, nameof(OnStopEvent));
-            remove => _eventManager.RemoveEventHandler(value, nameof(OnStopEvent));
-        }
         protected override void OnStop()
         {
             base.OnStop();
-            _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnStopEvent));
+            _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStop), nameof(LifeCycleEvent));
+        }
+
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnDestroy), nameof(LifeCycleEvent));
+        }
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 模仿Android的Lifcycle组件,将生命周期可以四处使用<br/>
+        /// Itself use WeakReference.
+        /// </summary>
+        public event EventHandler LifeCycleEvent
+        {
+            add => _eventManager.AddEventHandler(value, nameof(LifeCycleEvent));
+            remove => _eventManager.RemoveEventHandler(value, nameof(LifeCycleEvent));
         }
 
         /// <summary>
-        /// /// <summary>
-        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
+        /// 监听Dark和Light主题改变<br/>
+        /// 使用这个需要在配置文件中声明android:configChanges="uiMode"<br/>
+        /// Event Arg is <see cref="Theme"/>.
         /// </summary>
-        /// </summary>
-        public event EventHandler OnPauseEvent
+        public event EventHandler ThemeChangedEvent
         {
-            add => _eventManager.AddEventHandler(value, nameof(OnPauseEvent));
-            remove => _eventManager.RemoveEventHandler(value, nameof(OnPauseEvent));
+            add => _eventManager.AddEventHandler(value, nameof(ThemeChangedEvent));
+            remove => _eventManager.RemoveEventHandler(value, nameof(ThemeChangedEvent));
         }
 
-        /// <summary>
-        /// Xamarin doc advice remove event at OnPause. see https://docs.microsoft.com/en-us/xamarin/android/deploy-test/performance#remove-event-handlers-in-activities
-        /// </summary>
-        protected override void OnPause()
-        {
-            base.OnPause();
-            _eventManager.RaiseEvent(this, EventArgs.Empty, nameof(OnPauseEvent));
-        }
+        #endregion
 
-        protected void InitSoftKeyboard()
-        {
-            Action action = () =>
-            {
-                HideKeyboard(CurrentFocus);//隐藏软键，避免内存泄漏
-            };
-            // 点击外部隐藏软键盘，提升用户体验
-            GetContentView().SetOnClickListener(new ClickAction(action));
-        }
+        #region 功能
+
+
 
 
         #region KeyboardAction
@@ -146,20 +152,7 @@ namespace Xamarin.Helper.Controllers
 
         #endregion
 
-        public override void Finish()
-        {
-            // 隐藏软键，避免内存泄漏
-            HideKeyboard(CurrentFocus);
-            base.Finish();
-        }
-
-        //如果当前的 Activity（singleTop 启动模式） 被复用时会回调
-        protected override void OnNewIntent(Intent intent)
-        {
-            base.OnNewIntent(intent);
-            // 设置为当前的 Intent，避免 Activity 被杀死后重启 Intent 还是最原先的那个
-            Intent = intent;
-        }
+       
 
         /// <summary>
         /// 和 setContentView 对应的方法
@@ -189,6 +182,39 @@ namespace Xamarin.Helper.Controllers
         }
         #endregion
 
+
+
+        #endregion
+
+
+
+        #region 辅助方法
+
+        protected void InitSoftKeyboard()
+        {
+            Action action = () =>
+            {
+                HideKeyboard(CurrentFocus);//隐藏软键，避免内存泄漏
+            };
+            // 点击外部隐藏软键盘，提升用户体验
+            GetContentView().SetOnClickListener(new ClickAction(action));
+        }
+
+        public override void Finish()
+        {
+            // 隐藏软键，避免内存泄漏
+            HideKeyboard(CurrentFocus);
+            base.Finish();
+        }
+
+        //如果当前的 Activity（singleTop 启动模式） 被复用时会回调
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            // 设置为当前的 Intent，避免 Activity 被杀死后重启 Intent 还是最原先的那个
+            Intent = intent;
+        }
+
         public override bool DispatchKeyEvent(KeyEvent e)
         {
             IList<Fragment> fragments = SupportFragmentManager.Fragments;
@@ -209,22 +235,11 @@ namespace Xamarin.Helper.Controllers
             return base.DispatchKeyEvent(e);
         }
 
-        /// <summary>
-        /// 监听Dark和Light主题改变<br/>
-        /// 使用这个需要在配置文件中声明android:configChanges="uiMode"<br/>
-        /// Event Arg is <see cref="Theme"/>.
-        /// </summary>
-        public event EventHandler ThemeChangedEvent
-        {
-            add => _eventManager.AddEventHandler(value, nameof(ThemeChangedEvent));
-            remove => _eventManager.RemoveEventHandler(value, nameof(ThemeChangedEvent));
-        }
-
         public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
             var currentNightMode = newConfig.UiMode & UiMode.NightMask;
-            switch(currentNightMode)
+            switch (currentNightMode)
             {
                 case UiMode.NightNo:
                     // 夜间模式未启用，使用浅色主题
@@ -236,5 +251,14 @@ namespace Xamarin.Helper.Controllers
                     break;
             }
         }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        #endregion
     }
 }
