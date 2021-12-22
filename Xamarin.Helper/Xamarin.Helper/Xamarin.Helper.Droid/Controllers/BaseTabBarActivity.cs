@@ -10,11 +10,16 @@ using Fragment = AndroidX.Fragment.App.Fragment;
 namespace Xamarin.Helper.Controllers
 {
     /// <summary>
-    /// 包含TabBar的Activity.上限为四个Tab.
-    /// 其实现的App结构为
-    ///                                   Tab-Fragment-Fragment-Fragment
-    /// App-SplashActivity-TabBarActivity-Tab-Fragment-Fragment-Fragment
-    ///                                   Tab-Fragment-Fragment-Fragment
+    /// 包含TabBar的Activity.上限为四个Tab.<br/>
+    /// 其实现的App结构为:<br/>
+    /// App<br/>
+    /// SplashActivity<br/>
+    /// TabBarActivity<br/>
+    /// (TabBar)Fragment-Fragment-Fragment<br/>
+    /// Fragment-Fragment-Fragment<br/>
+    /// <br/>
+    /// How to use:<br/>
+    /// You need override InitTabFragments and InitBottomTabBar
     /// </summary>
     [Activity(Label = "BaseTabBarActivity")]
     public abstract class BaseTabBarActivity : BaseActivity,IBarController
@@ -95,7 +100,7 @@ namespace Xamarin.Helper.Controllers
         #endregion
 
         /// <summary>
-        /// 创建主界面的三或四个Fragment,请添加到列表
+        /// 创建主界面的三或四个Fragment,请给TabFragment
         /// </summary>
         public abstract void InitTabFragments();
 
