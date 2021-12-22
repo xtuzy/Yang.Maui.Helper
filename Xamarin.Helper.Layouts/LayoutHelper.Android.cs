@@ -607,6 +607,14 @@ namespace Xamarin.Helper.Layouts.Constraint
 
     public static class ConstrantLayoutParamsHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="secondView"></param>
+        /// <param name="margin"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static View LeftToLeft(this View view, View secondView, int margin = 0)
         {
             if (margin == 0)
@@ -615,8 +623,7 @@ namespace Xamarin.Helper.Layouts.Constraint
                 return view;
             }
 
-
-            //获取顶层ConstraitLayout
+            //获取布局树里最近的ConstraitLayout
             View parent = view;
             while (true)
             {

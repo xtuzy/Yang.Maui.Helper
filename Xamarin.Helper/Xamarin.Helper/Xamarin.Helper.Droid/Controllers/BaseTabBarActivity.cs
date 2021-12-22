@@ -32,8 +32,19 @@ namespace Xamarin.Helper.Controllers
         
         public int CurrentFragmentIndex;
 
+        /// <summary>
+        /// ToolBar在OnCreate时产生
+        /// </summary>
         public AndroidX.AppCompat.Widget.Toolbar ToolBar { get; private set; }
+
+        /// <summary>
+        /// 在OnCreate时产生
+        /// </summary>
         public FrameLayout FragmentContainer { get; private set; }
+
+        /// <summary>
+        /// 在OnCreate时产生
+        /// </summary>
         public BottomNavigationView BottomTabBar { get; private set; }
 
         #region 生命周期
@@ -63,6 +74,16 @@ namespace Xamarin.Helper.Controllers
             BottomTabBar.ItemSelected -= BottomTabBar_ItemSelected;
         }
 
+        public override void OnBackPressed()
+        {
+            if(SupportFragmentManager.BackStackEntryCount == 1)//如果Fragment栈中只剩一个,那么这个返回之后就到了TabBar的Fragment,此时需要显示ToolBar
+            {
+                ShowToolBar();
+                ShowBottomTabBar();
+            }
+            base.OnBackPressed();
+        }
+
         public new void Dispose()
         {
             ToolBar = null;
@@ -87,7 +108,7 @@ namespace Xamarin.Helper.Controllers
         }
 
         /// <summary>
-        /// 在此处实现fragment的选择逻辑,根据e.P0.ItemId对应于menu的名称来切换fragment
+        /// 在此处实现fragment的选择逻辑,根据e.P0.ItemId对应于menu的名称来切换fragment,请不要这些Fragment添加到返回栈
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -154,7 +175,7 @@ namespace Xamarin.Helper.Controllers
                 return false;
             
         }
-        
+
         public bool HidenToolBar()
         {
             if (ToolBar != null)

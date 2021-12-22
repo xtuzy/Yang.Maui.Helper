@@ -49,7 +49,7 @@ namespace Xamarin.Helper.Controllers
 
 
         #endregion
-        
+
         #region 生命周期
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -267,7 +267,9 @@ namespace Xamarin.Helper.Controllers
         /// <returns></returns>
         public bool HidenToolBar()
         {
-            ToolBar.Visibility = ViewStates.Gone;
+            if (ToolBar != null)
+                ToolBar.Visibility = ViewStates.Gone;
+            else return false;
             return true;
         }
 
@@ -277,7 +279,9 @@ namespace Xamarin.Helper.Controllers
         /// <returns></returns>
         public bool ShowToolBar()
         {
-            ToolBar.Visibility = ViewStates.Visible;
+            if (ToolBar != null)
+                ToolBar.Visibility = ViewStates.Visible;
+            else return false;
             return true;
         }
 
@@ -316,6 +320,8 @@ namespace Xamarin.Helper.Controllers
         /// </summary>
         public void SetContentViewAtToolBarBottom()
         {
+            if (ToolBar == null)
+                return;
             var set = new ConstraintSet();
             ContentView.LayoutParameters =
                 new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, 0);
@@ -330,6 +336,8 @@ namespace Xamarin.Helper.Controllers
         /// </summary>
         public void SetContentViewAtToolBarBelow()
         {
+            if (ToolBar == null)
+                return;
             var set = new ConstraintSet();
             ContentView.LayoutParameters =
                 new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
@@ -342,7 +350,7 @@ namespace Xamarin.Helper.Controllers
 
 
         #region 辅助方法
-        
+
 
         public override void OnConfigurationChanged(Configuration newConfig)
         {
