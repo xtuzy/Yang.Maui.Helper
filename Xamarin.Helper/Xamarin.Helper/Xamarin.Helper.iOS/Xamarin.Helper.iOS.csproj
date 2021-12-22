@@ -57,7 +57,7 @@
       <Version>2.80.3</Version>
     </PackageReference>
     <PackageReference Include="Svg.Skia">
-      <Version>0.5.8.3</Version>
+      <Version>0.5.10</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.7.0</Version>

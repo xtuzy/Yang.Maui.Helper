@@ -67,7 +67,6 @@
     <Compile Include="Tools\EventHandlers.cs" />
     <Compile Include="Views\BasePage.cs" />
     <Compile Include="Views\BaseView.cs" />
-    <Compile Include="Views\IBaseView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
