@@ -3,6 +3,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Google.Android.Material.BottomNavigation;
+using Google.Android.Material.Navigation;
 using System;
 using System.Collections.Generic;
 using Xamarin.Helper.Views;
@@ -19,7 +20,8 @@ namespace Xamarin.Helper.Controllers
     /// Fragment-Fragment-Fragment<br/>
     /// <br/>
     /// How to use:<br/>
-    /// You need override InitTabFragments and InitBottomTabBar
+    /// You need override InitTabFragments, InitBottomTabBar,BottomTabBar_ItemSelected,
+    /// You not need set SetContentView, because have use a template.
     /// </summary>
     [Activity(Label = "BaseTabBarActivity")]
     public abstract class BaseTabBarActivity : BaseActivity,IBarController
@@ -117,7 +119,7 @@ namespace Xamarin.Helper.Controllers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public virtual void BottomTabBar_ItemSelected(object sender, Google.Android.Material.Navigation.NavigationBarView.ItemSelectedEventArgs e)
+        public virtual void BottomTabBar_ItemSelected(object sender, NavigationBarView.ItemSelectedEventArgs e)
         {
             var transaction = SupportFragmentManager.BeginTransaction();
             var id = e.P0.ItemId;
