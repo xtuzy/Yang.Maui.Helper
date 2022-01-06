@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Helper.Droid", "Xam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Helper.iOS", "Xamarin.Helper\Xamarin.Helper\Xamarin.Helper.iOS\Xamarin.Helper.iOS.csproj", "{B5E62031-6050-4F36-BF27-84F6ED040B14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Helper.Wpf", "Xamarin.Helper\Xamarin.Helper\Xamarin.Helper.Wpf\Xamarin.Helper.Wpf.csproj", "{93A49BB9-8E5A-4D64-BC0D-7F2D4D552B1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin.Helper.Wpf", "Xamarin.Helper\Xamarin.Helper\Xamarin.Helper.Wpf\Xamarin.Helper.Wpf.csproj", "{93A49BB9-8E5A-4D64-BC0D-7F2D4D552B1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Helper.Mac", "Xamarin.Helper\Xamarin.Helper\Xamarin.Helper.Mac\Xamarin.Helper.Mac.csproj", "{B83BCC8A-CA02-4630-97C6-C0C648CB9087}"
 EndProject

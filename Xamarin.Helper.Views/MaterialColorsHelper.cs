@@ -659,10 +659,17 @@ namespace Xamarin.Helper.Views
                 G = (byte)((argb & 0xff00) >> 8),
                 B = (byte)(argb & 0xff),
             };
-
-
         }
 
+        /// <summary>
+        /// https://stackoverflow.com/a/51730709/13254773
+        /// </summary>
+        /// <param name="rgb"></param>
+        /// <returns></returns>
+        public static string ToHexString(this RGB rgb)
+        {
+            return $"{rgb.R:X2}{rgb.G:X2}{rgb.B:X2}";
+        }
 #endregion
 
     }

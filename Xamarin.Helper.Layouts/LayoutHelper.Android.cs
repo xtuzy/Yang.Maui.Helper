@@ -10,7 +10,7 @@ using Xamarin.Helper.Logs;
 //指定命名空间避免冲突
 namespace Xamarin.Helper.Layouts.Constraint
 {
-    
+
 
     //https://developer.android.com/training/constraint-layout?hl=zh-cn
     /// <summary>
@@ -233,7 +233,7 @@ namespace Xamarin.Helper.Layouts.Constraint
         /// <returns></returns>
         public static ConstraintSet Connect(this ConstraintSet set, View view, NSLayoutAttribute startSide, View secondView, NSLayoutAttribute endSide, int margin = 0)
         {
-            set.Connect(view.Id, (int)startSide, secondView.Id, (int)endSide,margin);
+            set.Connect(view.Id, (int)startSide, secondView.Id, (int)endSide, margin);
             return set;
         }
 
@@ -253,12 +253,12 @@ namespace Xamarin.Helper.Layouts.Constraint
         {
             if (view.Id == View.NoId)
             {
-                LogHelper.Debug("{0} {1}",view, "No id,will auto generate.");
+                LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
                 view.Id = View.GenerateViewId();
             }
             if (secondView.Id == View.NoId)
             {
-                LogHelper.Debug("{0} {1}",secondView, "No id,will auto generate.");
+                LogHelper.Debug("{0} {1}", secondView, "No id,will auto generate.");
                 secondView.Id = View.GenerateViewId();
             }
 
@@ -608,7 +608,7 @@ namespace Xamarin.Helper.Layouts.Constraint
     public static class ConstrantLayoutParamsHelper
     {
         /// <summary>
-        /// 
+        /// TODO:Test
         /// </summary>
         /// <param name="view"></param>
         /// <param name="secondView"></param>
@@ -648,7 +648,7 @@ namespace Xamarin.Helper.Layouts.Constraint
             }
             else
             {
-                lp.LeftToLeft =secondView.Id;
+                lp.LeftToLeft = secondView.Id;
                 lp.SetLeftMargins(margin);
             }
 
@@ -657,8 +657,177 @@ namespace Xamarin.Helper.Layouts.Constraint
             ((ConstraintLayout.LayoutParams)view.LayoutParameters).LeftToLeft = line.Id;
             return view;
         }
-    }
 
+
+        /// <summary>
+        /// TODO:Test
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="secondView"></param>
+        /// <param name="margin"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static View LeftToRight(this View view, View secondView, int margin = 0)
+        {
+            if (margin == 0)
+            {
+                ((ConstraintLayout.LayoutParams)view.LayoutParameters).LeftToRight = secondView.Id;
+                return view;
+            }
+
+            //获取布局树里最近的ConstraitLayout
+            View parent = view;
+            while (true)
+            {
+                //这里用循环获取ConstraintLayout是防止不按照每个组件只有一个父Layout的最佳原则
+                var p = (View)parent.Parent;
+                if (p == null)
+                    throw new ArgumentException("No ConstraintLayout in Parents");
+                parent = p as ConstraintLayout;
+                if (parent != null)
+                    break;
+                else
+                    parent = p;
+            }
+
+            //创建辅助线
+            var line = new Space(parent.Context) { Id = View.GenerateViewId() };
+            var lp = new ConstraintLayout.LayoutParams(0, 0);
+            if (margin < 0)
+            {
+                lp.RightToRight = secondView.Id;
+                lp.SetRightMargins(-margin);
+            }
+            else
+            {
+                lp.LeftToRight = secondView.Id;
+                lp.SetLeftMargins(margin);
+            }
+
+             ((ConstraintLayout)parent).AddView(line, lp);
+            //和辅助线对齐
+            ((ConstraintLayout.LayoutParams)view.LayoutParameters).LeftToLeft = line.Id;
+            return view;
+        }
+
+
+        /// <summary>
+        /// TODO:Test
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="secondView"></param>
+        /// <param name="margin"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static View TopToTop(this View view, View secondView, int margin = 0)
+        {
+            if (margin == 0)
+            {
+                ((ConstraintLayout.LayoutParams)view.LayoutParameters).TopToTop = secondView.Id;
+                return view;
+            }
+
+            //获取布局树里最近的ConstraitLayout
+            View parent = view;
+            while (true)
+            {
+                //这里用循环获取ConstraintLayout是防止不按照每个组件只有一个父Layout的最佳原则
+                var p = (View)parent.Parent;
+                if (p == null)
+                    throw new ArgumentException("No ConstraintLayout in Parents");
+                parent = p as ConstraintLayout;
+                if (parent != null)
+                    break;
+                else
+                    parent = p;
+            }
+
+            //创建辅助线
+            var line = new Space(parent.Context) { Id = View.GenerateViewId() };
+            var lp = new ConstraintLayout.LayoutParams(0, 0);
+            if (margin < 0)
+            {
+                lp.BottomToTop = secondView.Id;
+                lp.SetRightMargins(-margin);
+            }
+            else
+            {
+                lp.TopToTop = secondView.Id;
+                lp.SetLeftMargins(margin);
+            }
+
+             ((ConstraintLayout)parent).AddView(line, lp);
+            //和辅助线对齐
+            ((ConstraintLayout.LayoutParams)view.LayoutParameters).TopToTop = line.Id;
+            return view;
+        }
+
+        public static View TopToBottom(this View view, View secondView, int margin = 0)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.TopToBottom = secondView.Id;
+            first.TopMargin = margin;
+            return view;
+        }
+
+        public static View RightToLeft(this View view, View secondView, int margin = 0)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.RightToLeft = secondView.Id;
+            first.RightMargin = margin;
+            return view;
+        }
+
+        public static View RightToRight(this View view, View secondView, int margin = 0)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.RightToRight = secondView.Id;
+            first.RightMargin = margin;
+            return view;
+        }
+
+        public static View BottomToTop(this View view, View secondView, int margin = 0)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.BottomToTop = secondView.Id;
+            first.BottomMargin = margin;
+            return view;
+        }
+
+        public static View BottomTBottom(this View view, View secondView, int margin = 0)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.BottomToBottom = secondView.Id;
+            first.BottomMargin = margin;
+            return view;
+        }
+
+        public static View  CenterTo(this View view, View secondView)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.LeftToLeft = secondView.Id;
+            first.RightToRight = secondView.Id;
+            first.TopToTop = secondView.Id;
+            first.BottomToBottom = secondView.Id;
+            return view;
+        }
+
+        public static View CenterXTo(this View view, View secondView)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.LeftToLeft = secondView.Id;
+            first.RightToRight = secondView.Id;
+            return view;
+        }
+
+        public static View CenterYTo(this View view, View secondView)
+        {
+            var first = ((ConstraintLayout.LayoutParams)view.LayoutParameters);
+            first.TopToTop = secondView.Id;
+            first.BottomToBottom = secondView.Id;
+            return view;
+        }
+    }
 }
 
 namespace Xamarin.Helper.Layouts.Relative
@@ -681,7 +850,7 @@ namespace Xamarin.Helper.Layouts.Relative
         {
             if (view.Id == View.NoId)
             {
-                LogHelper.Debug("{0} {1}",view, "No id,will auto generate.");
+                LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
                 view.Id = View.GenerateViewId();
             }
             lp.AddRule(rule, view.Id);
@@ -697,7 +866,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -727,7 +896,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -750,7 +919,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -780,7 +949,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -803,7 +972,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -826,7 +995,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -849,7 +1018,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
@@ -872,7 +1041,7 @@ namespace Xamarin.Helper.Layouts.Relative
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}",view, "Not RelativeLayout.LayoutParams!");
+                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
                 throw new ArgumentException();
             }
             else
