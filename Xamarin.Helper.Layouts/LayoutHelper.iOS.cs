@@ -195,6 +195,11 @@ namespace Xamarin.Helper.Layouts
             return view;
         }
 
+        public static View BaselineToBaseline(this View view, View secondView, int constant = 0)
+        {
+            view.FirstBaselineAnchor.ConstraintEqualTo(secondView.FirstBaselineAnchor, constant).Active = true;
+            return view;
+        }
 
         public static View WidthEqualTo(this View view, View secondView, int constant = 0, float multiplier = 1f)
         {

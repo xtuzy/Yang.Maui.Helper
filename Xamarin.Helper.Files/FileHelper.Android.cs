@@ -286,9 +286,26 @@ namespace Xamarin.Helper.Files
         /// <param name="context"></param>
         /// <param name="assetName"></param>
         /// <returns></returns>
-        public static Stream FromAssets(Context context, string assetName)
+        public static MemoryStream ReadMemoryStreamFromAssets(Activity context, string assetName)
         {
-            return context.Resources.Assets.Open(assetName);
+            var ms = new MemoryStream();
+            using (var s = context.Assets.Open(assetName))
+            {
+                s.CopyTo(ms);
+                return ms;
+            }
+        }
+
+        /// <summary>
+        /// Assets中的文件只读
+        /// <see href="https://www.jianshu.com/p/eb757835b6d9">Assets文件访问</see>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        public static Stream FromAssets(Activity context, string assetName)
+        {
+            return context.Assets.Open(assetName);
         }
 
     }

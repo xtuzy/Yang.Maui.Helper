@@ -27,8 +27,8 @@ namespace Xamarin.Essentials
         static DisplayInfo GetMainDisplayInfo()
         {
             var currentGraphics = Graphics.FromHwnd(new WindowInteropHelper(Application.Current.MainWindow).Handle);
-            var density = currentGraphics.DpiX / 96;
-
+            var density = currentGraphics.DpiX / 96;//注意y轴可能不同
+//只提供主屏幕宽高 https://stackoverflow.com/a/54932562/13254773
             var w = ((int)SystemParameters.PrimaryScreenWidth) * density;
             var h = ((int)SystemParameters.PrimaryScreenHeight) * density;
 
