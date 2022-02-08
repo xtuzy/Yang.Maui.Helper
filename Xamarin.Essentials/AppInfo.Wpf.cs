@@ -1,54 +1,66 @@
-﻿using Microsoft.Win32;
-using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Xamarin.Essentials
 {
     public static partial class AppInfo
     {
-       
-        static string PlatformGetPackageName() => Application.ResourceAssembly.GetName().FullName;
+        static readonly Assembly launchingAssembly = Assembly.GetEntryAssembly();
 
-        /// <summary>
-        /// <see cref="https://stackoverflow.com/a/32964097/13254773"/>
-        /// </summary>
-        /// <returns></returns>
-        static string PlatformGetName() => Application.ResourceAssembly.GetName().Name;
+        static string PlatformGetPackageName()
+        {
+            var attr = launchingAssembly.GetCustomAttribute<AssemblyTitleAttribute>();
+            if (attr != null)
+            {
+                return attr.Title;
+            }
 
-        static string PlatformGetVersionString() => Application.ResourceAssembly.GetName().Version.ToString();
+            return string.Empty;
+        }
 
-        static string PlatformGetBuild() => Application.ResourceAssembly.GetName().Version.Build.ToString();
+        static string PlatformGetName()
+        {
+            var attr = launchingAssembly.GetCustomAttribute<AssemblyTitleAttribute>();
+            if (attr != null)
+            {
+                return attr.Title;
+            }
 
-        /// <summary>
-        /// <see cref="https://stackoverflow.com/a/37020706/13254773"/><br/>
-        /// This is not correct, wpf seems no setting page 
-        /// </summary>
+            return string.Empty;
+        }
+
+        static string PlatformGetVersionString() =>
+            launchingAssembly.GetName().Version.ToString();
+
+        static string PlatformGetBuild()
+        {
+            return launchingAssembly.GetName().Version.Build.ToString();
+        }
+
         static void PlatformShowSettingsUI()
         {
-            System.Diagnostics.Process.Start("ms-settings:privacy-webcam");
+            Process.Start(new ProcessStartInfo { FileName = "ms-settings:appsfeatures-app", UseShellExecute = true });
         }
 
-
-        /// <summary>
-        /// <see cref="https://stackoverflow.com/a/68845708/13254773"/>
-        /// </summary>
-        /// <returns></returns>
         static AppTheme PlatformRequestedTheme()
         {
-            using var key = Registry.CurrentUser.OpenSubKey(ThemeRegistryKeyPath);
-            var registryValueObject = key?.GetValue(ThemeRegistryValueName);
-            if (registryValueObject == null)
+            var themeVal = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize").GetValue("AppsUseLightTheme");
+
+            if (themeVal != null)
             {
-                return AppTheme.Light;
+                var val = (int)themeVal;
+                switch (val)
+                {
+                    case 1:
+                        return AppTheme.Light;
+
+                    case 0:
+                        return AppTheme.Dark;
+                }
             }
-            var registryValue = (int)registryValueObject;
 
-            return registryValue > 0 ? AppTheme.Light : AppTheme.Dark;
+            return AppTheme.Unspecified;
         }
-
-        private const string ThemeRegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-
-        private const string ThemeRegistryValueName = "AppsUseLightTheme";
-
-        
     }
 }
