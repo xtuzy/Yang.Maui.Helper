@@ -1,15 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <AssemblyVersion></AssemblyVersion>
     <FileVersion></FileVersion>
-    <Version>1.7.0</Version>
+    <Version>1.7.1</Version>
     <AssemblyName>Xamarin.Essentials</AssemblyName>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <PackageId>$(AssemblyName).Wpf</PackageId>
+    <Description>Xamarin.Essentials for wpf, not complete ,no test</Description>
+    <PackageProjectUrl>https://github.com/xtuzy/Xamarin.Native.Helper/tree/master/Xamarin.Essentials</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/xtuzy/Xamarin.Native.Helper/tree/master/Xamarin.Essentials</RepositoryUrl>
+    <PackageReleaseNotes>add some class according to https://github.com/xamarin/Essentials/tree/aab19bb928332e737c6957e8df45c1c7f2e722cb/Xamarin.Essentials</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
