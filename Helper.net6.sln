@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F880F3B7-7AAD-434A-81B9-8B0D7A12FFE2}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.txt = Readme.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xamarin.Essentials", "Xamarin.Essentials", "{B7497C01-AF0B-434A-B659-6E25BD7BFE22}"
