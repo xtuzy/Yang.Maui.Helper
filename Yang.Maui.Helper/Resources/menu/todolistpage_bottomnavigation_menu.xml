@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--For all properties see: https://aka.ms/android-menu-resource-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:id="@+id/page_1"
+      android:enabled="true"
+      android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+      android:title="第一页"/>
+  <item
+      android:id="@+id/page_2"
+      android:enabled="true"
+      android:icon="@drawable/ic_baseline_home_24"
+      android:title="主页"/>
+  <item
+      android:id="@+id/page_3"
+      android:enabled="true"
+      android:icon="@drawable/ic_baseline_person_24"
+      android:title="我的"/>
+</menu>
+
+<!-- Code to implement into Activity:
+
+Android.Widget.SearchView searchView;
+public override bool OnCreateOptionsMenu(IMenu menu)
+{
+  this.MenuInflater.Inflate(Resource.Menu.todolistpage_bottomnavigation_menu, menu);
+
+  var searchItem = menu.FindItem(Resource.Id.action_search);
+
+  searchView = searchItem.ActionProvider.JavaCast<Android.Widget.SearchView>();
+
+  searchView.QueryTextSubmit += (sender, args) =>
+  {
+    Toast.MakeText(this, "You searched: " + args.Query, ToastLength.Short).Show();
+
+  };
+
+
+  return base.OnCreateOptionsMenu(menu);
+}
+
+-->

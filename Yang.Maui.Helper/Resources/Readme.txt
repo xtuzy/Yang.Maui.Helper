@@ -1,0 +1,1 @@
+﻿//this Resource Folder just for Android
