@@ -17,11 +17,9 @@ namespace Yang.Maui.Helper.Applications
         public static void InvokeInMainThread(Action action)
         {
 #if WINDOWS7_0_OR_GREATER
-            var dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView?.CoreWindow?.Dispatcher;
-
-            if (dispatcher == null)
-                throw new InvalidOperationException("Unable to find main thread.");
-            dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => action()).AsTask().WatchForError();
+            //https://stackoverflow.com/questions/69885338/how-to-get-dispatcherqueue-in-winui-3-desktop-using-windows-app-sdk
+            var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            dispatcherQueue.TryEnqueue(()=> { action.Invoke(); });
             // #if WPF
             //                System.Windows.Application.Current.Dispatcher.Invoke(() =>
             //                {

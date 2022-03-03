@@ -13,6 +13,12 @@
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/xtuzy/Xamarin.Native.Helper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/xtuzy/Xamarin.Native.Helper</RepositoryUrl>
+    <PackageTags>xamarin,maui,dotnet,net6</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>0.1</Version>
 
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
