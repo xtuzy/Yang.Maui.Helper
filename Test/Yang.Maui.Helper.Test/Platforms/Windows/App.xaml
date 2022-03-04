@@ -1,0 +1,6 @@
+﻿<winui:Application
+    x:Class="Yang.Maui.Helper.Test.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Yang.Maui.Helper.Test.WinUI"
+    xmlns:winui="using:Microsoft.UI.Xaml" />
