@@ -5,7 +5,7 @@ using Android.Views;
 using AndroidX.ConstraintLayout.Widget;
 using Yang.Maui.Helper.Devices.Screen;
 
-namespace Yang.Maui.Helper.Platforms.Android.Views
+namespace Yang.Maui.Helper.Platforms.Android.UI
 {
     
 

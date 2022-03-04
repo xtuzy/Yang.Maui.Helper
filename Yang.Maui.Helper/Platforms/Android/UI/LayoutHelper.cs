@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Yang.Maui.Helper.Platforms.Android.Design
+namespace Yang.Maui.Helper.Platforms.Android.UI
 {
-    public static class LayoutGuide
+    public static class LayoutHelper
     {
         /// <summary>
         /// ToolBar 标准高度(像素)<br/>
