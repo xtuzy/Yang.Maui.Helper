@@ -5,7 +5,7 @@ using System;
 using UIKit;
 using Yang.Maui.Helper.Tools;
 
-namespace Xamarin.Helper.Controllers
+namespace Yang.Maui.Helper.Platforms.iOS.Controllers
 {
     /// <summary>
     /// <see href="https://github.com/lixiang1994/ViewControllerDemo">参考swift将UIView与UIViewController分离</see><br/>
