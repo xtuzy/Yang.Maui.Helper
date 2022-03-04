@@ -16,11 +16,11 @@ namespace Yang.Maui.Helper.Files
     public static partial class FileHelper
     {
         /// <summary>
-        /// from Assets get MemoryStream
+        /// From Assets get MemoryStream
         /// <see href="https://www.jianshu.com/p/eb757835b6d9">Assets name,need extension name</see>
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="assetName"></param>
+        /// <param name="assetName">Assets name,need extension name</param>
         /// <returns></returns>
         public static MemoryStream ReadMemoryStreamFromAssets(Activity context, string assetName)
         {
@@ -33,11 +33,11 @@ namespace Yang.Maui.Helper.Files
         }
 
         /// <summary>
-        /// from Assets get stream
+        /// From Assets get stream. Android is Assets Foler, iOS is Resources Folder.
         /// <see href="https://www.jianshu.com/p/eb757835b6d9"></see>
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="assetName"></param>
+        /// <param name="assetName">Assets name,need extension name</param>
         /// <returns></returns>
         public static Stream FromAssets(Activity context, string assetName)
         {

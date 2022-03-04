@@ -14,11 +14,11 @@ namespace Yang.Maui.Helper.Files
     public static partial class FileHelper
     {
         /// <summary>
-        /// 从Resources获取文件
+        /// From Assets get stream. Android is Assets Foler, iOS is Resources Folder.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Assets name,need extension name</param>
         /// <returns></returns>
-        public static FileStream FromResources(string name)
+        public static FileStream FromAssets(string name)
         {
             var path = NSBundle.MainBundle.PathForResource(name, null);
             return File.Open(path, FileMode.Open);
