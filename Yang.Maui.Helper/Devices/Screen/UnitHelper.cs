@@ -24,11 +24,7 @@ namespace Yang.Maui.Helper.Devices.Screen
             {
                 if(density == 0)
                 {
-#if __ANDROID__
-                    throw new System.InvalidOperationException("Please load ScreenHepler.GetScreenDensity() before use Density.");
-#elif WINDOWS || __IOS__ 
                     density =  ScreenHelper.Instance.GetScreenDensity();
-#endif
                 }
                 return density;
             }

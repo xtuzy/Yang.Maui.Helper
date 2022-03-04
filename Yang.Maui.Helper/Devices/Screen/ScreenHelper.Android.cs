@@ -344,8 +344,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         public float GetScreenDensity()
         {
-            UnitHelper.density = Resources.System.DisplayMetrics.Density;
-            return UnitHelper.density;
+            return Resources.System.DisplayMetrics.Density;
         }
 
 
