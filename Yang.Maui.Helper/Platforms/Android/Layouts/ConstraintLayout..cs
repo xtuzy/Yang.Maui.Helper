@@ -24,6 +24,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// </summary>
         public static ConstraintSet AddCenter(this ConstraintSet set, View view, View toFirstView, NSLayoutAttribute firstSide, View toSecondView, NSLayoutAttribute secondSide, int firstSideMargin = 0, int secondSideMargin = 0)
         {
+            VerifyViewId(view);
             // Error checking
             if (firstSideMargin < 0)
             {
@@ -105,6 +106,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// </summary>
         public static ConstraintSet AddCenterH(this ConstraintSet set, View view, View toView)
         {
+            VerifyViewId(view);
             if (view.Parent == toView)
             {
                 set.CenterHorizontally(view.Id, (int)NSUnKnowAttribute.ParentId);
@@ -124,6 +126,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddCenterV(this ConstraintSet set, View view, View toView)
         {
+            VerifyViewId(view);
             if (view.Parent == toView)
             {
                 set.CenterVertically(view.Id, (int)NSUnKnowAttribute.ParentId);
@@ -143,6 +146,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddGuidLinePercent(this ConstraintSet set, View guidLine, float percent)
         {
+            VerifyViewId(guidLine);
             set.SetGuidelinePercent(guidLine.Id, percent);
             return set;
         }
@@ -153,6 +157,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// </summary>
         public static ConstraintSet AddConstrainWidth(this ConstraintSet set, View view, int width)
         {
+            VerifyViewId(view);
             set.ConstrainWidth(view.Id, width);
             return set;
         }
@@ -166,6 +171,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddConstrainMinWidth(this ConstraintSet set, View view, int width)
         {
+            VerifyViewId(view);
             set.ConstrainMinWidth(view.Id, width);
             return set;
         }
@@ -179,6 +185,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddConstrainMaxWidth(this ConstraintSet set, View view, int width)
         {
+            VerifyViewId(view);
             set.ConstrainMaxWidth(view.Id, width);
             return set;
         }
@@ -189,6 +196,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// </summary>
         public static ConstraintSet AddConstrainHeight(this ConstraintSet set, View view, int height)
         {
+            VerifyViewId(view);
             set.ConstrainHeight(view.Id, height);
             return set;
         }
@@ -202,6 +210,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddConstrainMinHeight(this ConstraintSet set, View view, int height)
         {
+            VerifyViewId(view, null);
             set.ConstrainMinHeight(view.Id, height);
             return set;
         }
@@ -215,6 +224,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddConstrainMaxHeight(this ConstraintSet set, View view, int height)
         {
+            VerifyViewId(view);
             set.ConstrainMaxHeight(view.Id, height);
             return set;
         }
@@ -232,8 +242,23 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet Connect(this ConstraintSet set, View view, NSLayoutAttribute startSide, View secondView, NSLayoutAttribute endSide, int margin = 0)
         {
+            VerifyViewId(view, secondView);
             set.Connect(view.Id, (int)startSide, secondView.Id, (int)endSide, margin);
             return set;
+        }
+
+        public static void VerifyViewId(View view,View secondView=null)
+        {
+            if (view.Id == View.NoId)
+            {
+                LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
+                view.Id = View.GenerateViewId();
+            }
+            if (secondView!=null && secondView.Id == View.NoId)
+            {
+                LogHelper.Debug("{0} {1}", secondView, "No id,will auto generate.");
+                secondView.Id = View.GenerateViewId();
+            }
         }
 
         /// <summary>
@@ -250,18 +275,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         /// <returns></returns>
         public static ConstraintSet AddConnect(this ConstraintSet set, View view, NSLayoutAttribute startSide, View secondView, NSLayoutAttribute endSide, int biasMargins = 0)
         {
-            if (view.Id == View.NoId)
-            {
-                LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
-                view.Id = View.GenerateViewId();
-            }
-            if (secondView.Id == View.NoId)
-            {
-                LogHelper.Debug("{0} {1}", secondView, "No id,will auto generate.");
-                secondView.Id = View.GenerateViewId();
-            }
-
-
+            VerifyViewId(view,secondView);
             /*
              * 方向水平
              */
