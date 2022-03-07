@@ -12,10 +12,10 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 
     <!-- Display name -->
-    <ApplicationTitle>MauiNoMauiApp</ApplicationTitle>
+    <ApplicationTitle>YangMauiHelperTest</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.mauinomauiapp</ApplicationId>
+    <ApplicationId>com.zhouyang.YangMauiHelperTest</ApplicationId>
 
     <!-- Versions -->
     <ApplicationVersion>1</ApplicationVersion>
@@ -121,6 +121,9 @@
     <None Include="**\Windows\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Remove="bin\"/>
+    <Folder Remove="bin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Yang.Maui.Helper\Yang.Maui.Helper.csproj" />
   </ItemGroup>
 </Project>
