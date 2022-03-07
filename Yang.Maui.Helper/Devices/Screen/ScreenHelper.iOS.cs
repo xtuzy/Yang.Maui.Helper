@@ -1,4 +1,6 @@
-﻿namespace Yang.Maui.Helper.Devices.Screen
+﻿using UIKit;
+
+namespace Yang.Maui.Helper.Devices.Screen
 {
     public partial class ScreenHelper:IScreenHelper
     {

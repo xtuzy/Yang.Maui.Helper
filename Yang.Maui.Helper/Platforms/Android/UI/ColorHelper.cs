@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Android.Graphics;
 using AndroidX.Core.Content;
+using Android.App;
+using Color = Android.Graphics.Color;
 
 namespace Yang.Maui.Helper.Platforms.Android.UI
 {

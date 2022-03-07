@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Yang.Maui.Helper.Devices.Screen
 {
     public partial class ScreenHelper:IDisposable

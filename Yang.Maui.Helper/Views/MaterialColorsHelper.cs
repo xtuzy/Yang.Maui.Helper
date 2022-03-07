@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+
 #if __ANDROID__
 using Android.Graphics;
+#elif __IOS__
+using UIKit;
 #endif
 namespace Yang.Maui.Helper.Views
 {
@@ -25,7 +28,7 @@ namespace Yang.Maui.Helper.Views
 
 
 
-        #region Color Code
+#region Color Code
         public const string RED_50 = "#FFEBEE";
         public const string RED_100 = "#FFCDD2";
         public const string RED_200 = "#EF9A9A";
@@ -302,7 +305,7 @@ namespace Yang.Maui.Helper.Views
         public const string BLACK = "#000000";
         public const string WHITE = "#FFFFFF";
 
-        #endregion
+#endregion
         public static Dictionary<string, string> Colors { get; } = new Dictionary<string, string>
     {
         { "RED_50", RED_50 },
@@ -643,7 +646,7 @@ namespace Yang.Maui.Helper.Views
         private const string _A700 = "A700";
 
 
-        #region Convert Code
+#region Convert Code
 
         public static RGB ToRGB(this string hexColorCode)
         {
@@ -672,7 +675,7 @@ namespace Yang.Maui.Helper.Views
         {
             return $"{rgb.R:X2}{rgb.G:X2}{rgb.B:X2}";
         }
-        #endregion
+#endregion
 
     }
 

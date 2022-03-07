@@ -1,6 +1,8 @@
 ﻿#if __ANDROID__
 using Android.OS;
 #endif
+using System;
+
 namespace Yang.Maui.Helper.Applications
 {
     public partial class MainThread
@@ -47,38 +49,4 @@ namespace Yang.Maui.Helper.Applications
 #endif
         }
     }
-
-
-
-#if WINDOWS7_0_OR_GREATER
-    /// <summary>
-    /// https://github.com/xamarin/Essentials/blob/8657192a8963877e389a533b8feb324af6f89c8b/Xamarin.Essentials/MainThread/MainThreadExtensions.uwp.cs
-    /// </summary>
-    internal static partial class MainThreadExtensions
-    {
-        internal static void WatchForError(this Windows.Foundation.IAsyncAction self) =>
-            self.AsTask().WatchForError();
-
-        internal static void WatchForError<T>(this Windows.Foundation.IAsyncOperation<T> self) =>
-            self.AsTask().WatchForError();
-
-        internal static void WatchForError(this Task self)
-        {
-            var context = SynchronizationContext.Current;
-            if (context == null)
-                return;
-
-            self.ContinueWith(
-                t =>
-                {
-                    var exception = t.Exception.InnerExceptions.Count > 1 ? t.Exception : t.Exception.InnerException;
-
-                    context.Post(e => { throw (Exception)e; }, exception);
-                }, CancellationToken.None,
-                TaskContinuationOptions.OnlyOnFaulted,
-                TaskScheduler.Default);
-        }
-    }
-#endif
-
 }

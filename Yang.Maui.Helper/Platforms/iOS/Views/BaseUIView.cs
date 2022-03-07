@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using UIKit;
 using Yang.Maui.Helper.Tools;
+using WeakEventManager = Yang.Maui.Helper.Tools.WeakEventManager;
 
 namespace Yang.Maui.Helper.Platforms.iOS.Views
 {
