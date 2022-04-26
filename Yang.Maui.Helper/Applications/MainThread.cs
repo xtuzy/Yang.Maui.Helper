@@ -18,10 +18,10 @@ namespace Yang.Maui.Helper.Applications
         /// <param name="action"></param>
         public static void InvokeInMainThread(Action action)
         {
-#if WINDOWS7_0_OR_GREATER
+#if WINDOWS
             //https://stackoverflow.com/questions/69885338/how-to-get-dispatcherqueue-in-winui-3-desktop-using-windows-app-sdk
             var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-            dispatcherQueue.TryEnqueue(()=> { action.Invoke(); });
+            dispatcherQueue.TryEnqueue(() => { action.Invoke(); });
             // #if WPF
             //                System.Windows.Application.Current.Dispatcher.Invoke(() =>
             //                {

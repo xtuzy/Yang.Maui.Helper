@@ -1,6 +1,6 @@
 ﻿
-#if WINDOWS7_0_OR_GREATER
-using Console =  System.Diagnostics.Debug;
+#if WINDOWS
+using Console = System.Diagnostics.Debug;
 #else
 using System;
 #endif

@@ -8,6 +8,7 @@ using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
 using AndroidX.AppCompat.App;
+using Microsoft.Maui.ApplicationModel;
 using System;
 using System.Collections.Generic;
 using Yang.Maui.Helper.Platforms.Android.Actions;
@@ -25,13 +26,10 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
         /// </summary>
         public readonly WeakEventManager _eventManager = new WeakEventManager();
 
-
         #endregion
 
         #region 构造函数
         #endregion
-        
-
 
         #region 生命周期
         protected override void OnCreate(Bundle savedInstanceState)
@@ -58,7 +56,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
             base.OnStop();
             _eventManager.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStop), nameof(LifeCycleEvent));
         }
-
 
         protected override void OnDestroy()
         {
@@ -94,9 +91,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
         #endregion
 
         #region 功能
-
-
-
 
         #region KeyboardAction
         /// <summary>
@@ -152,8 +146,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
 
         #endregion
 
-       
-
         /// <summary>
         /// 和 setContentView 对应的方法
         /// </summary>
@@ -164,7 +156,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
         }
 
         #region IActivityAction
-        
+
         public new void StartActivity(System.Type activityName)
         {
             StartActivity(new Intent(this, activityName));
@@ -182,11 +174,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
         }
         #endregion
 
-
-
         #endregion
-
-
 
         #region 辅助方法
 
@@ -254,7 +242,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
-            Microsoft.Maui.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }

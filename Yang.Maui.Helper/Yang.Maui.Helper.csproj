@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
-
 
     <UseMauiEssentials Condition="$(TargetFramework.Contains('-windows'))">true</UseMauiEssentials>
     <UseMauiEssentials Condition="'$(TargetFramework)' == 'net6.0-android'">true</UseMauiEssentials>
@@ -20,30 +19,28 @@
     <RepositoryUrl>https://github.com/xtuzy/Yang.Maui.Helper</RepositoryUrl>
     <PackageTags>xamarin,maui,dotnet,net6</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.3</Version>
+    <Version>1.0.3.1</Version>
+    <Description>some class helper develop maui native</Description>
 
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
-    <PackageReference Include="Xamarin.AndroidX.ConstraintLayout">
-      <Version>2.1.2.2</Version>
-    </PackageReference>
+
     <PackageReference Include="Xamarin.AndroidX.Core">
-      <Version>1.6.0.5</Version>
+      <Version>1.7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Google.Android.Material">
-      <Version>1.4.0.6</Version>
+      <Version>1.5.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android' or '$(TargetFramework)' == 'net6.0-ios' or '$(TargetFramework)' == 'net6.0-maccatalyst'">
-    <PackageReference Include="SkiaSharp.Views" Version="2.88.0-preview.209" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.0-preview.254" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.209" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.254" />
     <PackageReference Include="Svg.Skia" Version="0.5.12" />
   </ItemGroup>
-  
-  
-   <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-ios' and '$(TargetFramework)' != 'net6.0-maccatalyst'">
+
+  <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-ios' and '$(TargetFramework)' != 'net6.0-maccatalyst'">
     <Compile Remove="**\*.iOS.cs" />
     <None Include="**\*.iOS.cs" />
     <Compile Remove="**\iOS\*.cs" />
@@ -51,7 +48,7 @@
     <Compile Remove="**\iOS\**\*.cs" />
     <None Include="**\iOS\**\*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-android'">
     <Compile Remove="**\*.Android.cs" />
     <None Include="**\*.Android.cs" />
@@ -60,7 +57,7 @@
     <Compile Remove="**\Android\**\*.cs" />
     <None Include="**\Android\**\*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="$(TargetFramework.Contains('-windows')) == false">
     <Compile Remove="**\*.Windows.cs" />
     <None Include="**\*.Windows.cs" />
@@ -69,17 +66,17 @@
     <Compile Remove="**\Windows\**\*.cs" />
     <None Include="**\Windows\**\*.cs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Folder Include="Platforms\iOS\Controllers\" />
     <Folder Include="Platforms\MacCatalyst\" />
     <Folder Include="Platforms\Windows\" />
   </ItemGroup>
-   
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.19041'">
     <PackageReference Include="SkiaSharp.Views.WinUI">
-      <Version>2.88.0-preview.209</Version>
+      <Version>2.88.0-preview.254</Version>
     </PackageReference>
   </ItemGroup>
-  
+
 </Project>

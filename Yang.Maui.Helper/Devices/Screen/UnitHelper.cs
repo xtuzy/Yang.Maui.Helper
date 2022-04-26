@@ -11,7 +11,7 @@ namespace Yang.Maui.Helper.Devices.Screen
     /// <summary>
     /// some screen unit convert
     /// </summary>
-    public static partial  class UnitHelper
+    public static partial class UnitHelper
     {
         public static float density = 0;
 
@@ -22,9 +22,9 @@ namespace Yang.Maui.Helper.Devices.Screen
         {
             get
             {
-                if(density == 0)
+                if (density == 0)
                 {
-                    density =  ScreenHelper.Instance.GetScreenDensity();
+                    density = ScreenHelper.GetScreenDensity();
                 }
                 return density;
             }

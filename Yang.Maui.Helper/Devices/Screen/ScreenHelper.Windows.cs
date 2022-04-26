@@ -1,49 +1,41 @@
 ﻿#if WINDOWS
-using Microsoft.Maui.Essentials;
+
+using Microsoft.Maui.Devices;
 
 namespace Yang.Maui.Helper.Devices.Screen
 {
-    public partial class ScreenHelper : IScreenHelper
+    public partial class ScreenHelper
     {
-        #region Interface
-        public float GetScreenDensity()
+        public static float GetScreenDensity()
         {
-           return (float)DeviceDisplay.MainDisplayInfo.Density;
+            return (float)DeviceDisplay.MainDisplayInfo.Density;
         }
 
-        public float GetScreenHeight(object arg = null)
+        public static float GetScreenHeight()
         {
             return (float)DeviceDisplay.MainDisplayInfo.Height;
         }
 
-        public DisplayOrientation GetScreenOrientation(object arg = null)
+        public static DisplayOrientation GetScreenOrientation()
         {
             return DeviceDisplay.MainDisplayInfo.Orientation switch
             {
-                Microsoft.Maui.Essentials.DisplayOrientation.Portrait => DisplayOrientation.Portrait,
-                Microsoft.Maui.Essentials.DisplayOrientation.Landscape => DisplayOrientation.Landscape,
-                Microsoft.Maui.Essentials.DisplayOrientation.Unknown => DisplayOrientation.Unknown,
+                DisplayOrientation.Portrait => DisplayOrientation.Portrait,
+                DisplayOrientation.Landscape => DisplayOrientation.Landscape,
+                DisplayOrientation.Unknown => DisplayOrientation.Unknown,
             };
         }
 
-        public DisplayRotation GetScreenRotation(object arg = null)
+        public static DisplayRotation GetScreenRotation()
         {
-            return DeviceDisplay.MainDisplayInfo.Rotation switch
-            {
-                Microsoft.Maui.Essentials.DisplayRotation.Rotation0 => DisplayRotation.Rotation0,
-                Microsoft.Maui.Essentials.DisplayRotation.Rotation90 => DisplayRotation.Rotation90,
-                Microsoft.Maui.Essentials.DisplayRotation.Rotation180 => DisplayRotation.Rotation180,
-                Microsoft.Maui.Essentials.DisplayRotation.Rotation270 => DisplayRotation.Rotation270,
-                Microsoft.Maui.Essentials.DisplayRotation.Unknown => DisplayRotation.Unknown,
-            };
+            return DeviceDisplay.MainDisplayInfo.Rotation;
         }
 
-        public float GetScreenWidth(object arg = null)
+        public static float GetScreenWidth()
         {
             return (float)DeviceDisplay.MainDisplayInfo.Width;
         }
 
-        #endregion
     }
 }
 #endif

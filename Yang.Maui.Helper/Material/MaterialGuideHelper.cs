@@ -1,4 +1,4 @@
-﻿namespace Yang.Maui.Helper.Views
+﻿namespace Yang.Maui.Helper.Material
 {
     public static class MaterialGuideHelper
     {

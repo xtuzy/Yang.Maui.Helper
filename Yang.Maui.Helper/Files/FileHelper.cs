@@ -94,24 +94,6 @@ namespace Yang.Maui.Helper.Files
             }
             return isSaved;
         }
-
-        /// <summary>
-        /// From Assets get stream. Android is Assets Foler, iOS is Resources Folder.
-        /// <see href="https://www.jianshu.com/p/eb757835b6d9"></see>
-        /// </summary>
-        /// <param name="assetName">Assets name,need extension name</param>
-        /// <param name="activty"> Android need.</param>
-        /// <returns></returns>
-        public static Stream FromAssets(string assetName, object activity = null)
-        {
-#if __ANDROID__
-            return FromAssets(activity as Activity,assetName);
-#elif __IOS__
-             return FromAssets(assetName);
-#else
-            throw new NotImplementedException();
-#endif
-        }
     }
 
 }

@@ -1,5 +1,5 @@
 ﻿using CoreGraphics;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Storage;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ namespace Yang.Maui.Helper.Test
         {
             var label = new UILabel(new CGRect(100, 100, 100, 50))
             {
-                BackgroundColor = UIColor.SystemPinkColor,
+                BackgroundColor = UIColor.SystemPink,
                 TextAlignment = UITextAlignment.Center,
                 Text = "Hello, iOS!!"
             };
@@ -33,7 +33,7 @@ namespace Yang.Maui.Helper.Test
 
             Page = new UIStackView(frame)
             {
-                BackgroundColor = UIColor.SystemYellowColor,
+                BackgroundColor = UIColor.SystemYellow,
                 Axis = UILayoutConstraintAxis.Vertical
             };
             Page.AddSubview(label);

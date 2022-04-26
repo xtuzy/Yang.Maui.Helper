@@ -156,8 +156,6 @@ namespace Yang.Maui.Helper.Layouts
             return view;
         }
 
-
-
         public static View TopToTop(this View view, View secondView, int constant = 0)
         {
             view.TopAnchor.ConstraintEqualTo(secondView.TopAnchor, constant).Active = true;

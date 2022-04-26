@@ -1,3 +1,4 @@
+using Android.App;
 using static Android.Manifest;
 using PM = Android.Content.PM;
 
@@ -23,11 +24,10 @@ namespace Yang.Maui.Helper.Applications
         /// </summary>
         private static readonly int REQUEST_EXTERNAL_STORAGE = 1;
 
-       
-       /// <summary>
-       /// check write external storage persmission
-       /// </summary>
-       /// <param name="activity"></param>
+        /// <summary>
+        /// check write external storage persmission
+        /// </summary>
+        /// <param name="activity"></param>
         public static void RequestExternalStoragePermission(Activity activity)
         {
             //check we whether have write permission

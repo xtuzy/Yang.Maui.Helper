@@ -53,14 +53,6 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <!-- Required - WinUI does not yet have buildTransitive for everything -->
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
-
-  </ItemGroup>
-
   <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
     <OutputType>WinExe</OutputType>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
@@ -68,7 +60,7 @@
 
   <ItemGroup>
     <!--use this you can "hotreload" when use pure code write ui-->
-    <PackageReference Include="ReloadPreview" Version="3.0.5" />
+    <PackageReference Include="ReloadPreview" Version="3.0.6" />
   </ItemGroup>
   <!--only ios and maccatalyst have these-->
   <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-ios' and '$(TargetFramework)' != 'net6.0-maccatalyst'">

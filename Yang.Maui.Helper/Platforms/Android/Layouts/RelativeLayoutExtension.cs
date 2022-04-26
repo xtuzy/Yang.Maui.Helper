@@ -1,4 +1,5 @@
 ﻿using Android.Views;
+using Android.Widget;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +33,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             lp.AddRule(rule, view.Id);
             return lp;
         }
-
-
-
 
         #region 尝试和iOS一致
         public static View LeftToLeft(this View view, View secondView, int constant = 0)

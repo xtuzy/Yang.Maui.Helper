@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maui.Storage;
+using System;
 #if __IOS__ || __MACOS__
 using System.IO;
 #elif   __ANDROID__
@@ -11,7 +12,7 @@ namespace Yang.Maui.Helper.Files
     /// 由于各平台文件系统不同,Xamarin统一了部分访问,但还是让人糊涂.
     /// 此处进行解释,并对另外的存储进行统一管理
     /// </summary>
-    public class FileStoreFolderService
+    public class CommonFolder
     {
         /// <summary>
         /// App卸载后依旧能存在的数据.如选择保存的用户头像
@@ -26,7 +27,7 @@ namespace Yang.Maui.Helper.Files
                 throw new NotImplementedException();
 #elif WINDOWS
                 return Environment.GetFolderPath(Environment.SpecialFolder.Personal);//C:\\Users\\me\\Documents
-                #else
+#else
                 throw new NotImplementedException();
 #endif
             }
@@ -47,7 +48,7 @@ namespace Yang.Maui.Helper.Files
 #elif __ANDROID__
                 return Application.Context.GetExternalFilesDir(null).AbsolutePath;
 #elif WINDOWS
-                return Microsoft.Maui.Essentials.FileSystem.AppDataDirectory;
+                return FileSystem.AppDataDirectory;
 #else
                 throw new NotImplementedException();
 #endif
@@ -68,8 +69,8 @@ namespace Yang.Maui.Helper.Files
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library");
 #elif __ANDROID__
                 return Application.Context.FilesDir.AbsolutePath;
-                #elif WINDOWS
-                return Microsoft.Maui.Essentials.FileSystem.AppDataDirectory;
+#elif WINDOWS
+                return FileSystem.AppDataDirectory;
 #else
                 throw new NotImplementedException();
 #endif
@@ -90,8 +91,8 @@ namespace Yang.Maui.Helper.Files
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library", "Caches");
 #elif __ANDROID__
                 return Application.Context.CacheDir.AbsolutePath;
-                #elif WINDOWS
-                return Microsoft.Maui.Essentials.FileSystem.CacheDirectory;
+#elif WINDOWS
+                return FileSystem.CacheDirectory;
 #else
                 throw new NotImplementedException();
 #endif

@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using Microsoft.Maui.Devices;
 using System;
 using PM = Android.Content.PM;
 using Res = Android.Content.Res;
@@ -26,14 +27,14 @@ namespace Yang.Maui.Helper.Devices.Screen
     /// 2.density
     /// <a href="https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/src/main/java/com/blankj/utilcode/util/ScreenUtils.java">???AndroidUtilCode ScreenUtils??????</a>
     /// </summary>
-    public partial class ScreenHelper:IScreenHelper
+    public partial class ScreenHelper
     {
         /// <summary>
         /// Return the width of screen, in pixel.
         /// <a href="https://stackoverflow.com/questions/4743116/get-screen-width-and-height-in-android">Get screen width and height in Android</a>
         /// </summary>
         /// <returns>px</returns>
-        public int GetScreenPixelWidth(Context context)
+        public static int GetScreenPixelWidth(Context context)
         {
             DisplayMetrics displayMetrics;
             Display display;
@@ -65,7 +66,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// <a href="https://stackoverflow.com/questions/4743116/get-screen-width-and-height-in-android">Get screen width and height in Android</a>
         /// </summary>
         /// <returns>px</returns>
-        public int GetScreenPixelHeight(Context context)
+        public static int GetScreenPixelHeight(Context context)
         {
             DisplayMetrics displayMetrics;
             Display display;
@@ -121,13 +122,12 @@ namespace Yang.Maui.Helper.Devices.Screen
         //    return point.y;
         //}
 
-
         /// <summary>
         /// Return the screen density expressed as dots-per-inch,
         /// such as 120,160,180,240...
         /// </summary>
         /// <returns></returns>
-        public int GetScreenDensityDpi()
+        public static int GetScreenDensityDpi()
         {
             return (int)Resources.System.DisplayMetrics.DensityDpi;
         }
@@ -136,7 +136,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// Set full screen.
         /// </summary>
         /// <param name="activity"></param>
-        public void SetFullScreen(Activity activity)
+        public static void SetFullScreen(Activity activity)
         {
             activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
         }
@@ -145,7 +145,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// Set non full screen.
         /// </summary>
         /// <param name="activity"></param>
-        public void SetNoFullScreen(Activity activity)
+        public static void SetNoFullScreen(Activity activity)
         {
             activity.Window.ClearFlags(WindowManagerFlags.Fullscreen);
         }
@@ -154,7 +154,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// Toggle full screen.
         /// </summary>
         /// <param name="activity"></param>
-        public void ToggleFullScreen(Activity activity)
+        public static void ToggleFullScreen(Activity activity)
         {
             bool isFullScreen = IsFullScreen(activity);
             if (isFullScreen)
@@ -172,25 +172,25 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         /// <param name="activity"></param>
         /// <returns></returns>
-        public bool IsFullScreen(Activity activity)
+        public static bool IsFullScreen(Activity activity)
         {
             var fullScreenFlag = WindowManagerFlags.Fullscreen;
             return (activity.Window.Attributes.Flags & fullScreenFlag) == fullScreenFlag;
         }
 
         /// <summary>
-        /// Set the screen to landscape.
+        /// Set the screen to landscape.(横屏)
         /// </summary>
         /// <param name="activity"></param>
-        public void SetLandscape(Activity activity)
+        public static void SetLandscape(Activity activity)
         {
             activity.RequestedOrientation = PM.ScreenOrientation.Landscape;
         }
 
         /// <summary>
-        /// Set the screen to portrait.
+        /// Set the screen to portrait.(竖屏)
         /// </summary>
-        public void SetPortrait(Activity activity)
+        public static void SetPortrait(Activity activity)
         {
             activity.RequestedOrientation = PM.ScreenOrientation.Portrait;
         }
@@ -200,7 +200,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public bool IsLandscape(Context context)
+        public static bool IsLandscape(Context context)
         {
             return context.Resources.Configuration.Orientation
                     == Res.Orientation.Landscape;
@@ -211,34 +211,20 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public bool IsPortrait(Context context)
+        public static bool IsPortrait(Context context)
         {
             return context.Resources.Configuration.Orientation
                     == Res.Orientation.Portrait;
         }
 
-        
-        /// <summary>
-        /// Return the bitmap of screen.
-        /// </summary>
-        /// <param name="activity"></param>
-        /// <returns></returns>
-        [Obsolete("deprecated", true)]
-        public Bitmap ScreenShot(Activity activity)
-        {
-            return ScreenShot(activity, false);
-        }
-
         /**
          *
-         * Return the bitmap of screen.
+         * Return the bitmap of current App screen.
          * @param activity          The activity.
          * @param isDeleteStatusBar True to delete status bar, false otherwise.
          * @return the bitmap of screen
          */
-
-        [Obsolete("deprecated", true)]
-        public Bitmap ScreenShot(Activity activity, bool isDeleteStatusBar)
+        public static Bitmap ScreenShot(Activity activity, bool isDeleteStatusBar = false)
         {
             View decorView = activity.Window.DecorView;
             Bitmap bmp = View2Bitmap(decorView);
@@ -269,7 +255,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public int GetStatusBarHeight(Context context)
+        public static int GetStatusBarHeight(Context context)
         {
             Resources resources = context.Resources;
             int resourceId = resources.GetIdentifier("status_bar_height", "dimen", "android");
@@ -283,43 +269,57 @@ namespace Yang.Maui.Helper.Devices.Screen
             }
         }
 
-
-        [Obsolete("deprecated", true)]
-        private Bitmap View2Bitmap(View view)
+        /// <summary>
+        /// 参考<see href="https://stackoverflow.com/questions/2661536/how-to-programmatically-take-a-screenshot-on-android?answertab=trending#tab-top"/>
+        /// 截图有多种情况,比如长截图,后台截图,这里只适用于当前App内的可见区域截图
+        /// </summary>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        private static Bitmap View2Bitmap(View view)
         {
             if (view == null)
                 return null;
-            bool drawingCacheEnabled = view.DrawingCacheEnabled;
-            bool willNotCacheDrawing = view.WillNotCacheDrawing();
-            view.DrawingCacheEnabled = (true);
-            view.SetWillNotCacheDrawing(false);
-            Bitmap drawingCache = view.GetDrawingCache(true);
-            Bitmap bitmap;
-            if (null == drawingCache || drawingCache.IsRecycled)
+            if (Build.VERSION.SdkInt <= Android.OS.BuildVersionCodes.P)
             {
-                view.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified),
-                        View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
-                view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
-                view.BuildDrawingCache();
-                drawingCache = view.GetDrawingCache(true);
+                bool drawingCacheEnabled = view.DrawingCacheEnabled;
+                bool willNotCacheDrawing = view.WillNotCacheDrawing();
+                view.DrawingCacheEnabled = (true);
+                view.SetWillNotCacheDrawing(false);
+                Bitmap drawingCache = view.GetDrawingCache(true);
+                Bitmap bitmap;
                 if (null == drawingCache || drawingCache.IsRecycled)
                 {
-                    bitmap = Bitmap.CreateBitmap(view.MeasuredWidth, view.MeasuredHeight, Bitmap.Config.Rgb565);
-                    Canvas canvas = new Canvas(bitmap);
-                    view.Draw(canvas);
+                    view.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified),
+                            View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+                    view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
+                    view.BuildDrawingCache();
+                    drawingCache = view.GetDrawingCache(true);
+                    if (null == drawingCache || drawingCache.IsRecycled)
+                    {
+                        bitmap = Bitmap.CreateBitmap(view.MeasuredWidth, view.MeasuredHeight, Bitmap.Config.Rgb565);
+                        Canvas canvas = new Canvas(bitmap);
+                        view.Draw(canvas);
+                    }
+                    else
+                    {
+                        bitmap = Bitmap.CreateBitmap(drawingCache);
+                    }
                 }
                 else
                 {
                     bitmap = Bitmap.CreateBitmap(drawingCache);
                 }
+                view.SetWillNotCacheDrawing(willNotCacheDrawing);
+                view.DrawingCacheEnabled = (drawingCacheEnabled);
+                return bitmap;
             }
             else
             {
-                bitmap = Bitmap.CreateBitmap(drawingCache);
+                Bitmap bitmap = Bitmap.CreateBitmap(view.Width, view.Height, Bitmap.Config.Argb8888);
+                Canvas canvas = new Canvas(bitmap);
+                view.Draw(canvas);
+                return bitmap;
             }
-            view.SetWillNotCacheDrawing(willNotCacheDrawing);
-            view.DrawingCacheEnabled = (drawingCacheEnabled);
-            return bitmap;
         }
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// <param name="context"></param>
         /// <returns></returns>
         [Obsolete("deprecated", true)]
-        public bool IsScreenLock(Context context)
+        public static bool IsScreenLock(Context context)
         {
             KeyguardManager km =
                     (KeyguardManager)context.GetSystemService(Context.KeyguardService);
@@ -337,16 +337,14 @@ namespace Yang.Maui.Helper.Devices.Screen
             return km.InKeyguardRestrictedInputMode();
         }
 
-        #region Interface
         /// <summary>
         /// Return the density of screen,
         /// such as 1,1.5,2...
         /// </summary>
-        public float GetScreenDensity()
+        public static float GetScreenDensity()
         {
             return Resources.System.DisplayMetrics.Density;
         }
-
 
         /// <summary>
         /// Return the rotation of screen.
@@ -354,10 +352,9 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// <param name="final"></param>
         /// <param name="activity"></param>
         /// <returns></returns>
-        public DisplayOrientation GetScreenOrientation(object arg)
+        public static DisplayOrientation GetScreenOrientation(Context context)
         {
-            var activity = arg as Context;
-            return activity.Resources.Configuration.Orientation switch
+            return context.Resources.Configuration.Orientation switch
             {
                 Res.Orientation.Landscape => DisplayOrientation.Landscape,
                 Res.Orientation.Portrait => DisplayOrientation.Portrait,
@@ -366,10 +363,9 @@ namespace Yang.Maui.Helper.Devices.Screen
             };
         }
 
-        public DisplayRotation GetScreenRotation(object activity)
+        public static DisplayRotation GetScreenRotation(Activity activity)
         {
-            var context = activity as Activity;
-            return context.WindowManager.DefaultDisplay.Rotation switch
+            return activity.WindowManager.DefaultDisplay.Rotation switch
             {
                 SurfaceOrientation.Rotation270 => DisplayRotation.Rotation270,
                 SurfaceOrientation.Rotation180 => DisplayRotation.Rotation180,
@@ -385,9 +381,8 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// <param name="Activity"></param>
         /// <param name=""></param>
         /// <returns>px</returns>
-        public float GetScreenWidth(object arg)
+        public static float GetScreenWidth(Activity activity)
         {
-            var activity = arg as Activity;
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.R)
             {
                 WindowMetrics windowMetrics = activity.WindowManager.CurrentWindowMetrics;
@@ -422,9 +417,8 @@ namespace Yang.Maui.Helper.Devices.Screen
         /// </summary>
         /// <param name="activity"></param>
         /// <returns>px</returns>
-        public float GetScreenHeight(object arg)
+        public static float GetScreenHeight(Activity activity)
         {
-            var activity = arg  as Activity;
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.R)
             {
                 WindowMetrics windowMetrics = activity.WindowManager.CurrentWindowMetrics;
@@ -453,7 +447,5 @@ namespace Yang.Maui.Helper.Devices.Screen
                 return outMetrics.HeightPixels;
             }
         }
-
-        #endregion
     }
 }

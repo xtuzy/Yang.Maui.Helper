@@ -9,7 +9,7 @@ using Android.Graphics;
 #elif __IOS__
 using UIKit;
 #endif
-namespace Yang.Maui.Helper.Views
+namespace Yang.Maui.Helper.Material
 {
     /// <summary>
     /// Google Material Design Color hexStringCode
@@ -26,9 +26,7 @@ namespace Yang.Maui.Helper.Views
         * https://github.com/cyrusdargahi
         */
 
-
-
-#region Color Code
+        #region Color Code
         public const string RED_50 = "#FFEBEE";
         public const string RED_100 = "#FFCDD2";
         public const string RED_200 = "#EF9A9A";
@@ -305,7 +303,7 @@ namespace Yang.Maui.Helper.Views
         public const string BLACK = "#000000";
         public const string WHITE = "#FFFFFF";
 
-#endregion
+        #endregion
         public static Dictionary<string, string> Colors { get; } = new Dictionary<string, string>
     {
         { "RED_50", RED_50 },
@@ -472,8 +470,6 @@ namespace Yang.Maui.Helper.Views
         { "AMBER_A200", AMBER_A200 },
         { "AMBER_A400", AMBER_A400 },
         { "AMBER_A700", AMBER_A700 },
-
-
 
         { "PURPLE_50", PURPLE_50 },
         { "PURPLE_100", PURPLE_100 },
@@ -645,8 +641,7 @@ namespace Yang.Maui.Helper.Views
         private const string _A400 = "A400";
         private const string _A700 = "A700";
 
-
-#region Convert Code
+        #region Convert Code
 
         public static RGB ToRGB(this string hexColorCode)
         {
@@ -675,7 +670,7 @@ namespace Yang.Maui.Helper.Views
         {
             return $"{rgb.R:X2}{rgb.G:X2}{rgb.B:X2}";
         }
-#endregion
+        #endregion
 
     }
 
@@ -690,11 +685,11 @@ namespace Yang.Maui.Helper.Views
 
     public static class MaterialColorsHelperExtension
     {
-        public static Color ToUIColor(this RGB rgb)
+        public static Color ToPlatformColor(this RGB rgb)
         {
             return new Color(rgb.R, rgb.G, rgb.B);
         }
-        public static Color ToUIColor(this RGB rgb, int a)
+        public static Color ToPlatformColor(this RGB rgb, int a)
         {
             return new Color(rgb.R, rgb.G, rgb.B, a);
         }
@@ -705,7 +700,7 @@ namespace Yang.Maui.Helper.Views
 #if __IOS__
     public static class MaterialColorsHelperExtension
     {
-        public static UIColor ToUIColor(this RGB rgb)
+        public static UIColor ToPlatformColor(this RGB rgb)
         {
             return UIColor.FromRGB(rgb.R, rgb.G, rgb.B);
         }

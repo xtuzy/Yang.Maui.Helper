@@ -1,20 +1,21 @@
-﻿using UIKit;
+﻿using Microsoft.Maui.Devices;
+using UIKit;
 
 namespace Yang.Maui.Helper.Devices.Screen
 {
-    public partial class ScreenHelper:IScreenHelper
+    public partial class ScreenHelper
     {
-        public float GetScreenDensity()
+        public static float GetScreenDensity()
         {
             return (float)UIScreen.MainScreen.Scale;
         }
 
-        public float GetScreenHeight(object arg = null)
+        public static float GetScreenHeight(object arg = null)
         {
-            return GetScreenDensity()* (float)UIScreen.MainScreen.Bounds.Height;
+            return GetScreenDensity() * (float)UIScreen.MainScreen.Bounds.Height;
         }
 
-        public DisplayOrientation GetScreenOrientation(object arg = null)
+        public static DisplayOrientation GetScreenOrientation()
         {
             var orientation = UIApplication.SharedApplication.StatusBarOrientation;
 
@@ -24,7 +25,7 @@ namespace Yang.Maui.Helper.Devices.Screen
             return DisplayOrientation.Portrait;
         }
 
-        public DisplayRotation GetScreenRotation(object arg = null)
+        public static DisplayRotation GetScreenRotation()
         {
             var orientation = UIApplication.SharedApplication.StatusBarOrientation;
 
@@ -43,9 +44,9 @@ namespace Yang.Maui.Helper.Devices.Screen
             return DisplayRotation.Unknown;
         }
 
-        public float GetScreenWidth(object arg = null)
+        public static float GetScreenWidth()
         {
-            return GetScreenDensity()* (float)UIScreen.MainScreen.Bounds.Width;
+            return GetScreenDensity() * (float)UIScreen.MainScreen.Bounds.Width;
         }
     }
 }
