@@ -15,11 +15,9 @@ namespace Yang.Maui.Helper.Test
         public UIView Page;
         public MainPage(CGRect frame)
         {
-            var label = new UILabel(new CGRect(100, 100, 100, 50))
+            var label = new FPS.FPSHelper(new CGRect(frame.Right - 100, 100, 100, 200))
             {
-                BackgroundColor = UIColor.SystemPink,
                 TextAlignment = UITextAlignment.Center,
-                Text = "Hello, iOS!!"
             };
 
             var button = new UIButton(new CGRect(100, 200, 100, 50))
@@ -31,14 +29,20 @@ namespace Yang.Maui.Helper.Test
                 button.BackgroundColor = UIColor.LightGray;
             };
 
-            Page = new UIStackView(frame)
+            Page = new UIView(frame);
+            var scrollView =new UIScrollView(frame) { ContentSize = new CGSize(frame.Width, frame.Height * 2) };
+            Page.AddSubview(scrollView);
+            Page.AddSubview(label);
+            
+            var layout = new UIStackView(frame)
             {
                 BackgroundColor = UIColor.SystemYellow,
-                Axis = UILayoutConstraintAxis.Vertical
+                Axis = UILayoutConstraintAxis.Vertical,
             };
-            Page.AddSubview(label);
-            Page.AddSubview(button);
-            LoadMauiAsset();
+            scrollView.Add(layout);
+            layout.Add(button);
+            layout.Add(new UIView() { Frame = new CGRect(0, 0, 100, 1000), BackgroundColor = UIColor.Blue });
+            
         }
 
         async Task LoadMauiAsset()

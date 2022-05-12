@@ -13,11 +13,11 @@ using Microsoft.UI.Xaml;
 #elif __IOS__
 using UIElement = UIKit.UIView;
 #endif
-namespace SharpConstraintLayout.Maui.Native.Example.Tool
+namespace Yang.Maui.Helper.Applications
 {
-    internal class UIThread
+    public class UIThread
     {
-        internal static void Invoke(Action action, UIElement view)
+        public static void Invoke(Action action, UIElement view)
         {
 #if WINDOWS
 

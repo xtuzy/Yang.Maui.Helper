@@ -30,7 +30,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Yang.Maui.Helper.Platforms.Android.Layouts
+namespace Yang.Maui.Helper.Layouts
 {
     public static class EasyLayout
     {

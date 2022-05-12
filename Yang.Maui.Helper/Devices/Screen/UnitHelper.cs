@@ -24,7 +24,7 @@ namespace Yang.Maui.Helper.Devices.Screen
             {
                 if (density == 0)
                 {
-                    density = ScreenHelper.GetScreenDensity();
+                    density = ScreenPropertyHelper.GetScreenDensity();
                 }
                 return density;
             }

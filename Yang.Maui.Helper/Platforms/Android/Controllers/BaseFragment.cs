@@ -46,7 +46,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
             _eventManager = new WeakEventManager();
         }
 
-
         #endregion
 
         #region 生命周期
@@ -80,7 +79,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
             base.OnStop();
             _eventManager?.RaiseEvent(this, new LifeCycleArgs(LifeCycle.OnStop), nameof(LifeCycleEvent));
         }
-
 
         public override void OnDestroy()
         {
@@ -258,8 +256,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
                 throw new NotImplementedException("当前仅在TabBar中实现回退");
         }
 
-
-
         /// <summary>
         /// 隐藏Fragment的ToolBar
         /// </summary>
@@ -325,8 +321,8 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
             ContentView.LayoutParameters =
                 new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, 0);
             set.Clone(RootLayout);
-            set.AddConnect(ContentView, NSLayoutAttribute.Top, ToolBar, NSLayoutAttribute.Bottom)
-            .AddConnect(ContentView, NSLayoutAttribute.Bottom, RootLayout, NSLayoutAttribute.Bottom);
+            set.Connect(ContentView.Id, ConstraintSet.Top, ToolBar.Id, ConstraintSet.Bottom);
+            set.Connect(ContentView.Id, ConstraintSet.Bottom, RootLayout.Id, ConstraintSet.Bottom);
             set.ApplyTo(RootLayout);
         }
 
@@ -347,9 +343,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
         }
         #endregion
 
-
         #region 辅助方法
-
 
         public override void OnConfigurationChanged(Configuration newConfig)
         {
@@ -367,7 +361,6 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
                     break;
             }
         }
-
 
         #endregion
 

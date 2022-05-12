@@ -4,7 +4,7 @@ using Microsoft.Maui.Devices;
 
 namespace Yang.Maui.Helper.Devices.Screen
 {
-    public partial class ScreenHelper
+    public partial class ScreenPropertyHelper
     {
         public static float GetScreenDensity()
         {

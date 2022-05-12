@@ -27,7 +27,7 @@ namespace Yang.Maui.Helper.Devices.Screen
     /// 2.density
     /// <a href="https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/src/main/java/com/blankj/utilcode/util/ScreenUtils.java">???AndroidUtilCode ScreenUtils??????</a>
     /// </summary>
-    public partial class ScreenHelper
+    public partial class ScreenPropertyHelper
     {
         /// <summary>
         /// Return the width of screen, in pixel.
