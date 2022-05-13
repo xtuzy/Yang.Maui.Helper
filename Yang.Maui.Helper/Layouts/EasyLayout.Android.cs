@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+//https://github.com/lprichar/EasyLayout.Droid
 using Android.Content;
 using Android.OS;
 using Android.Util;

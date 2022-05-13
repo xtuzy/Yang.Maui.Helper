@@ -19,7 +19,7 @@
     <RepositoryUrl>https://github.com/xtuzy/Yang.Maui.Helper</RepositoryUrl>
     <PackageTags>xamarin,maui,dotnet,net6</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.3.2</Version>
+    <Version>1.0.3.3</Version>
     <Description>some class helper develop maui native</Description>
 
   </PropertyGroup>
@@ -69,7 +69,6 @@
 
   <ItemGroup>
     <Folder Include="Platforms\iOS\Controllers\" />
-    <Folder Include="Platforms\MacCatalyst\" />
     <Folder Include="Platforms\Windows\" />
   </ItemGroup>
 

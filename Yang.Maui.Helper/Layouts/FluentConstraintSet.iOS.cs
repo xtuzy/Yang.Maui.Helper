@@ -1,13 +1,11 @@
-﻿#if __MACOS__
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using AppKit;
-using View = AppKit.NSView;
+using UIKit;
+using View = UIKit.UIView;
 
 namespace Yang.Maui.Helper.Layouts
 {
-     public static class NSLayoutConstraintHelper
+    public static class NSLayoutConstraintHelper
     {
 
         public static View AddSubviews(this View view, params View[] subviews)
@@ -49,12 +47,13 @@ namespace Yang.Maui.Helper.Layouts
         /// <summary>
         /// Sets the multiplier.
         /// 有问题,慎用!!!.注意这个方法,因为Anchor约束里不能直接修改Multiplier,所以重新创建了一个约束.
-        /// See <see href="https://stackoverflow.com/questions/19593641/can-i-change-multiplier-property-for-nslayoutconstraint/56574862#56574862">参考</see>
+        /// See <see cref="https://stackoverflow.com/questions/19593641/can-i-change-multiplier-property-for-nslayoutconstraint/56574862#56574862"/>
         /// </summary>
         /// <param name="constraint">The constraint.</param>
         /// <param name="multiplier">The multiplier.</param>
         /// <returns></returns>
-        public static NSLayoutConstraint SetMultiplier(this NSLayoutConstraint constraint, nfloat multiplier)
+        [Obsolete("有问题,慎用!!!.注意这个方法,因为Anchor约束里不能直接修改Multiplier,所以重新创建了一个约束.")]
+        public static NSLayoutConstraint SetMultiplier(this NSLayoutConstraint constraint, float multiplier)
         {
             NSLayoutConstraint.DeactivateConstraints(new NSLayoutConstraint[] { constraint });
             var newConstraint = NSLayoutConstraint.Create(
@@ -67,7 +66,7 @@ namespace Yang.Maui.Helper.Layouts
                 constraint.Constant);
             newConstraint.Priority = constraint.Priority;
             newConstraint.ShouldBeArchived = constraint.ShouldBeArchived;
-            newConstraint.Identifier=constraint.Identifier;
+            newConstraint.SetIdentifier(constraint.GetIdentifier());
             var view = constraint.FirstItem as View;
             //NSLayoutConstraint.ActivateConstraints(new NSLayoutConstraint[] { newConstraint });
             return newConstraint;
@@ -80,7 +79,7 @@ namespace Yang.Maui.Helper.Layouts
         /// <param name="constraint">The constraint.</param>
         /// <param name="constant">The constant.</param>
         /// <returns></returns>
-        public static NSLayoutConstraint SetConstant(this NSLayoutConstraint constraint, nfloat constant)
+        public static NSLayoutConstraint SetConstant(this NSLayoutConstraint constraint, float constant)
         {
             constraint.Constant = constant;
             return constraint;
@@ -98,122 +97,125 @@ namespace Yang.Maui.Helper.Layouts
         /// <param name="bottomConstant"></param>
         public static View EdgesToSuperView(this View view, View superView, int leftConstant = 0, int topConstant = 0, int rightConstant = 0, int bottomConstant = 0)
         {
-            view.LeadingAnchor.ConstraintEqualToAnchor(superView.LeadingAnchor, leftConstant).Active = true;
-            view.TopAnchor.ConstraintEqualToAnchor(superView.TopAnchor, topConstant).Active = true;
-            view.TrailingAnchor.ConstraintEqualToAnchor(superView.TrailingAnchor, rightConstant).Active = true;
-            view.BottomAnchor.ConstraintEqualToAnchor(superView.BottomAnchor, bottomConstant).Active = true;
+            view.LeadingAnchor.ConstraintEqualTo(superView.LeadingAnchor, leftConstant).Active = true;
+            view.TopAnchor.ConstraintEqualTo(superView.TopAnchor, topConstant).Active = true;
+            view.TrailingAnchor.ConstraintEqualTo(superView.TrailingAnchor, rightConstant).Active = true;
+            view.BottomAnchor.ConstraintEqualTo(superView.BottomAnchor, bottomConstant).Active = true;
             return view;
         }
 
         public static View CenterXTo(this View view, View secondView, int constant = 0)
         {
-            view.CenterXAnchor.ConstraintEqualToAnchor(secondView.CenterXAnchor, constant).Active = true;
+            view.CenterXAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
             return view;
         }
         public static View CenterYTo(this View view, View secondView, int constant = 0)
         {
-            view.CenterYAnchor.ConstraintEqualToAnchor(secondView.CenterYAnchor, constant).Active = true;
+            view.CenterYAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
             return view;
         }
 
         public static View CenterTo(this View view, View secondView, int constant = 0)
         {
-            view.CenterXAnchor.ConstraintEqualToAnchor(secondView.CenterXAnchor, constant).Active = true;
-            view.CenterYAnchor.ConstraintEqualToAnchor(secondView.CenterYAnchor, constant).Active = true;
+            view.CenterXAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
+            view.CenterYAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
             return view;
         }
 
         public static View LeftToLeft(this View view, View secondView, int constant = 0)
         {
-            view.LeadingAnchor.ConstraintEqualToAnchor(secondView.LeadingAnchor, constant).Active = true;
+            view.LeadingAnchor.ConstraintEqualTo(secondView.LeadingAnchor, constant).Active = true;
             return view;
         }
 
         public static View LeftToCenter(this View view, View secondView, int constant = 0)
         {
-            view.LeadingAnchor.ConstraintEqualToAnchor(secondView.CenterXAnchor, constant).Active = true;
+            view.LeadingAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
             return view;
         }
 
         public static View LeftToRight(this View view, View secondView, int constant = 0)
         {
-            view.LeadingAnchor.ConstraintEqualToAnchor(secondView.TrailingAnchor, constant).Active = true;
+            view.LeadingAnchor.ConstraintEqualTo(secondView.TrailingAnchor, constant).Active = true;
             return view;
         }
 
         public static View RightToLeft(this View view, View secondView, int constant = 0)
         {
-            view.TrailingAnchor.ConstraintEqualToAnchor(secondView.LeadingAnchor, constant).Active = true;
+            view.TrailingAnchor.ConstraintEqualTo(secondView.LeadingAnchor, constant).Active = true;
             return view;
         }
         public static View RightToCenter(this View view, View secondView, int constant = 0)
         {
-            view.TrailingAnchor.ConstraintEqualToAnchor(secondView.CenterXAnchor, constant).Active = true;
+            view.TrailingAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
             return view;
         }
 
         public static View RightToRight(this View view, View secondView, int constant = 0)
         {
-            view.TrailingAnchor.ConstraintEqualToAnchor(secondView.TrailingAnchor, constant).Active = true;
+            view.TrailingAnchor.ConstraintEqualTo(secondView.TrailingAnchor, constant).Active = true;
             return view;
         }
 
-
-
         public static View TopToTop(this View view, View secondView, int constant = 0)
         {
-            view.TopAnchor.ConstraintEqualToAnchor(secondView.TopAnchor, constant).Active = true;
+            view.TopAnchor.ConstraintEqualTo(secondView.TopAnchor, constant).Active = true;
             return view;
         }
 
         public static View TopToCenter(this View view, View secondView, int constant = 0)
         {
-            view.TopAnchor.ConstraintEqualToAnchor(secondView.CenterYAnchor, constant).Active = true;
+            view.TopAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
             return view;
         }
 
         public static View TopToBottom(this View view, View secondView, int constant = 0)
         {
-            view.TopAnchor.ConstraintEqualToAnchor(secondView.BottomAnchor, constant).Active = true;
+            view.TopAnchor.ConstraintEqualTo(secondView.BottomAnchor, constant).Active = true;
             return view;
         }
 
         public static View BottomToTop(this View view, View secondView, int constant = 0)
         {
-            view.BottomAnchor.ConstraintEqualToAnchor(secondView.TopAnchor, constant).Active = true;
+            view.BottomAnchor.ConstraintEqualTo(secondView.TopAnchor, constant).Active = true;
             return view;
         }
 
         public static View BottomToCenter(this View view, View secondView, int constant = 0)
         {
-            view.BottomAnchor.ConstraintEqualToAnchor(secondView.CenterYAnchor, constant).Active = true;
+            view.BottomAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
             return view;
         }
 
         public static View BottomToBottom(this View view, View secondView, int constant = 0)
         {
-            view.BottomAnchor.ConstraintEqualToAnchor(secondView.BottomAnchor, constant).Active = true;
+            view.BottomAnchor.ConstraintEqualTo(secondView.BottomAnchor, constant).Active = true;
             return view;
         }
 
+        public static View BaselineToBaseline(this View view, View secondView, int constant = 0)
+        {
+            view.FirstBaselineAnchor.ConstraintEqualTo(secondView.FirstBaselineAnchor, constant).Active = true;
+            return view;
+        }
 
         public static View WidthEqualTo(this View view, View secondView, int constant = 0, float multiplier = 1f)
         {
-            view.WidthAnchor.ConstraintEqualToAnchor(secondView.WidthAnchor, multiplier, constant).SetActive();
+            view.WidthAnchor.ConstraintEqualTo(secondView.WidthAnchor, multiplier, constant).SetActive();
             return view;
         }
         public static View WidthEqualTo(this View view, int constant)
         {
-            view.WidthAnchor.ConstraintEqualToConstant(constant).SetActive();
+            view.WidthAnchor.ConstraintEqualTo(constant).SetActive();
             return view;
         }
 
         public static View MinWidth(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
         {
             if (secondView == null)
-                view.WidthAnchor.ConstraintGreaterThanOrEqualToConstant(constant);
+                view.WidthAnchor.ConstraintGreaterThanOrEqualTo(constant);
             else
-                view.WidthAnchor.ConstraintGreaterThanOrEqualToAnchor(secondView.WidthAnchor, multiplier, constant);
+                view.WidthAnchor.ConstraintGreaterThanOrEqualTo(secondView.WidthAnchor, multiplier, constant);
 
             return view;
         }
@@ -221,39 +223,39 @@ namespace Yang.Maui.Helper.Layouts
         public static View MaxWidth(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
         {
             if (secondView == null)
-                view.WidthAnchor.ConstraintLessThanOrEqualToConstant(constant);
+                view.WidthAnchor.ConstraintLessThanOrEqualTo(constant);
             else
-                view.WidthAnchor.ConstraintLessThanOrEqualToAnchor(secondView.WidthAnchor, multiplier, constant);
+                view.WidthAnchor.ConstraintLessThanOrEqualTo(secondView.WidthAnchor, multiplier, constant);
 
             return view;
         }
         public static View HeightEqualTo(this View view, View secondView, int constant = 0, float multiplier = 1f)
         {
-            view.HeightAnchor.ConstraintEqualToAnchor(secondView.HeightAnchor, multiplier, constant).SetActive();
+            view.HeightAnchor.ConstraintEqualTo(secondView.HeightAnchor, multiplier, constant).SetActive();
             return view;
         }
 
         public static View HeightEqualTo(this View view, int constant)
         {
-            view.HeightAnchor.ConstraintEqualToConstant(constant).SetActive();
+            view.HeightAnchor.ConstraintEqualTo(constant).SetActive();
             return view;
         }
 
         public static View MinHeight(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
         {
             if (secondView == null)
-                view.HeightAnchor.ConstraintGreaterThanOrEqualToConstant(constant);
+                view.HeightAnchor.ConstraintGreaterThanOrEqualTo(constant);
             else
-                view.HeightAnchor.ConstraintGreaterThanOrEqualToAnchor(secondView.HeightAnchor, multiplier, constant);
+                view.HeightAnchor.ConstraintGreaterThanOrEqualTo(secondView.HeightAnchor, multiplier, constant);
 
             return view;
         }
         public static View MaxHeight(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
         {
             if (secondView == null)
-                view.HeightAnchor.ConstraintLessThanOrEqualToConstant(constant);
+                view.HeightAnchor.ConstraintLessThanOrEqualTo(constant);
             else
-                view.HeightAnchor.ConstraintLessThanOrEqualToAnchor(secondView.HeightAnchor, multiplier, constant);
+                view.HeightAnchor.ConstraintLessThanOrEqualTo(secondView.HeightAnchor, multiplier, constant);
 
             return view;
         }
@@ -267,17 +269,17 @@ namespace Yang.Maui.Helper.Layouts
     /// 3. set.AddConnect();<br/>
     /// 4. set.ApplyTo(Page);<br/>
     /// </summary>
-    public class ConstrainSet
+    public class FluentConstraintSet
     {
         List<NSLayoutConstraint> Set = new List<NSLayoutConstraint>();
-        public ConstrainSet AddConnect(View view, NSLayoutAttribute firstSide, View secondView, NSLayoutAttribute secondSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
+        public FluentConstraintSet AddConnect(View view, NSLayoutAttribute firstSide, View secondView, NSLayoutAttribute secondSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
         {
             var constraint = NSLayoutConstraint.Create(view, firstSide, relation, secondView, secondSide, 1, margin);
             Set.Add(constraint);
             return this;
         }
 
-        public ConstrainSet AddConnect(View view, NSLayoutAttribute firstSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
+        public FluentConstraintSet AddConnect(View view, NSLayoutAttribute firstSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
         {
             var constraint = NSLayoutConstraint.Create(view, firstSide, relation, 1, margin);
             Set.Add(constraint);
@@ -289,12 +291,11 @@ namespace Yang.Maui.Helper.Layouts
         /// </summary>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        public ConstrainSet AddConnect(NSLayoutConstraint constraint)
+        public FluentConstraintSet AddConnect(NSLayoutConstraint constraint)
         {
             Set.Add(constraint);
             return this;
         }
-
         /// <summary>
         /// 激活约束并应用到View,移除和DeactivateView原有约束
         /// </summary>
@@ -324,7 +325,7 @@ namespace Yang.Maui.Helper.Layouts
         public void Clear(View view)
         {
             List<NSLayoutConstraint> constraints = new List<NSLayoutConstraint>();
-            foreach(var constraint in Set)
+            foreach (var constraint in Set)
             {
                 if (constraint.FirstItem == view)
                 {
@@ -334,13 +335,12 @@ namespace Yang.Maui.Helper.Layouts
                         throw new InvalidOperationException($"{Set}不包含{view}中某一项约束");
                 }
             }
-            
-            foreach(var constraint in constraints)
+
+            foreach (var constraint in constraints)
             {
                 Set.Remove(constraint);
             }
         }
+
     }
 }
-
-#endif

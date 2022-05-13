@@ -1,344 +1,424 @@
-﻿using System;
+//
+// Copyright (c) Krueger Systems, Inc.
+//
+// All right reserved.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+#nullable enable
+//https://github.com/praeclarum/EasyLayout
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using Foundation;
 using UIKit;
-using View = UIKit.UIView;
 
-namespace Yang.Maui.Helper.Layouts
+namespace EasyLayout
 {
-    public static class NSLayoutConstraintHelper
-    {
-
-        public static View AddSubviews(this View view,params View[] subviews)
-        {
-            foreach(var subview in subviews)
-            {
-                view.AddSubview(subview);
-            }
-            return view;
-        }
-
-        /// <summary>
-        /// Sets the priority(优先级).
-        /// See <see cref="NSLayoutConstraint.Priority"/><br/>
-        /// The priority of the constraint. Must be in range [0, UILayoutPriority.Required].
-        /// </summary>
-        /// <param name="constraint">The constraint.</param>
-        /// <param name="priority">The priority.</param>
-        /// <returns></returns>
-        public static NSLayoutConstraint SetPriority(this NSLayoutConstraint constraint, float priority)
-        {
-            constraint.Priority = priority;
-            return constraint;
-        }
-
-        /// <summary>
-        /// 设置Active必然设置true，因为不设置就不会激活
-        /// </summary>
-        /// <param name="constraint"></param>
-        /// <param name="thisView"></param>
-        /// <param name="active"></param>
-        /// <returns></returns>
-        public static View SetActive(this NSLayoutConstraint constraint, bool active = true)
-        {
-            constraint.Active = active;
-            return constraint.FirstItem as View;
-        }
-
-        /// <summary>
-        /// Sets the multiplier.
-        /// 有问题,慎用!!!.注意这个方法,因为Anchor约束里不能直接修改Multiplier,所以重新创建了一个约束.
-        /// See <see cref="https://stackoverflow.com/questions/19593641/can-i-change-multiplier-property-for-nslayoutconstraint/56574862#56574862"/>
-        /// </summary>
-        /// <param name="constraint">The constraint.</param>
-        /// <param name="multiplier">The multiplier.</param>
-        /// <returns></returns>
-        public static NSLayoutConstraint SetMultiplier(this NSLayoutConstraint constraint, float multiplier)
-        {
-            NSLayoutConstraint.DeactivateConstraints(new NSLayoutConstraint[] { constraint });
-            var newConstraint = NSLayoutConstraint.Create(
-                constraint.FirstItem,
-                constraint.FirstAttribute,
-                constraint.Relation,
-                constraint.SecondItem,
-                constraint.SecondAttribute,
-                multiplier,
-                constraint.Constant);
-            newConstraint.Priority = constraint.Priority;
-            newConstraint.ShouldBeArchived = constraint.ShouldBeArchived;
-            newConstraint.SetIdentifier(constraint.GetIdentifier());
-            var view = constraint.FirstItem as View;
-            //NSLayoutConstraint.ActivateConstraints(new NSLayoutConstraint[] { newConstraint });
-            return newConstraint;
-        }
-
-        /// <summary>
-        /// Sets the constant.
-        /// View1.attribute1 = multiplier × View2.attribute2 + constant.
-        /// </summary>
-        /// <param name="constraint">The constraint.</param>
-        /// <param name="constant">The constant.</param>
-        /// <returns></returns>
-        public static NSLayoutConstraint SetConstant(this NSLayoutConstraint constraint, float constant)
-        {
-            constraint.Constant = constant;
-            return constraint;
-        }
-
-        /// <summary>
-        /// 直接设置相对于父View四边的位置
-        /// 参考<see cref="https://github.com/roberthein/TinyConstraints"/>
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="superView"></param>
-        /// <param name="leftConstant"></param>
-        /// <param name="topConstant"></param>
-        /// <param name="rightConstant"></param>
-        /// <param name="bottomConstant"></param>
-        public static View EdgesToSuperView(this View view, View superView, int leftConstant = 0, int topConstant = 0, int rightConstant = 0, int bottomConstant = 0)
-        {
-            view.LeadingAnchor.ConstraintEqualTo(superView.LeadingAnchor, leftConstant).Active = true;
-            view.TopAnchor.ConstraintEqualTo(superView.TopAnchor, topConstant).Active = true;
-            view.TrailingAnchor.ConstraintEqualTo(superView.TrailingAnchor, rightConstant).Active = true;
-            view.BottomAnchor.ConstraintEqualTo(superView.BottomAnchor, bottomConstant).Active = true;
-            return view;
-        }
-
-        public static View CenterXTo(this View view, View secondView, int constant = 0)
-        {
-            view.CenterXAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
-            return view;
-        }
-        public static View CenterYTo(this View view, View secondView, int constant = 0)
-        {
-            view.CenterYAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View CenterTo(this View view, View secondView, int constant = 0)
-        {
-            view.CenterXAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
-            view.CenterYAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View LeftToLeft(this View view, View secondView, int constant = 0)
-        {
-            view.LeadingAnchor.ConstraintEqualTo(secondView.LeadingAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View LeftToCenter(this View view, View secondView, int constant = 0)
-        {
-            view.LeadingAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View LeftToRight(this View view, View secondView, int constant = 0)
-        {
-            view.LeadingAnchor.ConstraintEqualTo(secondView.TrailingAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View RightToLeft(this View view, View secondView, int constant = 0)
-        {
-            view.TrailingAnchor.ConstraintEqualTo(secondView.LeadingAnchor, constant).Active = true;
-            return view;
-        }
-        public static View RightToCenter(this View view, View secondView, int constant = 0)
-        {
-            view.TrailingAnchor.ConstraintEqualTo(secondView.CenterXAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View RightToRight(this View view, View secondView, int constant = 0)
-        {
-            view.TrailingAnchor.ConstraintEqualTo(secondView.TrailingAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View TopToTop(this View view, View secondView, int constant = 0)
-        {
-            view.TopAnchor.ConstraintEqualTo(secondView.TopAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View TopToCenter(this View view, View secondView, int constant = 0)
-        {
-            view.TopAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View TopToBottom(this View view, View secondView, int constant = 0)
-        {
-            view.TopAnchor.ConstraintEqualTo(secondView.BottomAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View BottomToTop(this View view, View secondView, int constant = 0)
-        {
-            view.BottomAnchor.ConstraintEqualTo(secondView.TopAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View BottomToCenter(this View view, View secondView, int constant = 0)
-        {
-            view.BottomAnchor.ConstraintEqualTo(secondView.CenterYAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View BottomToBottom(this View view, View secondView, int constant = 0)
-        {
-            view.BottomAnchor.ConstraintEqualTo(secondView.BottomAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View BaselineToBaseline(this View view, View secondView, int constant = 0)
-        {
-            view.FirstBaselineAnchor.ConstraintEqualTo(secondView.FirstBaselineAnchor, constant).Active = true;
-            return view;
-        }
-
-        public static View WidthEqualTo(this View view, View secondView, int constant = 0, float multiplier = 1f)
-        {
-            view.WidthAnchor.ConstraintEqualTo(secondView.WidthAnchor, multiplier, constant).SetActive();
-            return view;
-        }
-        public static View WidthEqualTo(this View view, int constant)
-        {
-            view.WidthAnchor.ConstraintEqualTo(constant).SetActive();
-            return view;
-        }
-
-        public static View MinWidth(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
-        {
-            if (secondView == null)
-                view.WidthAnchor.ConstraintGreaterThanOrEqualTo(constant);
-            else
-                view.WidthAnchor.ConstraintGreaterThanOrEqualTo(secondView.WidthAnchor, multiplier, constant);
-
-            return view;
-        }
-
-        public static View MaxWidth(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
-        {
-            if (secondView == null)
-                view.WidthAnchor.ConstraintLessThanOrEqualTo(constant);
-            else
-                view.WidthAnchor.ConstraintLessThanOrEqualTo(secondView.WidthAnchor, multiplier, constant);
-
-            return view;
-        }
-        public static View HeightEqualTo(this View view, View secondView, int constant = 0, float multiplier = 1f)
-        {
-            view.HeightAnchor.ConstraintEqualTo(secondView.HeightAnchor, multiplier, constant).SetActive();
-            return view;
-        }
-
-        public static View HeightEqualTo(this View view, int constant)
-        {
-            view.HeightAnchor.ConstraintEqualTo(constant).SetActive();
-            return view;
-        }
-
-        public static View MinHeight(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
-        {
-            if (secondView == null)
-                view.HeightAnchor.ConstraintGreaterThanOrEqualTo(constant);
-            else
-                view.HeightAnchor.ConstraintGreaterThanOrEqualTo(secondView.HeightAnchor, multiplier, constant);
-
-            return view;
-        }
-        public static View MaxHeight(this View view, int constant = 0, View secondView = null, float multiplier = 1f)
-        {
-            if (secondView == null)
-                view.HeightAnchor.ConstraintLessThanOrEqualTo(constant);
-            else
-                view.HeightAnchor.ConstraintLessThanOrEqualTo(secondView.HeightAnchor, multiplier, constant);
-
-            return view;
-        }
-    }
-
     /// <summary>
-    /// 模仿Android中的ConstraintLayout的ConstrainSet实现简单布局逻辑,用法基本相同<br/>
-    /// 步骤:<br/>
-    /// 1. var set = new ConstrainSet();<br/>
-    /// 2. set.Clone(Page);<br/>
-    /// 3. set.AddConnect();<br/>
-    /// 4. set.ApplyTo(Page);<br/>
+    /// Static class with extension methods to make using Auto Layout easier.
     /// </summary>
-    public class ConstrainSet
+    public static class Layout
     {
-        List<NSLayoutConstraint> Set = new List<NSLayoutConstraint>();
-        public ConstrainSet AddConnect(View view, NSLayoutAttribute firstSide, View secondView, NSLayoutAttribute secondSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
-        {
-            var constraint = NSLayoutConstraint.Create(view, firstSide, relation, secondView, secondSide, 1, margin);
-            Set.Add(constraint);
-            return this;
-        }
-
-        public ConstrainSet AddConnect(View view, NSLayoutAttribute firstSide, float margin, NSLayoutRelation relation = NSLayoutRelation.Equal)
-        {
-            var constraint = NSLayoutConstraint.Create(view, firstSide, relation, 1, margin);
-            Set.Add(constraint);
-            return this;
-        }
-
         /// <summary>
-        /// 需要使用Priority的使用该方法
+        /// <para>Constrains the layout of subviews according to equations and
+        /// inequalities specified in <paramref name="constraints"/> and adds
+        /// those constraints to the <paramref name="view"/>. Issue
+        /// multiple constraints per call using the &amp;&amp; operator.</para>
+        /// <para>e.g. button.Frame.Left &gt;= text.Frame.Right + 22 &amp;&amp;
+        /// button.Frame.Width == View.Frame.Width * 0.42f</para>
         /// </summary>
-        /// <param name="constraint"></param>
-        /// <returns></returns>
-        public ConstrainSet AddConnect(NSLayoutConstraint constraint)
+        /// <param name="view">The superview laying out the referenced subviews.</param>
+        /// <param name="constraints">Constraint equations and inequalities.</param>
+        public static void AddLayoutConstraints(this UIView view, Expression<Func<bool>> constraints)
         {
-            Set.Add(constraint);
-            return this;
-        }
-        /// <summary>
-        /// 激活约束并应用到View,移除和DeactivateView原有约束
-        /// </summary>
-        /// <param name="view"></param>
-        public void ApplyTo(View view)
-        {
-            NSLayoutConstraint.DeactivateConstraints(view.Constraints);
-            NSLayoutConstraint.ActivateConstraints(Set.ToArray());
-            view.RemoveConstraints(view.Constraints);
-            view.AddConstraints(Set.ToArray());
+            var cs = ConstrainLayout(view, constraints, UILayoutPriority.Required);
+            view.AddConstraints(cs);
         }
 
         /// <summary>
-        /// 复制View的约束
+        /// <para>Constrains the layout of subviews according to equations and
+        /// inequalities specified in <paramref name="constraints"/>.  Issue
+        /// multiple constraints per call using the &amp;&amp; operator.</para>
+        /// <para>e.g. button.Frame.Left &gt;= text.Frame.Right + 22 &amp;&amp;
+        /// button.Frame.Width == View.Frame.Width * 0.42f</para>
         /// </summary>
-        /// <param name="view"></param>
-        public void Clone(View view)
+        /// <param name="view">The superview laying out the referenced subviews.</param>
+        /// <param name="constraints">Constraint equations and inequalities.</param>
+        public static NSLayoutConstraint[] ConstrainLayout(this UIView view, Expression<Func<bool>> constraints)
         {
-            Set.Clear();
-            Set.AddRange(view.Constraints);
+            return ConstrainLayout(view, constraints, UILayoutPriority.Required);
         }
 
         /// <summary>
-        /// 去掉某一个View的约束
+        /// <para>Constrains the layout of subviews according to equations and
+        /// inequalities specified in <paramref name="constraints"/>.  Issue
+        /// multiple constraints per call using the &amp;&amp; operator.</para>
+        /// <para>e.g. button.Frame.Left &gt;= text.Frame.Right + 22 &amp;&amp;
+        /// button.Frame.Width == View.Frame.Width * 0.42f</para>
         /// </summary>
-        /// <param name="view"></param>
-        public void Clear(View view)
+        /// <param name="view">The superview laying out the referenced subviews.</param>
+        /// <param name="constraints">Constraint equations and inequalities.</param>
+        /// <param name = "priority">The priority of the constraints</param>
+        public static NSLayoutConstraint[] ConstrainLayout(this UIView view, Expression<Func<bool>> constraints, UILayoutPriority priority)
         {
-            List<NSLayoutConstraint> constraints = new List<NSLayoutConstraint>();
-            foreach(var constraint in Set)
+            var body = constraints.Body;
+
+            var exprs = new List<BinaryExpression>();
+            FindConstraints(body, exprs);
+
+            var layoutConstraints = exprs.Select(e => CompileConstraint(e, view)).ToArray();
+
+            if (layoutConstraints.Length > 0)
             {
-                if (constraint.FirstItem == view)
+                foreach (var c in layoutConstraints)
                 {
-                    if (Set.Contains(constraint))
-                        constraints.Add(constraint);
-                    else
-                        throw new InvalidOperationException($"{Set}不包含{view}中某一项约束");
+                    c.Priority = (float)priority;
+                }
+                view.AddConstraints(layoutConstraints);
+            }
+
+            return layoutConstraints;
+        }
+
+        static NSLayoutConstraint CompileConstraint(BinaryExpression expr, UIView constrainedView)
+        {
+            var rel = expr.NodeType switch
+            {
+                ExpressionType.Equal => NSLayoutRelation.Equal,
+                ExpressionType.LessThanOrEqual => NSLayoutRelation.LessThanOrEqual,
+                ExpressionType.GreaterThanOrEqual => NSLayoutRelation.GreaterThanOrEqual,
+                _ => throw new NotSupportedException("Not a valid relationship for a constrain."),
+            };
+
+            if (rel == NSLayoutRelation.Equal && IsAnchor(expr.Left) && IsAnchor(expr.Right))
+            {
+                return GetAnchorConstraint(expr);
+            }
+
+            var left = GetViewAndAttribute(expr.Left);
+            if (left.View != constrainedView && left.View is UIView lview)
+            {
+                lview.TranslatesAutoresizingMaskIntoConstraints = false;
+            }
+
+            var right = GetRight(expr.Right);
+
+            return NSLayoutConstraint.Create(
+                left.View, left.Attribute,
+                rel,
+                right.View, right.Attribute,
+                right.Item3, right.Item4);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Common Practices and Code Improvements", "RECS0093:Convert 'if' to '&&' expression", Justification = "Crazy unreadable")]
+        static (NSObject? View, NSLayoutAttribute Attribute, nfloat, nfloat) GetRight(Expression expr)
+        {
+            var r = expr;
+
+            NSObject? view = null;
+            var attr = NSLayoutAttribute.NoAttribute;
+            nfloat mul = 1;
+            nfloat add = 0;
+            var pos = true;
+
+            if (r.NodeType == ExpressionType.Add || r.NodeType == ExpressionType.Subtract)
+            {
+                var rb = (BinaryExpression)r;
+                if (IsConstant(rb.Left))
+                {
+                    add = ConstantValue(rb.Left);
+                    if (r.NodeType == ExpressionType.Subtract)
+                    {
+                        pos = false;
+                    }
+                    r = rb.Right;
+                }
+                else if (IsConstant(rb.Right))
+                {
+                    add = ConstantValue(rb.Right);
+                    if (r.NodeType == ExpressionType.Subtract)
+                    {
+                        add = -add;
+                    }
+                    r = rb.Left;
+                }
+                else
+                {
+                    throw new NotSupportedException("Addition only supports constants: " + rb.Right.NodeType);
                 }
             }
-            
-            foreach(var constraint in constraints)
+
+            if (r.NodeType == ExpressionType.Multiply)
             {
-                Set.Remove(constraint);
+                var rb = (BinaryExpression)r;
+                if (IsConstant(rb.Left))
+                {
+                    mul = ConstantValue(rb.Left);
+                    r = rb.Right;
+                }
+                else if (IsConstant(rb.Right))
+                {
+                    mul = ConstantValue(rb.Right);
+                    r = rb.Left;
+                }
+                else
+                {
+                    throw new NotSupportedException("Multiplication only supports constants.");
+                }
             }
+
+            if (IsConstant(r))
+            {
+                add = (nfloat)Convert.ToDouble(Eval(r));
+            }
+            else if (r.NodeType == ExpressionType.MemberAccess || r.NodeType == ExpressionType.Call || r.NodeType == ExpressionType.Convert)
+            {
+                var t = GetViewAndAttribute(r);
+                view = t.View;
+                attr = t.Attribute;
+            }
+            else
+            {
+                throw new NotSupportedException("Unsupported layout expression node type " + r.NodeType);
+            }
+
+            if (!pos)
+                mul = -mul;
+
+            return (view, attr, mul, add);
+        }
+
+        static bool IsConstant(Expression expr)
+        {
+            if (expr.NodeType == ExpressionType.Constant)
+                return true;
+
+            if (expr.NodeType == ExpressionType.MemberAccess)
+            {
+                var mexpr = (MemberExpression)expr;
+                var m = mexpr.Member;
+                if (m.MemberType == MemberTypes.Field)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            if (expr.NodeType == ExpressionType.Convert)
+            {
+                var cexpr = (UnaryExpression)expr;
+                return IsConstant(cexpr.Operand);
+            }
+
+            return false;
+        }
+
+        static float ConstantValue(Expression expr)
+        {
+            return Convert.ToSingle(Eval(expr));
+        }
+
+        static (NSObject View, NSLayoutAttribute Attribute) GetViewAndAttribute(Expression expr)
+        {
+            var attr = NSLayoutAttribute.NoAttribute;
+            MemberExpression? frameExpr = null;
+
+            if (expr is MethodCallExpression fExpr)
+            {
+                switch (fExpr.Method.Name)
+                {
+                    case "GetMidX":
+                    case "GetCenterX":
+                        attr = NSLayoutAttribute.CenterX;
+                        break;
+                    case "GetMidY":
+                    case "GetCenterY":
+                        attr = NSLayoutAttribute.CenterY;
+                        break;
+                    case "GetBaseline":
+                        attr = NSLayoutAttribute.Baseline;
+                        break;
+                    default:
+                        throw new NotSupportedException("Method " + fExpr.Method.Name + " is not recognized.");
+                }
+
+                frameExpr = fExpr.Arguments.FirstOrDefault() as MemberExpression;
+            }
+
+            if (attr == NSLayoutAttribute.NoAttribute)
+            {
+                var memExpr = expr as MemberExpression;
+                if (memExpr == null && expr.NodeType == ExpressionType.Convert && expr is UnaryExpression convert)
+                    memExpr = convert.Operand as MemberExpression;
+                if (memExpr == null)
+                    throw new NotSupportedException("Left hand side of a relation must be a member expression, instead it is " + expr);
+
+                switch (memExpr.Member.Name)
+                {
+                    case "Width":
+                        attr = NSLayoutAttribute.Width;
+                        break;
+                    case "Height":
+                        attr = NSLayoutAttribute.Height;
+                        break;
+                    case "Left":
+                    case "X":
+                        attr = NSLayoutAttribute.Left;
+                        break;
+                    case "Top":
+                    case "Y":
+                        attr = NSLayoutAttribute.Top;
+                        break;
+                    case "Right":
+                        attr = NSLayoutAttribute.Right;
+                        break;
+                    case "Bottom":
+                        attr = NSLayoutAttribute.Bottom;
+                        break;
+                    default:
+                        throw new NotSupportedException("Property " + memExpr.Member.Name + " is not recognized.");
+                }
+
+                frameExpr = memExpr.Expression as MemberExpression;
+            }
+
+            if (frameExpr == null)
+                throw new NotSupportedException("Constraints should use the Frame or Bounds property of views.");
+
+            var viewExpr = frameExpr.Expression;
+
+            if (!(Eval(viewExpr) is UIView view))
+                throw new NotSupportedException("Constraints only apply to views.");
+
+            if (frameExpr.Member.Name == "SafeAreaLayoutGuide")
+            {
+                return (view.SafeAreaLayoutGuide, attr);
+            }
+            else
+            {
+                return (view, attr);
+            }
+        }
+
+        static object Eval(Expression expr)
+        {
+            if (expr.NodeType == ExpressionType.Constant)
+            {
+                return ((ConstantExpression)expr).Value;
+            }
+
+            if (expr.NodeType == ExpressionType.MemberAccess)
+            {
+                var mexpr = (MemberExpression)expr;
+                var m = mexpr.Member;
+                if (m.MemberType == MemberTypes.Field)
+                {
+                    var f = (FieldInfo)m;
+                    var v = f.GetValue(mexpr.Expression != null ? Eval(mexpr.Expression) : null);
+                    return v;
+                }
+            }
+
+            if (expr.NodeType == ExpressionType.Convert)
+            {
+                var cexpr = (UnaryExpression)expr;
+                var op = Eval(cexpr.Operand);
+                if (cexpr.Method != null)
+                {
+                    return cexpr.Method.Invoke(null, new[] { op });
+                }
+                else
+                {
+                    return Convert.ChangeType(op, cexpr.Type);
+                }
+            }
+
+            return Expression.Lambda(expr).Compile().DynamicInvoke();
+        }
+
+        static void FindConstraints(Expression expr, List<BinaryExpression> constraintExprs)
+        {
+            if (!(expr is BinaryExpression b))
+                return;
+
+            if (b.NodeType == ExpressionType.AndAlso)
+            {
+                FindConstraints(b.Left, constraintExprs);
+                FindConstraints(b.Right, constraintExprs);
+            }
+            else
+            {
+                constraintExprs.Add(b);
+            }
+        }
+
+        static bool IsAnchor(Expression expr)
+        {
+            return expr is MemberExpression m && m.Member.Name.EndsWith("Anchor", StringComparison.Ordinal);
+        }
+
+        static NSObject? GetAnchor(Expression expr)
+        {
+            return Eval(expr) as NSObject;
+        }
+
+        static NSLayoutConstraint GetAnchorConstraint(BinaryExpression binary)
+        {
+            var left = GetAnchor(binary.Left);
+            var right = GetAnchor(binary.Right);
+            if (left != null && right != null)
+            {
+                var t = left.GetType();
+                var m = t.GetMethods().FirstOrDefault(x => x.Name == "ConstraintEqualTo" && x.GetParameters().Length == 1);
+                var r = (NSLayoutConstraint)m.Invoke(left, new object[] { right });
+                return r;
+            }
+            throw new Exception("Failed to get the left and right anchors from " + binary);
+        }
+
+        /// <summary>
+        /// The baseline of the view whose frame is viewFrame. Use only when defining constraints.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "It's documented that this function doesn't work")]
+        public static nfloat GetBaseline(this CoreGraphics.CGRect viewFrame)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// The x coordinate of the center of the frame.
+        /// </summary>
+        public static nfloat GetCenterX(this CoreGraphics.CGRect viewFrame)
+        {
+            return viewFrame.X + viewFrame.Width / 2;
+        }
+
+        /// <summary>
+        /// The y coordinate of the center of the frame.
+        /// </summary>
+        public static nfloat GetCenterY(this CoreGraphics.CGRect viewFrame)
+        {
+            return viewFrame.Y + viewFrame.Height / 2;
         }
     }
 }
