@@ -14,6 +14,7 @@ namespace Yang.Maui.Helper.Files
     public static partial class FileHelper
     {
         /// <summary>
+        /// At not Maui project.
         /// From Assets get stream. Android is Assets Foler, iOS is Resources Folder.
         /// </summary>
         /// <param name="name">Assets name,need extension name</param>

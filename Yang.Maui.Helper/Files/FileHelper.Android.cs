@@ -1,19 +1,8 @@
 using Android.App;
-using Android.Content;
-using Android.Database;
-using Android.OS;
-using Android.Provider;
-using Android.Text;
-using Android.Util;
-using Android.Widget;
-using System;
 using System.IO;
-using Environment = Android.OS.Environment;
-using Uri = Android.Net.Uri;
 
 namespace Yang.Maui.Helper.Files
 {
-
     public static partial class FileHelper
     {
         /// <summary>
@@ -34,6 +23,7 @@ namespace Yang.Maui.Helper.Files
         }
 
         /// <summary>
+        /// At not Maui project.
         /// From Assets get stream. Android is Assets Foler, iOS is Resources Folder.
         /// <see href="https://www.jianshu.com/p/eb757835b6d9"></see>
         /// </summary>
@@ -44,7 +34,5 @@ namespace Yang.Maui.Helper.Files
         {
             return context.Assets.Open(assetName);
         }
-
     }
-
 }

@@ -1,13 +1,13 @@
-﻿
+﻿using Microsoft.Maui.Storage;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Yang.Maui.Helper.Logs;
 
 namespace Yang.Maui.Helper.Files
 {
     public static partial class FileHelper
     {
-
         /// <summary>
         /// 保存数据流到文件
         /// </summary>
@@ -94,6 +94,15 @@ namespace Yang.Maui.Helper.Files
             }
             return isSaved;
         }
-    }
 
+        /// <summary>
+        /// 从Maui项目的Resources/Fonts文件夹读取字体文件, 其读取实际和Raw文件夹一样
+        /// </summary>
+        /// <param name="fileFullName"></param>
+        /// <returns></returns>
+        public static Task<Stream> LoadMauiFont(string fileFullName)
+        {
+            return FileSystem.OpenAppPackageFileAsync(fileFullName);
+        }
+    }
 }

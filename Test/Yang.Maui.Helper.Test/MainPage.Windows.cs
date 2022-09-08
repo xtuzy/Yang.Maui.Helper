@@ -10,38 +10,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
+using Yang.Maui.Helper.Files;
+using Yang.Maui.Helper.Test.Tests;
 
 namespace Yang.Maui.Helper.Test
 {
     public class MainPage : StackPanel
     {
-        private Button MainButton;
-
         public MainPage()
         {
             this.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.HotPink);
             Orientation = Orientation.Vertical;
             HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center;
             VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center;
-            MainButton = new Button()
+            
+            var fileHeperTestButton = new Button()
             {
-                Content = "Click it.",
+                Content = "FileHelperTest",
             };
-            MainButton.Click += MainButton_Click;
-            this.Children.Add(MainButton);
-            LoadMauiAsset();
-        }
+            fileHeperTestButton.Click += (sender, e) =>
+            {
+                new FileHelperTest();
+            };
 
-        private void MainButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            Debug.WriteLine("Hello");
+            this.Children.Add(fileHeperTestButton);
         }
-
-        async Task LoadMauiAsset()
-        {
-            using var stream = await FileSystem.OpenAppPackageFileAsync("favorite_black_24dp.svg");
-            System.Diagnostics.Debug.WriteLine($"svg size:{stream.Length}");
-        }
-
     }
 }
