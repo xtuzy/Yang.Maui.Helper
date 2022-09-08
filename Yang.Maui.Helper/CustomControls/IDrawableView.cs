@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui;
 using Microsoft.Maui.Graphics;
 
-namespace Yang.Maui.Helper.CustomControls.DrawableView
+namespace Yang.Maui.Helper.CustomControls
 {
     public interface IDrawableView : IView
     {
@@ -28,6 +28,6 @@ namespace Yang.Maui.Helper.CustomControls.DrawableView
         void OnTouchMove(Point point);
         void OnTouchUp(Point point);
 
-        void OnDraw(object? sender, PlatformDrawEventArgs e);
+        void OnDraw(object sender, PlatformDrawEventArgs e);
     }
 }

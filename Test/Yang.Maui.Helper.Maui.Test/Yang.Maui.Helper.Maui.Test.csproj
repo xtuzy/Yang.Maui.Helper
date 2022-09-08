@@ -48,4 +48,12 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Yang.Maui.Helper\Yang.Maui.Helper.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.Graphics;
 
-namespace Yang.Maui.Helper.CustomControls.DrawableView
+namespace Yang.Maui.Helper.CustomControls.Handlers
 {
     public partial class DrawableViewHandler : ViewHandler<IDrawableView, PlatformDrawableView>
     {

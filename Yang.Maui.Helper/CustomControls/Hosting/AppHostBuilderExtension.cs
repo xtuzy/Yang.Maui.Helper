@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Hosting;
-using CpuView = Yang.Maui.Helper.CustomControls.DrawableView.DrawableView;
-using CpuViewHandler = Yang.Maui.Helper.CustomControls.DrawableView.DrawableViewHandler;
+using CpuView = Yang.Maui.Helper.CustomControls.DrawableView;
+using CpuViewHandler = Yang.Maui.Helper.CustomControls.Handlers.DrawableViewHandler;
 namespace Yang.Maui.Helper.CustomControls.Hosting
 {
     public static class AppHostBuilderExtension

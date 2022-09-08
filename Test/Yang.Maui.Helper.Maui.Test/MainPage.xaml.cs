@@ -1,24 +1,28 @@
-﻿namespace Yang.Maui.Helper.Maui.Test
+﻿using Android.OS;
+using SkiaSharp;
+using SkiaSharp.Views.Maui.Controls;
+using Yang.Maui.Helper.SkiaExtension;
+
+namespace Yang.Maui.Helper.Maui.Test
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void DrawText_Clicked(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            var skCanvasView = new SKCanvasView() { WidthRequest= 500, HeightRequest=1000};
+            container.Content = skCanvasView;
+            skCanvasView.PaintSurface += (sender, e) =>
+            {
+                var skCanvas = e.Surface.Canvas;
+                var canvas = new AndroidCanvas(skCanvas);
+                canvas.DrawColor(SKColors.White);
+                canvas.DrawText("Hello", 50, 50, new SKPaint());
+            };
         }
     }
 }

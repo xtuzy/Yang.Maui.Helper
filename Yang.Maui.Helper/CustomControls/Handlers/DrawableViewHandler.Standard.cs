@@ -2,7 +2,7 @@
 using Microsoft.Maui.Handlers;
 using System;
 
-namespace Yang.Maui.Helper.CustomControls.DrawableView
+namespace Yang.Maui.Helper.CustomControls.Handlers
 {
     public partial class DrawableViewHandler : ViewHandler<IDrawableView, object>
     {

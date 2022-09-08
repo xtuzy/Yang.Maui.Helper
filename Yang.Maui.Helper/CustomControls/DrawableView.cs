@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
-namespace Yang.Maui.Helper.CustomControls.DrawableView
+namespace Yang.Maui.Helper.CustomControls
 {
     public class DrawableView : ContentView, IDrawableView
     {

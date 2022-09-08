@@ -11,7 +11,7 @@ using APointF = Android.Graphics.PointF;
 using View = Android.Views.View;
 using Microsoft.Maui.Graphics;
 
-namespace Yang.Maui.Helper.CustomControls.DrawableView
+namespace Yang.Maui.Helper.CustomControls.Handlers
 {
     public partial class DrawableViewHandler : ViewHandler<IDrawableView, PlatformDrawableView>
     {
