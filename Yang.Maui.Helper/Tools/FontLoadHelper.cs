@@ -13,17 +13,18 @@ namespace Yang.Maui.Helper.Tools
     public class FontLoadHelper
     {
         static List<string> SystemFonts;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="font">可以是纯名字,可以是带后缀,可以是路径</param>
-        /// <returns></returns>
+        
         public FontLoadHelper()
         {
             if (SystemFonts == null)
                 SystemFonts = SKFontManager.Default.FontFamilies.ToList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="font">可以是纯名字,可以是带后缀,可以是路径</param>
+        /// <returns></returns>
         async Task<SKTypeface> Load(string font)
         {
             var skFontManager = SKFontManager.Default;
