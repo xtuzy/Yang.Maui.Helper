@@ -70,6 +70,7 @@
   <ItemGroup>
     <Folder Include="Platforms\iOS\Controllers\" />
     <Folder Include="Platforms\Windows\" />
+    <Folder Include="Canvas\" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.19041'">
