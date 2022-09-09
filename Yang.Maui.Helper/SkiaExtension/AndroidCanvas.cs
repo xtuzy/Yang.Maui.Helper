@@ -41,144 +41,78 @@ namespace Yang.Maui.Helper.SkiaExtension
             ClipPath(path, RegionOp.DIFFERENCE);
         }
 
-        //
-        // 摘要:
-        //     Set the clip to the difference of the current clip and the specified rectangle,
-        //     which is expressed in local coordinates.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle used in the difference operation
-        //
-        //   top:
-        //     The top of the rectangle used in the difference operation
-        //
-        //   right:
-        //     The right side of the rectangle used in the difference operation
-        //
-        //   bottom:
-        //     The bottom of the rectangle used in the difference operation
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+        /// <summary>
+        /// Set the clip to the difference of the current clip and the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle used in the difference operation</param>
+        /// <param name="top">The top of the rectangle used in the difference operation</param>
+        /// <param name="right">The right side of the rectangle used in the difference operation</param>
+        /// <param name="bottom">The bottom of the rectangle used in the difference operation</param>
         public virtual void ClipOutRect(int left, int top, int right, int bottom)
         {
-            SKCanvas.ClipRect(new RectF(left, top, right, bottom), SKClipOperation.Difference);
+            SKCanvas.ClipRect(new RectF(left, top, right, bottom), SKClipOperation.Difference, true);
         }
-        //
-        // 摘要:
-        //     Set the clip to the difference of the current clip and the specified rectangle,
-        //     which is expressed in local coordinates.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle used in the difference operation
-        //
-        //   top:
-        //     The top of the rectangle used in the difference operation
-        //
-        //   right:
-        //     The right side of the rectangle used in the difference operation
-        //
-        //   bottom:
-        //     The bottom of the rectangle used in the difference operation
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Set the clip to the difference of the current clip and the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle used in the difference operation</param>
+        /// <param name="top">The top of the rectangle used in the difference operation</param>
+        /// <param name="right">The right side of the rectangle used in the difference operation</param>
+        /// <param name="bottom">The bottom of the rectangle used in the difference operation</param>
         public virtual void ClipOutRect(float left, float top, float right, float bottom)
         {
             SKCanvas.ClipRect(new RectF(left, top, right, bottom), SKClipOperation.Difference);
         }
-        //
-        // 摘要:
-        //     Set the clip to the difference of the current clip and the specified rectangle,
-        //     which is expressed in local coordinates.
-        //
-        // 参数:
-        //   rect:
-        //     The rectangle to perform a difference op with the current clip.
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Set the clip to the difference of the current clip and the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="rect">The rectangle to perform a difference op with the current clip.</param>
         public virtual void ClipOutRect(RectF rect)
         {
             SKCanvas.ClipRect(rect, SKClipOperation.Difference);
         }
-        //
-        // 摘要:
-        //     Set the clip to the difference of the current clip and the specified rectangle,
-        //     which is expressed in local coordinates.
-        //
-        // 参数:
-        //   rect:
-        //     The rectangle to perform a difference op with the current clip.
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Set the clip to the difference of the current clip and the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="rect">The rectangle to perform a difference op with the current clip.</param>
         public virtual void ClipOutRect(Rect rect)
         {
             SKCanvas.ClipRect(rect, SKClipOperation.Difference);
         }
         [Obsolete("deprecated")]
         public virtual void ClipPath(Path path, RegionOp op) { throw new NotImplementedException(nameof(ClipRect)); }
-        //
-        // 摘要:
-        //     Intersect the current clip with the specified path.
-        //
-        // 参数:
-        //   path:
-        //     The path to intersect with the current clip
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Intersect the current clip with the specified path.
+        /// </summary>
+        /// <param name="path">The path to intersect with the current clip</param>
         public virtual void ClipPath(Path path)
         {
             SKCanvas.ClipPath(path, SKClipOperation.Intersect);
         }
-        //
-        // 摘要:
-        //     Intersect the current clip with the specified rectangle, which is expressed in
-        //     local coordinates.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle to intersect with the current clip
-        //
-        //   top:
-        //     The top of the rectangle to intersect with the current clip
-        //
-        //   right:
-        //     The right side of the rectangle to intersect with the current clip
-        //
-        //   bottom:
-        //     The bottom of the rectangle to intersect with the current clip
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Intersect the current clip with the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle to intersect with the current clip</param>
+        /// <param name="top">The top of the rectangle to intersect with the current clip</param>
+        /// <param name="right">The right side of the rectangle to intersect with the current clip</param>
+        /// <param name="bottom">The bottom of the rectangle to intersect with the current clip</param>
         public virtual void ClipRect(int left, int top, int right, int bottom)
         {
             SKCanvas.ClipRect(new Rect(left, top, right, bottom), SKClipOperation.Intersect);
         }
-        //
-        // 摘要:
-        //     Intersect the current clip with the specified rectangle, which is expressed in
-        //     local coordinates.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle to intersect with the current clip
-        //
-        //   top:
-        //     The top of the rectangle to intersect with the current clip
-        //
-        //   right:
-        //     The right side of the rectangle to intersect with the current clip
-        //
-        //   bottom:
-        //     The bottom of the rectangle to intersect with the current clip
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Intersect the current clip with the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle to intersect with the current clip</param>
+        /// <param name="top">The top of the rectangle to intersect with the current clip</param>
+        /// <param name="right">The right side of the rectangle to intersect with the current clip</param>
+        /// <param name="bottom">The bottom of the rectangle to intersect with the current clip</param>
         public virtual void ClipRect(float left, float top, float right, float bottom)
         {
             SKCanvas.ClipRect(new RectF(left, top, right, bottom), SKClipOperation.Intersect);
@@ -198,17 +132,11 @@ namespace Yang.Maui.Helper.SkiaExtension
 
         [Obsolete("deprecated")]
         public virtual bool ClipRect(Rect rect, RegionOp op) { throw new NotImplementedException(nameof(ClipRect)); }
-        //
-        // 摘要:
-        //     Intersect the current clip with the specified rectangle, which is expressed in
-        //     local coordinates.
-        //
-        // 参数:
-        //   rect:
-        //     The rectangle to intersect with the current clip.
-        //
-        // 返回结果:
-        //     true if the resulting clip is non-empty
+
+        /// <summary>
+        /// Intersect the current clip with the specified rectangle, which is expressed in local coordinates.
+        /// </summary>
+        /// <param name="rect">The rectangle to intersect with the current clip.</param>
         public virtual void ClipRect(Rect rect)
         {
             SKCanvas.ClipRect(rect, SKClipOperation.Intersect);
@@ -217,25 +145,20 @@ namespace Yang.Maui.Helper.SkiaExtension
         public virtual bool ClipRect(float left, float top, float right, float bottom, RegionOp op) { throw new NotImplementedException(nameof(ClipRect)); }
         [Obsolete("deprecated")]
         public virtual bool ClipRegion(Region? region, RegionOp? op) { throw new NotImplementedException(nameof(ClipRegion)); }
-        //
-        // 摘要:
-        //     Intersect the current clip with the specified region.
-        //
-        // 参数:
-        //   region:
-        //     The region to operate on the current clip, based on op
-        //
-        // 返回结果:
-        //     To be added.
+
+        /// <summary>
+        /// Intersect the current clip with the specified region.
+        /// </summary>
+        /// <param name="region">The region to operate on the current clip, based on op</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         [Obsolete("deprecated")]
         public virtual bool ClipRegion(Region? region) { throw new NotImplementedException(nameof(ClipRegion)); }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified matrix.
-        //
-        // 参数:
-        //   matrix:
-        //     The matrix to preconcatenate with the current matrix
+
+        /// <summary>
+        /// Preconcat the current matrix with the specified matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to preconcatenate with the current matrix</param>
         public virtual void Concat(ref Matrix matrix)
         {
             SKCanvas.Concat(ref matrix);
@@ -247,136 +170,72 @@ namespace Yang.Maui.Helper.SkiaExtension
         //     visually reordered or having shadows rendered.
         public virtual void DisableZ() { throw new NotImplementedException(); }
 
-        //
-        // 摘要:
-        //     Draw the specified arc, which will be scaled to fit inside the specified oval.
-        //
-        // 参数:
-        //   oval:
-        //     The bounds of oval used to define the shape and size of the arc
-        //
-        //   startAngle:
-        //     Starting angle (in degrees) where the arc begins
-        //
-        //   sweepAngle:
-        //     Sweep angle (in degrees) measured clockwise
-        //
-        //   useCenter:
-        //     If true, include the center of the oval in the arc, and close it if it is being
-        //     stroked. This will draw a wedge
-        //
-        //   paint:
-        //     The paint used to draw the arc
+        /// <summary>
+        /// Draw the specified arc, which will be scaled to fit inside the specified oval.
+        /// </summary>
+        /// <param name="oval">The bounds of oval used to define the shape and size of the arc</param>
+        /// <param name="startAngle">Starting angle (in degrees) where the arc begins</param>
+        /// <param name="sweepAngle">Sweep angle (in degrees) measured clockwise</param>
+        /// <param name="useCenter">If true, include the center of the oval in the arc, and close it if it is being stroked. This will draw a wedge</param>
+        /// <param name="paint">The paint used to draw the arc</param>
         public virtual void DrawArc(RectF oval, float startAngle, float sweepAngle, bool useCenter, Paint paint)
         {
             SKCanvas.DrawArc(oval, startAngle, sweepAngle, useCenter, paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified arc, which will be scaled to fit inside the specified oval.
-        //
-        // 参数:
-        //   left:
-        //     To be added.
-        //
-        //   top:
-        //     To be added.
-        //
-        //   right:
-        //     To be added.
-        //
-        //   bottom:
-        //     To be added.
-        //
-        //   startAngle:
-        //     Starting angle (in degrees) where the arc begins
-        //
-        //   sweepAngle:
-        //     Sweep angle (in degrees) measured clockwise
-        //
-        //   useCenter:
-        //     If true, include the center of the oval in the arc, and close it if it is being
-        //     stroked. This will draw a wedge
-        //
-        //   paint:
-        //     The paint used to draw the arc
+          
+        /// <summary>
+        /// Draw the specified arc, which will be scaled to fit inside the specified oval.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="right"></param>
+        /// <param name="bottom"></param>
+        /// <param name="startAngle">Starting angle (in degrees) where the arc begins</param>
+        /// <param name="sweepAngle">Sweep angle (in degrees) measured clockwise</param>
+        /// <param name="useCenter">If true, include the center of the oval in the arc, and close it if it is being stroked. This will draw a wedge</param>
+        /// <param name="paint">The paint used to draw the arc</param>
         public virtual void DrawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, bool useCenter, Paint paint)
         {
             DrawArc(new RectF(left, top, right, bottom), startAngle, sweepAngle, useCenter, paint);
         }
-        //
-        // 摘要:
-        //     Fill the entire canvas' bitmap (restricted to the current clip) with the specified
-        //     ARGB color, using srcover porterduff mode.
-        //
-        // 参数:
-        //   a:
-        //     alpha component (0..255) of the color to draw onto the canvas
-        //
-        //   r:
-        //     red component (0..255) of the color to draw onto the canvas
-        //
-        //   g:
-        //     green component (0..255) of the color to draw onto the canvas
-        //
-        //   b:
-        //     blue component (0..255) of the color to draw onto the canvas
+  
+        /// <summary>
+        /// Fill the entire canvas' bitmap (restricted to the current clip) with the specified ARGB color, using srcover porterduff mode.
+        /// </summary>
+        /// <param name="a">alpha component (0..255) of the color to draw onto the canvas</param>
+        /// <param name="r">red component (0..255) of the color to draw onto the canvas</param>
+        /// <param name="g">green component (0..255) of the color to draw onto the canvas</param>
+        /// <param name="b">blue component (0..255) of the color to draw onto the canvas</param>
         public virtual void DrawARGB(int a, int r, int g, int b)
         {
             DrawColor(new SKColor((byte)r, (byte)g, (byte)b, (byte)a));
         }
-        //
-        // 摘要:
-        //     Draw the specified bitmap, scaling/translating automatically to fill the destination
-        //     rectangle.
-        //
-        // 参数:
-        //   bitmap:
-        //     The bitmap to be drawn
-        //
-        //   src:
-        //     May be null. The subset of the bitmap to be drawn
-        //
-        //   dst:
-        //     The rectangle that the bitmap will be scaled/translated to fit into
-        //
-        //   paint:
-        //     May be null. The paint used to draw the bitmap
+  
+        /// <summary>
+        /// Draw the specified bitmap, scaling/translating automatically to fill the destination rectangle.
+        /// </summary>
+        /// <param name="bitmap">The bitmap to be drawn</param>
+        /// <param name="src">May be null. The subset of the bitmap to be drawn</param>
+        /// <param name="dst">The rectangle that the bitmap will be scaled/translated to fit into</param>
+        /// <param name="paint">May be null. The paint used to draw the bitmap</param>
         public virtual void DrawBitmap(Bitmap bitmap, Rect src, RectF dst, Paint? paint)
         {
             SKCanvas.DrawBitmap(bitmap, src, dst, paint);
         }
-        //
-        // 摘要:
-        //     Legacy version of drawBitmap(int[] colors, .
-        //
-        // 参数:
-        //   colors:
-        //     To be added.
-        //
-        //   offset:
-        //     To be added.
-        //
-        //   stride:
-        //     To be added.
-        //
-        //   x:
-        //     To be added.
-        //
-        //   y:
-        //     To be added.
-        //
-        //   width:
-        //     To be added.
-        //
-        //   height:
-        //     To be added.
-        //
-        //   hasAlpha:
-        //     To be added.
-        //
-        //   paint:
-        //     The paint used to draw the bitmap (may be null)
+
+        /// <summary>
+        /// Legacy version of drawBitmap(int[] colors, .
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="offset"></param>
+        /// <param name="stride"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="hasAlpha"></param>
+        /// <param name="paint"></param>
+        /// <exception cref="NotImplementedException"></exception>
         [Obsolete("deprecated")]
         public virtual void DrawBitmap(int[] colors, int offset, int stride, int x, int y, int width, int height, bool hasAlpha, Paint? paint) { throw new NotImplementedException(nameof(DrawBitmap)); }
         //
@@ -414,44 +273,26 @@ namespace Yang.Maui.Helper.SkiaExtension
         //     The paint used to draw the bitmap (may be null)
         [Obsolete("deprecated")]
         public virtual void DrawBitmap(int[] colors, int offset, int stride, float x, float y, int width, int height, bool hasAlpha, Paint? paint) { throw new NotImplementedException(nameof(DrawBitmap)); }
-        //
-        // 摘要:
-        //     Draw the specified bitmap, with its top/left corner at (x,y), using the specified
-        //     paint, transformed by the current matrix.
-        //
-        // 参数:
-        //   bitmap:
-        //     The bitmap to be drawn
-        //
-        //   left:
-        //     The position of the left side of the bitmap being drawn
-        //
-        //   top:
-        //     The position of the top side of the bitmap being drawn
-        //
-        //   paint:
-        //     The paint used to draw the bitmap (may be null)
+
+        /// <summary>
+        /// Draw the specified bitmap, with its top/left corner at (x,y), using the specified paint, transformed by the current matrix.
+        /// </summary>
+        /// <param name="bitmap">The bitmap to be drawn</param>
+        /// <param name="left">The position of the left side of the bitmap being drawn</param>
+        /// <param name="top">The position of the top side of the bitmap being drawn</param>
+        /// <param name="paint">The paint used to draw the bitmap (may be null)</param>
         public virtual void DrawBitmap(Bitmap bitmap, float left, float top, Paint? paint)
         {
             SKCanvas.DrawBitmap(bitmap, left, top, paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified bitmap, scaling/translating automatically to fill the destination
-        //     rectangle.
-        //
-        // 参数:
-        //   bitmap:
-        //     The bitmap to be drawn
-        //
-        //   src:
-        //     May be null. The subset of the bitmap to be drawn
-        //
-        //   dst:
-        //     The rectangle that the bitmap will be scaled/translated to fit into
-        //
-        //   paint:
-        //     May be null. The paint used to draw the bitmap
+ 
+        /// <summary>
+        /// Draw the specified bitmap, scaling/translating automatically to fill the destination rectangle.
+        /// </summary>
+        /// <param name="bitmap">The bitmap to be drawn</param>
+        /// <param name="src">May be null. The subset of the bitmap to be drawn</param>
+        /// <param name="dst">The rectangle that the bitmap will be scaled/translated to fit into</param>
+        /// <param name="paint">May be null. The paint used to draw the bitmap</param>
         public virtual void DrawBitmap(Bitmap bitmap, Rect? src, Rect dst, Paint? paint)
         {
             int left, top, right, bottom;
@@ -518,22 +359,14 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     May be null. The paint used to draw the bitmap
         public virtual void DrawBitmapMesh(Bitmap bitmap, int meshWidth, int meshHeight, float[] verts, int vertOffset, int[]? colors, int colorOffset, Paint? paint) { throw new NotImplementedException(); }
-        //
-        // 摘要:
-        //     Draw the specified circle using the specified paint.
-        //
-        // 参数:
-        //   cx:
-        //     The x-coordinate of the center of the cirle to be drawn
-        //
-        //   cy:
-        //     The y-coordinate of the center of the cirle to be drawn
-        //
-        //   radius:
-        //     The radius of the cirle to be drawn
-        //
-        //   paint:
-        //     The paint used to draw the circle
+ 
+        /// <summary>
+        /// Draw the specified circle using the specified paint.
+        /// </summary>
+        /// <param name="cx">The x-coordinate of the center of the cirle to be drawn</param>
+        /// <param name="cy">The y-coordinate of the center of the cirle to be drawn</param>
+        /// <param name="radius">The radius of the cirle to be drawn</param>
+        /// <param name="paint">The paint used to draw the circle</param>
         public virtual void DrawCircle(float cx, float cy, float radius, Paint paint)
         {
             SKCanvas.DrawCircle(cx, cy, radius, paint);
@@ -551,29 +384,21 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   mode:
         //     the blendmode to apply to the color
         public virtual void DrawColor(long color, BlendMode mode) { throw new NotImplementedException(nameof(DrawColor)); }
-        //
-        // 摘要:
-        //     Fill the entire canvas' bitmap (restricted to the current clip) with the specified
-        //     color, using srcover porterduff mode.
-        //
-        // 参数:
-        //   color:
-        //     the color to draw onto the canvas
+ 
+        /// <summary>
+        /// Fill the entire canvas' bitmap (restricted to the current clip) with the specified color, using srcover porterduff mode.
+        /// </summary>
+        /// <param name="color">the color to draw onto the canvas</param>
         public virtual void DrawColor(Color color)
         {
             SKCanvas.DrawColor(color, BlendMode.SrcOver);
         }
-        //
-        // 摘要:
-        //     Fill the entire canvas' bitmap (restricted to the current clip) with the specified
-        //     color and blendmode.
-        //
-        // 参数:
-        //   color:
-        //     the color to draw onto the canvas
-        //
-        //   mode:
-        //     the blendmode to apply to the color
+  
+        /// <summary>
+        /// Fill the entire canvas' bitmap (restricted to the current clip) with the specified color and blendmode.
+        /// </summary>
+        /// <param name="color">the color to draw onto the canvas</param>
+        /// <param name="mode">the blendmode to apply to the color</param>
         public virtual void DrawColor(Color color, BlendMode mode)
         {
             SKCanvas.DrawColor(color, mode);
@@ -675,40 +500,25 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     Paint used for drawing. The typeface set to this paint is ignored.
         public virtual void DrawGlyphs(int[] glyphIds, int glyphIdOffset, float[] positions, int positionOffset, int glyphCount, Font font, Paint paint) { throw new NotImplementedException(nameof(DrawGlyphs)); }
-        //
-        // 摘要:
-        //     Draw a line segment with the specified start and stop x,y coordinates, using
-        //     the specified paint.
-        //
-        // 参数:
-        //   stopX:
-        //     To be added.
-        //
-        //   stopY:
-        //     To be added.
-        //
-        //   startX:
-        //     The x-coordinate of the start point of the line
-        //
-        //   startY:
-        //     The y-coordinate of the start point of the line
-        //
-        //   paint:
-        //     The paint used to draw the line
+ 
+        /// <summary>
+        /// Draw a line segment with the specified start and stop x,y coordinates, using the specified paint.
+        /// </summary>
+        /// <param name="startX">The x-coordinate of the start point of the line</param>
+        /// <param name="startY">The y-coordinate of the start point of the line</param>
+        /// <param name="stopX"></param>
+        /// <param name="stopY"></param>
+        /// <param name="paint">The paint used to draw the line</param>
         public virtual void DrawLine(float startX, float startY, float stopX, float stopY, Paint paint)
         {
             SKCanvas.DrawLine(startX, startY, stopX, stopY, paint);
         }
-        //
-        // 摘要:
-        //     Draw a series of lines.
-        //
-        // 参数:
-        //   pts:
-        //     Array of points to draw [x0 y0 x1 y1 x2 y2 ...]
-        //
-        //   paint:
-        //     The paint used to draw the points
+
+        /// <summary>
+        /// Draw a series of lines.
+        /// </summary>
+        /// <param name="pts">Array of points to draw [x0 y0 x1 y1 x2 y2 ...]</param>
+        /// <param name="paint">The paint used to draw the points</param>
         public virtual void DrawLines(float[] pts, Paint paint)
         {
             var points = new SKPoint[pts.Length / 2];
@@ -737,51 +547,34 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     The paint used to draw the points
         public virtual void DrawLines(float[] pts, int offset, int count, Paint paint) { throw new NotImplementedException(nameof(DrawLines)); }
-        //
-        // 摘要:
-        //     Draw the specified oval using the specified paint.
-        //
-        // 参数:
-        //   paint:
-        //     To be added.
-        //
-        //   oval:
-        //     The rectangle bounds of the oval to be drawn
+
+        /// <summary>
+        /// Draw the specified oval using the specified paint.
+        /// </summary>
+        /// <param name="oval"></param>
+        /// <param name="paint">The rectangle bounds of the oval to be drawn</param>
         public virtual void DrawOval(RectF oval, Paint paint)
         {
             SKCanvas.DrawOval(oval, paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified oval using the specified paint.
-        //
-        // 参数:
-        //   left:
-        //     To be added.
-        //
-        //   top:
-        //     To be added.
-        //
-        //   right:
-        //     To be added.
-        //
-        //   bottom:
-        //     To be added.
-        //
-        //   paint:
-        //     To be added.
+
+        /// <summary>
+        /// Draw the specified oval using the specified paint.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="right"></param>
+        /// <param name="bottom"></param>
+        /// <param name="paint"></param>
         public virtual void DrawOval(float left, float top, float right, float bottom, Paint paint)
         {
             SKCanvas.DrawOval(new RectF(left, right, top, bottom), paint);
         }
-        //
-        // 摘要:
-        //     Fill the entire canvas' bitmap (restricted to the current clip) with the specified
-        //     paint.
-        //
-        // 参数:
-        //   paint:
-        //     The paint used to draw onto the canvas
+ 
+        /// <summary>
+        /// Fill the entire canvas' bitmap (restricted to the current clip) with the specified paint.
+        /// </summary>
+        /// <param name="paint">The paint used to draw onto the canvas</param>
         public virtual void DrawPaint(Paint paint)
         {
             SKCanvas.DrawPaint(paint);
@@ -814,27 +607,21 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     The paint to draw the bitmap with. may be null
         public virtual void DrawPatch(NinePatch patch, Rect dst, Paint? paint) { throw new NotImplementedException(nameof(DrawPatch)); }
-        //
-        // 摘要:
-        //     Draw the specified path using the specified paint.
-        //
-        // 参数:
-        //   path:
-        //     The path to be drawn
-        //
-        //   paint:
-        //     The paint used to draw the path
+  
+        /// <summary>
+        /// Draw the specified path using the specified paint.
+        /// </summary>
+        /// <param name="path">The path to be drawn</param>
+        /// <param name="paint">The paint used to draw the path</param>
         public virtual void DrawPath(Path path, Paint paint)
         {
             SKCanvas.DrawPath(path, paint);
         }
-        //
-        // 摘要:
-        //     Save the canvas state, draw the picture, and restore the canvas state.
-        //
-        // 参数:
-        //   picture:
-        //     The picture to be drawn
+   
+        /// <summary>
+        /// Save the canvas state, draw the picture, and restore the canvas state.
+        /// </summary>
+        /// <param name="picture">The picture to be drawn</param>
         public virtual void DrawPicture(Picture picture)
         {
             SKCanvas.DrawPicture(picture);
@@ -861,33 +648,23 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   dst:
         //     To be added.
         public virtual void DrawPicture(Picture picture, RectF dst) { throw new NotImplementedException(nameof(DrawPicture)); }
-        //
-        // 摘要:
-        //     Helper for drawPoints() for drawing a single point.
-        //
-        // 参数:
-        //   x:
-        //     To be added.
-        //
-        //   y:
-        //     To be added.
-        //
-        //   paint:
-        //     To be added.
+
+        /// <summary>
+        /// Helper for drawPoints() for drawing a single point.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="paint"></param>
         public virtual void DrawPoint(float x, float y, Paint paint)
         {
             SKCanvas.DrawPoint(x, y, paint);
         }
-        //
-        // 摘要:
-        //     Helper for drawPoints() that assumes you want to draw the entire array
-        //
-        // 参数:
-        //   pts:
-        //     Array of points to draw [x0 y0 x1 y1 x2 y2 ...]
-        //
-        //   paint:
-        //     The paint used to draw the points
+
+        /// <summary>
+        /// Helper for drawPoints() that assumes you want to draw the entire array
+        /// </summary>
+        /// <param name="pts">Array of points to draw [x0 y0 x1 y1 x2 y2 ...]</param>
+        /// <param name="paint">The paint used to draw the points</param>
         public virtual void DrawPoints(float[] pts, Paint paint)
         {
             var points = new SKPoint[pts.Length / 2];
@@ -953,53 +730,35 @@ namespace Yang.Maui.Helper.SkiaExtension
         //     The paint used for the text (e.g. color, size, style)
         [Obsolete("deprecated")]
         public virtual void DrawPosText(char[] text, int index, int count, float[] pos, Paint paint) { throw new NotImplementedException(nameof(DrawPosText)); }
-        //
-        // 摘要:
-        //     Draw the specified Rect using the specified paint.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle to be drawn
-        //
-        //   top:
-        //     The top side of the rectangle to be drawn
-        //
-        //   right:
-        //     The right side of the rectangle to be drawn
-        //
-        //   bottom:
-        //     The bottom side of the rectangle to be drawn
-        //
-        //   paint:
-        //     The paint used to draw the rect
+   
+        /// <summary>
+        /// Draw the specified Rect using the specified paint.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle to be drawn</param>
+        /// <param name="top">The top side of the rectangle to be drawn</param>
+        /// <param name="right">The right side of the rectangle to be drawn</param>
+        /// <param name="bottom">The bottom side of the rectangle to be drawn</param>
+        /// <param name="paint">The paint used to draw the rect</param>
         public virtual void DrawRect(float left, float top, float right, float bottom, Paint paint)
         {
             SKCanvas.DrawRect(new RectF(left, top, right, bottom), paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified Rect using the specified paint.
-        //
-        // 参数:
-        //   rect:
-        //     The rect to be drawn
-        //
-        //   paint:
-        //     The paint used to draw the rect
+ 
+        /// <summary>
+        /// Draw the specified Rect using the specified paint.
+        /// </summary>
+        /// <param name="rect">The rect to be drawn</param>
+        /// <param name="paint">The paint used to draw the rect</param>
         public virtual void DrawRect(RectF rect, Paint paint)
         {
             SKCanvas.DrawRect(rect, paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified Rect using the specified Paint.
-        //
-        // 参数:
-        //   r:
-        //     The rectangle to be drawn.
-        //
-        //   paint:
-        //     The paint used to draw the rectangle
+   
+        /// <summary>
+        /// Draw the specified Rect using the specified Paint.
+        /// </summary>
+        /// <param name="r">The rectangle to be drawn.</param>
+        /// <param name="paint">The paint used to draw the rectangle</param>
         public virtual void DrawRect(Rect r, Paint paint)
         {
             SKCanvas.DrawRect(r, paint);
@@ -1012,89 +771,52 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   renderNode:
         //     The RenderNode to draw, must be non-null.
         public virtual void DrawRenderNode(RenderNode renderNode) { throw new NotImplementedException(nameof(DrawRenderNode)); }
-        //
-        // 摘要:
-        //     Fill the entire canvas' bitmap (restricted to the current clip) with the specified
-        //     RGB color, using srcover porterduff mode.
-        //
-        // 参数:
-        //   r:
-        //     red component (0..255) of the color to draw onto the canvas
-        //
-        //   g:
-        //     green component (0..255) of the color to draw onto the canvas
-        //
-        //   b:
-        //     blue component (0..255) of the color to draw onto the canvas
+
+        /// <summary>
+        /// Fill the entire canvas' bitmap (restricted to the current clip) with the specified RGB color, using srcover porterduff mode.
+        /// </summary>
+        /// <param name="r">red component (0..255) of the color to draw onto the canvas</param>
+        /// <param name="g">green component (0..255) of the color to draw onto the canvas</param>
+        /// <param name="b">blue component (0..255) of the color to draw onto the canvas</param>
         public virtual void DrawRGB(int r, int g, int b)
         {
             SKCanvas.DrawColor(new SKColor((byte)r, (byte)g, (byte)b));
         }
-        //
-        // 摘要:
-        //     Draw the specified round-rect using the specified paint.
-        //
-        // 参数:
-        //   left:
-        //     To be added.
-        //
-        //   top:
-        //     To be added.
-        //
-        //   right:
-        //     To be added.
-        //
-        //   bottom:
-        //     To be added.
-        //
-        //   rx:
-        //     The x-radius of the oval used to round the corners
-        //
-        //   ry:
-        //     The y-radius of the oval used to round the corners
-        //
-        //   paint:
-        //     The paint used to draw the roundRect
+  
+        /// <summary>
+        /// Draw the specified round-rect using the specified paint.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="right"></param>
+        /// <param name="bottom"></param>
+        /// <param name="rx">The x-radius of the oval used to round the corners</param>
+        /// <param name="ry">The y-radius of the oval used to round the corners</param>
+        /// <param name="paint">The paint used to draw the roundRect</param>
         public virtual void DrawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint)
         {
             SKCanvas.DrawRoundRect(new SKRect(left, top, right, bottom), rx, ry, paint);
         }
-        //
-        // 摘要:
-        //     Draw the specified round-rect using the specified paint.
-        //
-        // 参数:
-        //   rect:
-        //     The rectangular bounds of the roundRect to be drawn
-        //
-        //   rx:
-        //     The x-radius of the oval used to round the corners
-        //
-        //   ry:
-        //     The y-radius of the oval used to round the corners
-        //
-        //   paint:
-        //     The paint used to draw the roundRect
+ 
+        /// <summary>
+        /// Draw the specified round-rect using the specified paint.
+        /// </summary>
+        /// <param name="rect">The rectangular bounds of the roundRect to be drawn</param>
+        /// <param name="rx">The x-radius of the oval used to round the corners</param>
+        /// <param name="ry">The y-radius of the oval used to round the corners</param>
+        /// <param name="paint">The paint used to draw the roundRect</param>
         public virtual void DrawRoundRect(RectF rect, float rx, float ry, Paint paint)
         {
             SKCanvas.DrawRoundRect(rect, rx, ry, paint);
         }
-        //
-        // 摘要:
-        //     Draw the text, with origin at (x,y), using the specified paint.
-        //
-        // 参数:
-        //   text:
-        //     The text to be drawn
-        //
-        //   x:
-        //     The x-coordinate of the origin of the text being drawn
-        //
-        //   y:
-        //     The y-coordinate of the baseline of the text being drawn
-        //
-        //   paint:
-        //     The paint used for the text (e.g. color, size, style)
+
+        /// <summary>
+        /// Draw the text, with origin at (x,y), using the specified paint.
+        /// </summary>
+        /// <param name="text">The text to be drawn</param>
+        /// <param name="x">The x-coordinate of the origin of the text being drawn</param>
+        /// <param name="y">The y-coordinate of the baseline of the text being drawn</param>
+        /// <param name="paint">The paint used for the text (e.g. color, size, style)</param>
         public virtual void DrawText(string text, float x, float y, Paint paint)
         {
             SKCanvas.DrawText(text, x, y, paint);
@@ -1146,28 +868,16 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     The paint used for the text (e.g. color, size, style)
         public virtual void DrawText(char[] text, int index, int count, float x, float y, Paint paint) { throw new NotImplementedException(nameof(DrawText)); }
-        //
-        // 摘要:
-        //     Draw the text, with origin at (x,y), using the specified paint.
-        //
-        // 参数:
-        //   text:
-        //     The text to be drawn
-        //
-        //   start:
-        //     The index of the first character in text to draw
-        //
-        //   end:
-        //     (end - 1) is the index of the last character in text to draw
-        //
-        //   x:
-        //     The x-coordinate of the origin of the text being drawn
-        //
-        //   y:
-        //     The y-coordinate of the baseline of the text being drawn
-        //
-        //   paint:
-        //     The paint used for the text (e.g. color, size, style)
+
+        /// <summary>
+        /// Draw the text, with origin at (x,y), using the specified paint.
+        /// </summary>
+        /// <param name="text">The text to be drawn</param>
+        /// <param name="start">The index of the first character in text to draw</param>
+        /// <param name="end">(end - 1) is the index of the last character in text to draw</param>
+        /// <param name="x">The x-coordinate of the origin of the text being drawn</param>
+        /// <param name="y">The y-coordinate of the baseline of the text being drawn</param>
+        /// <param name="paint">The paint used for the text (e.g. color, size, style)</param>
         public virtual void DrawText(string text, int start, int end, float x, float y, Paint paint)
         {
             SKCanvas.DrawText(text.Substring(start, end - start), x, y, paint);
@@ -1199,26 +909,15 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   paint:
         //     The paint used for the text (e.g. color, size, style)
         public virtual void DrawTextOnPath(char[] text, int index, int count, Path path, float hOffset, float vOffset, Paint paint) { throw new NotImplementedException(nameof(DrawTextOnPath)); }
-        //
-        // 摘要:
-        //     Draw the text, with origin at (x,y), using the specified paint, along the specified
-        //     path.
-        //
-        // 参数:
-        //   text:
-        //     The text to be drawn
-        //
-        //   path:
-        //     The path the text should follow for its baseline
-        //
-        //   hOffset:
-        //     The distance along the path to add to the text's starting position
-        //
-        //   vOffset:
-        //     The distance above(-) or below(+) the path to position the text
-        //
-        //   paint:
-        //     The paint used for the text (e.g. color, size, style)
+
+        /// <summary>
+        /// Draw the text, with origin at (x,y), using the specified paint, along the specified path.
+        /// </summary>
+        /// <param name="text">The text to be drawn</param>
+        /// <param name="path">The path the text should follow for its baseline</param>
+        /// <param name="hOffset">The distance along the path to add to the text's starting position</param>
+        /// <param name="vOffset">The distance above(-) or below(+) the path to position the text</param>
+        /// <param name="paint">The paint used for the text (e.g. color, size, style)</param>
         public virtual void DrawTextOnPath(string text, Path path, float hOffset, float vOffset, Paint paint)
         {
             SKCanvas.DrawTextOnPath(text, path, hOffset, vOffset, paint);
@@ -1370,18 +1069,12 @@ namespace Yang.Maui.Helper.SkiaExtension
         // 言论：
         //     To be added.
         public virtual void EnableZ() { throw new NotImplementedException(nameof(EnableZ)); }
-        //
-        // 摘要:
-        //     Return the bounds of the current clip (in local coordinates) in the bounds parameter,
-        //     and return true if it is non-empty.
-        //
-        // 参数:
-        //   bounds:
-        //     Return the clip bounds here. If it is null, ignore it but still return true if
-        //     the current clip is non-empty.
-        //
-        // 返回结果:
-        //     true if the current clip is non-empty.
+ 
+        /// <summary>
+        /// Return the bounds of the current clip (in local coordinates) in the bounds parameter, and return true if it is non-empty.
+        /// </summary>
+        /// <param name="bounds">Return the clip bounds here. If it is null, ignore it but still return true if the current clip is non-empty.</param>
+        /// <returns>true if the current clip is non-empty.</returns>
         public virtual bool GetClipBounds(out RectF bounds)
         {
             return SKCanvas.GetLocalClipBounds(out bounds);
@@ -1395,113 +1088,78 @@ namespace Yang.Maui.Helper.SkiaExtension
         //     To be added.
         [Obsolete("deprecated")]
         public virtual void GetMatrix(Matrix ctm) { throw new NotImplementedException(nameof(GetMatrix)); }
-        //
-        // 摘要:
-        //     Return true if the specified path, after being transformed by the current matrix,
-        //     would lie completely outside of the current clip.
-        //
-        // 参数:
-        //   path:
-        //     The path to compare with the current clip
-        //
-        // 返回结果:
-        //     true if the path (transformed by the canvas' matrix) does not intersect with
-        //     the canvas' clip
+
+        /// <summary>
+        /// Return true if the specified path, after being transformed by the current matrix, would lie completely outside of the current clip.
+        /// </summary>
+        /// <param name="path">The path to compare with the current clip</param>
+        /// <returns>true if the path (transformed by the canvas' matrix) does not intersect with the canvas' clip</returns>
         public virtual bool QuickReject(Path path)
         {
             return SKCanvas.QuickReject(path);
         }
         [Obsolete("deprecated")]
         public virtual bool QuickReject(Path path, EdgeType type) { throw new NotImplementedException(nameof(QuickReject)); }
-        //
-        // 摘要:
-        //     Return true if the specified rectangle, after being transformed by the current
-        //     matrix, would lie completely outside of the current clip.
-        //
-        // 参数:
-        //   rect:
-        //     the rect to compare with the current clip
-        //
-        // 返回结果:
-        //     true if the rect (transformed by the canvas' matrix) does not intersect with
-        //     the canvas' clip
+ 
+        /// <summary>
+        /// Return true if the specified rectangle, after being transformed by the current matrix, would lie completely outside of the current clip.
+        /// </summary>
+        /// <param name="rect">the rect to compare with the current clip</param>
+        /// <returns>true if the rect (transformed by the canvas' matrix) does not intersect with the canvas' clip</returns>
         public virtual bool QuickReject(RectF rect)
         {
             return SKCanvas.QuickReject(rect);
         }
         [Obsolete("deprecated")]
         public virtual bool QuickReject(RectF rect, EdgeType type) { throw new NotImplementedException(nameof(QuickReject)); }
-        //
-        // 摘要:
-        //     Return true if the specified rectangle, after being transformed by the current
-        //     matrix, would lie completely outside of the current clip.
-        //
-        // 参数:
-        //   left:
-        //     The left side of the rectangle to compare with the current clip
-        //
-        //   top:
-        //     The top of the rectangle to compare with the current clip
-        //
-        //   right:
-        //     The right side of the rectangle to compare with the current clip
-        //
-        //   bottom:
-        //     The bottom of the rectangle to compare with the current clip
-        //
-        // 返回结果:
-        //     true if the rect (transformed by the canvas' matrix) does not intersect with
-        //     the canvas' clip
+  
+        /// <summary>
+        /// Return true if the specified rectangle, after being transformed by the current matrix, would lie completely outside of the current clip.
+        /// </summary>
+        /// <param name="left">The left side of the rectangle to compare with the current clip</param>
+        /// <param name="top">The top of the rectangle to compare with the current clip</param>
+        /// <param name="right">The right side of the rectangle to compare with the current clip</param>
+        /// <param name="bottom">The bottom of the rectangle to compare with the current clip</param>
+        /// <returns>true if the rect (transformed by the canvas' matrix) does not intersect with the canvas' clip</returns>
         public virtual bool QuickReject(float left, float top, float right, float bottom)
         {
             return SKCanvas.QuickReject(new RectF(left, top, right, bottom));
         }
         [Obsolete("deprecated")]
         public virtual bool QuickReject(float left, float top, float right, float bottom, EdgeType type) { throw new NotImplementedException(nameof(QuickReject)); }
-        //
-        // 摘要:
-        //     This call balances a previous call to save(), and is used to remove all modifications
-        //     to the matrix/clip state since the last save call.
+ 
+        /// <summary>
+        /// This call balances a previous call to save(), and is used to remove all modifications to the matrix/clip state since the last save call.
+        /// </summary>
         public virtual void Restore()
         {
             SKCanvas.Restore();
         }
-        //
-        // 摘要:
-        //     Efficient way to pop any calls to save() that happened after the save count reached
-        //     saveCount.
-        //
-        // 参数:
-        //   saveCount:
-        //     The save level to restore to.
+   
+        /// <summary>
+        /// Efficient way to pop any calls to save() that happened after the save count reached saveCount.
+        /// </summary>
+        /// <param name="saveCount">The save level to restore to.</param>
         public virtual void RestoreToCount(int saveCount)
         {
             SKCanvas.RestoreToCount(saveCount);
         }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified rotation.
-        //
-        // 参数:
-        //   degrees:
-        //     The amount to rotate, in degrees
-        //
-        //   px:
-        //     The x-coord for the pivot point (unchanged by the rotation)
-        //
-        //   py:
-        //     The y-coord for the pivot point (unchanged by the rotation)
+ 
+        /// <summary>
+        /// Preconcat the current matrix with the specified rotation.
+        /// </summary>
+        /// <param name="degrees">The amount to rotate, in degrees</param>
+        /// <param name="px">The x-coord for the pivot point (unchanged by the rotation)</param>
+        /// <param name="py">The y-coord for the pivot point (unchanged by the rotation)</param>
         public void Rotate(float degrees, float px, float py)
         {
             SKCanvas.RotateDegrees(degrees, px, py);
         }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified rotation.
-        //
-        // 参数:
-        //   degrees:
-        //     The amount to rotate, in degrees
+ 
+        /// <summary>
+        /// Preconcat the current matrix with the specified rotation.
+        /// </summary>
+        /// <param name="degrees">The amount to rotate, in degrees</param>
         public virtual void Rotate(float degrees)
         {
             SKCanvas.RotateDegrees(degrees);
@@ -1518,58 +1176,36 @@ namespace Yang.Maui.Helper.SkiaExtension
         //     The value to pass to restoreToCount() to balance this save()
         [Obsolete("deprecated")]
         public virtual int Save(SaveFlags saveFlags) { throw new NotImplementedException(nameof(Save)); }
-        //
-        // 摘要:
-        //     Saves the current matrix and clip onto a private stack.
-        //
-        // 返回结果:
-        //     The value to pass to restoreToCount() to balance this save()
+ 
+        /// <summary>
+        /// Saves the current matrix and clip onto a private stack.
+        /// </summary>
+        /// <returns>The value to pass to restoreToCount() to balance this save()</returns>
         public virtual int Save()
         {
             return SKCanvas.Save();
         }
-        //
-        // 摘要:
-        //     Convenience for #saveLayer(RectF, Paint) that takes the four float coordinates
-        //     of the bounds rectangle.
-        //
-        // 参数:
-        //   left:
-        //     To be added.
-        //
-        //   top:
-        //     To be added.
-        //
-        //   right:
-        //     To be added.
-        //
-        //   bottom:
-        //     To be added.
-        //
-        //   paint:
-        //     To be added.
-        //
-        // 返回结果:
-        //     To be added.
+
+        /// <summary>
+        /// Convenience for #saveLayer(RectF, Paint) that takes the four float coordinates of the bounds rectangle.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="right"></param>
+        /// <param name="bottom"></param>
+        /// <param name="paint"></param>
+        /// <returns></returns>
         public virtual int SaveLayer(float left, float top, float right, float bottom, Paint? paint)
         {
             return SKCanvas.SaveLayer(new RectF(left, top, right, bottom), paint);
         }
-        //
-        // 摘要:
-        //     This behaves the same as save(), but in addition it allocates and redirects drawing
-        //     to an offscreen rendering target.
-        //
-        // 参数:
-        //   bounds:
-        //     May be null. The maximum size the offscreen render target needs to be (in local
-        //     coordinates)
-        //
-        //   paint:
-        //     This is copied, and is applied to the offscreen when restore() is called.
-        //
-        // 返回结果:
-        //     value to pass to restoreToCount() to balance this save()
+ 
+        /// <summary>
+        /// This behaves the same as save(), but in addition it allocates and redirects drawing to an offscreen rendering target.
+        /// </summary>
+        /// <param name="bounds">May be null. The maximum size the offscreen render target needs to be (in local coordinates)</param>
+        /// <param name="paint">This is copied, and is applied to the offscreen when restore() is called.</param>
+        /// <returns>value to pass to restoreToCount() to balance this save()</returns>
         public virtual int SaveLayer(RectF bounds, Paint? paint)
         {
             return SKCanvas.SaveLayer(bounds, paint);
@@ -1707,36 +1343,24 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   alpha:
         //     The alpha to apply to the offscreen when it is drawn during restore()
         public virtual int SaveLayerAlpha(RectF? bounds, int alpha) { throw new NotImplementedException(nameof(SaveLayerAlpha)); }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified scale.
-        //
-        // 参数:
-        //   sx:
-        //     The amount to scale in X
-        //
-        //   sy:
-        //     The amount to scale in Y
+
+        /// <summary>
+        /// Preconcat the current matrix with the specified scale.
+        /// </summary>
+        /// <param name="sx">The amount to scale in X</param>
+        /// <param name="sy">The amount to scale in Y</param>
         public virtual void Scale(float sx, float sy)
         {
             SKCanvas.Scale(sx, sy);
         }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified scale.
-        //
-        // 参数:
-        //   sx:
-        //     The amount to scale in X
-        //
-        //   sy:
-        //     The amount to scale in Y
-        //
-        //   px:
-        //     The x-coord for the pivot point (unchanged by the scale)
-        //
-        //   py:
-        //     The y-coord for the pivot point (unchanged by the scale)
+ 
+        /// <summary>
+        /// Preconcat the current matrix with the specified scale.
+        /// </summary>
+        /// <param name="sx">The amount to scale in X</param>
+        /// <param name="sy">The amount to scale in Y</param>
+        /// <param name="px">The x-coord for the pivot point (unchanged by the scale)</param>
+        /// <param name="py">The y-coord for the pivot point (unchanged by the scale)</param>
         public void Scale(float sx, float sy, float px, float py)
         {
             SKCanvas.Scale(sx, sy, px, py);
@@ -1757,30 +1381,22 @@ namespace Yang.Maui.Helper.SkiaExtension
         //   width:
         //     To be added.
         public virtual void SetViewport(int width, int height) { throw new NotImplementedException(nameof(SetViewport)); }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified skew.
-        //
-        // 参数:
-        //   sx:
-        //     The amount to skew in X
-        //
-        //   sy:
-        //     The amount to skew in Y
+  
+        /// <summary>
+        /// Preconcat the current matrix with the specified skew.
+        /// </summary>
+        /// <param name="sx">The amount to skew in X</param>
+        /// <param name="sy">The amount to skew in Y</param>
         public virtual void Skew(float sx, float sy) 
         { 
             SKCanvas.Skew(sx, sy);
         }
-        //
-        // 摘要:
-        //     Preconcat the current matrix with the specified translation
-        //
-        // 参数:
-        //   dx:
-        //     The distance to translate in X
-        //
-        //   dy:
-        //     The distance to translate in Y
+
+        /// <summary>
+        /// Preconcat the current matrix with the specified translation
+        /// </summary>
+        /// <param name="dx">The distance to translate in X</param>
+        /// <param name="dy">The distance to translate in Y</param>
         public virtual void Translate(float dx, float dy) 
         { 
             SKCanvas.Translate(dx, dy);
