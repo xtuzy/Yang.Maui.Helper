@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Yang.Maui.Helper.Logs;
+using Yang.Maui.Helper.Log;
 
 namespace Yang.Maui.Helper.Platforms.Android.Layouts
 {

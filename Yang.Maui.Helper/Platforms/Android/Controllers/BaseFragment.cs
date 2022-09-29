@@ -6,7 +6,7 @@ using Android.Widget;
 using AndroidX.ConstraintLayout.Widget;
 using System;
 using System.Collections.Generic;
-using Yang.Maui.Helper.Logs;
+using Yang.Maui.Helper.Log;
 using Yang.Maui.Helper.Platforms.Android.Layouts;
 using Yang.Maui.Helper.Tools;
 using Fragment = AndroidX.Fragment.App.Fragment;

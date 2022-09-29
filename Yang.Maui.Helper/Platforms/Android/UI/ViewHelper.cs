@@ -4,7 +4,7 @@ using Android.Util;
 using Android.Views;
 using Attribute = Android.Resource.Attribute;
 using AndroidX.ConstraintLayout.Widget;
-using Yang.Maui.Helper.Devices.Screen;
+using Yang.Maui.Helper.Device.Screen;
 using Android.Content.Res;
 using Android.Graphics.Drawables;
 using System.Linq;

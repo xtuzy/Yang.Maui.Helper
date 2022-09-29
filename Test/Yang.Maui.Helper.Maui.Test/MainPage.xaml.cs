@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 using SkiaSharp.Views.Maui.Controls;
-using Yang.Maui.Helper.SkiaExtension;
+using Yang.Maui.Helper.Skia.Canvas;
 
 namespace Yang.Maui.Helper.Maui.Test
 {

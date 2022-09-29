@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
@@ -32,15 +32,8 @@
       <Version>1.6.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android' or '$(TargetFramework)' == 'net6.0-ios' or '$(TargetFramework)' == 'net6.0-maccatalyst'">
-    <PackageReference Include="SkiaSharp.Views" Version="2.88.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.2" />
-    <PackageReference Include="Svg.Skia" Version="0.5.16" />
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-ios' and '$(TargetFramework)' != 'net6.0-maccatalyst'">
+  <ItemGroup Condition="$(TargetFramework.Contains('ios')) == false and $(TargetFramework.Contains('maccatalyst'))==false">
     <Compile Remove="**\*.iOS.cs" />
     <None Include="**\*.iOS.cs" />
     <Compile Remove="**\iOS\*.cs" />
@@ -49,7 +42,7 @@
     <None Include="**\iOS\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-android'">
+  <ItemGroup Condition="$(TargetFramework.Contains('android')) == false">
     <Compile Remove="**\*.Android.cs" />
     <None Include="**\*.Android.cs" />
     <Compile Remove="**\Android\*.cs" />
@@ -70,12 +63,6 @@
   <ItemGroup>
     <Folder Include="Platforms\iOS\Controllers\" />
     <Folder Include="Platforms\Windows\" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.19041'">
-    <PackageReference Include="SkiaSharp.Views.WinUI">
-      <Version>2.88.2</Version>
-    </PackageReference>
   </ItemGroup>
 
 </Project>
