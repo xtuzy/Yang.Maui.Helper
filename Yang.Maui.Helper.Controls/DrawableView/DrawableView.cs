@@ -1,4 +1,4 @@
-﻿using Yang.Maui.Helper.CustomControls.Platform;
+﻿using Yang.Maui.Helper.Controls.DrawableView.Platform;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
-namespace Yang.Maui.Helper.CustomControls
+namespace Yang.Maui.Helper.Controls.DrawableView
 {
     public class DrawableView : ContentView, IDrawableView
     {

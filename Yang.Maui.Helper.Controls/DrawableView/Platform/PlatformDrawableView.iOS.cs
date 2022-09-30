@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UIKit;
 
-namespace Yang.Maui.Helper.CustomControls.Platform
+namespace Yang.Maui.Helper.Controls.DrawableView.Platform
 {
 
     public class PlatformDrawableView : UIView
