@@ -106,7 +106,7 @@ namespace Yang.Maui.Helper.Skia.Image
             }
             catch (Exception Ex)
             {
-                Console.WriteLine("Load Image ERROR:" + Ex.Message);
+                Console.WriteLine("Load PlatformImage ERROR:" + Ex.Message);
             }
             return null;
         }

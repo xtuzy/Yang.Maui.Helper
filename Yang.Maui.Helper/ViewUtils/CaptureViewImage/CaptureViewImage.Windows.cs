@@ -14,9 +14,9 @@ namespace Yang.Maui.Helper.ViewUtils
     using System.Runtime.InteropServices.WindowsRuntime;
     using Windows.Graphics.Imaging;
 
-    internal partial class CaptureViewImage
+    public partial class CaptureViewImage
     {
-        public static async Task<RenderTargetBitmap> GetImageFormViewAsync(Control element)
+        public static async Task<RenderTargetBitmap> GetImageFormViewAsync(UIElement element)
         {
             RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap();
             await renderTargetBitmap.RenderAsync(element);

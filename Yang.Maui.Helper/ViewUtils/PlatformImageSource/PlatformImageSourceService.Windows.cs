@@ -14,7 +14,7 @@ namespace Yang.Maui.Helper.ViewUtils.PlatformImageSource
         {
             var image = imageSource switch
             {
-                IPlatformImageSource img => img.Image as Microsoft.UI.Xaml.Media.ImageSource,
+                IPlatformImageSource img => img.PlatformImage as Microsoft.UI.Xaml.Media.ImageSource,
                 _ => null,
             };
 

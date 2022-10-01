@@ -13,7 +13,7 @@ namespace Yang.Maui.Helper.ViewUtils.PlatformImageSource
         {
             var image = imageSource switch
             {
-                IPlatformImageSource img => img.Image as Bitmap,
+                IPlatformImageSource img => img.PlatformImage as Bitmap,
                 _ => null,
             };
 

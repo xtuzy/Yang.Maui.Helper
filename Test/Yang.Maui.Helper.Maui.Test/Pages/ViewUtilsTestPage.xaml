@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Yang.Maui.Helper.Maui.Test.Pages.ViewUtilsTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="ViewUtilsTestPage">
+    <VerticalStackLayout>
+        <Label
+            x:Name="NeedTestLabel"
+            HorizontalOptions="Center"
+            Text="Welcome to .NET MAUI!"
+            TextColor="Red"
+            VerticalOptions="Center" />
+        <Button
+            x:Name="GenerateResultImageButton"
+            Clicked="GenerateResultImageButton_Clicked"
+            Text="Click Me To Generate Image Of Label" />
+        <Image
+            x:Name="ShowResultImage"
+            BackgroundColor="Gray"
+            HeightRequest="200"
+            WidthRequest="300" />
+    </VerticalStackLayout>
+</ContentPage>

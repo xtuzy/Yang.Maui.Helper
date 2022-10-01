@@ -53,7 +53,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Yang.Maui.Helper.Controls\Yang.Maui.Helper.Controls.csproj" />
     <ProjectReference Include="..\..\Yang.Maui.Helper.Skia\Yang.Maui.Helper.Skia.csproj" />
+    <ProjectReference Include="..\..\Yang.Maui.Helper\Yang.Maui.Helper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Pages\ViewUtilsTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

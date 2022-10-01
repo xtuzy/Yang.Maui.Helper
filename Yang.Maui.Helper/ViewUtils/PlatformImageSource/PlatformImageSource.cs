@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Yang.Maui.Helper.ViewUtils.PlatformImageSource
 {
-    public sealed partial class PlatformImageSource : ImageSource
+    public sealed partial class PlatformImageSource : ImageSource, IPlatformImageSource
     {
-        public static readonly BindableProperty ImageProperty = BindableProperty.Create(nameof(Image), typeof(object), typeof(PlatformImageSource), default(object));
+        public static readonly BindableProperty PlatformImageProperty = BindableProperty.Create(nameof(PlatformImage), typeof(object), typeof(PlatformImageSource), default(object));
 
-        public object Image
+        public object PlatformImage
         {
-            get { return (object)GetValue(ImageProperty); }
-            set { SetValue(ImageProperty, value); }
+            get { return (object)GetValue(PlatformImageProperty); }
+            set { SetValue(PlatformImageProperty, value); }
         }
 
         public override Task<bool> Cancel()
@@ -24,7 +24,7 @@ namespace Yang.Maui.Helper.ViewUtils.PlatformImageSource
 
         protected override void OnPropertyChanged(string propertyName = null)
         {
-            if (propertyName == ImageProperty.PropertyName)
+            if (propertyName == PlatformImageProperty.PropertyName)
                 OnSourceChanged();
             base.OnPropertyChanged(propertyName);
         }

@@ -9,7 +9,7 @@ namespace Yang.Maui.Helper.ViewUtils
     using System.IO;
     using Color = Android.Graphics.Color;
 
-    internal partial class CaptureViewImage
+    public partial class CaptureViewImage
     {
         /// <summary>
         /// https://stackoverflow.com/questions/3609297/android-total-height-of-scrollview

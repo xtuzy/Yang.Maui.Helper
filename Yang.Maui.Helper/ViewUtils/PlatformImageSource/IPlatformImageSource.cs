@@ -9,6 +9,6 @@ namespace Yang.Maui.Helper.ViewUtils.PlatformImageSource
 {
     public interface IPlatformImageSource : IImageSource
     {
-        object Image { get; }
+        object PlatformImage { get; }
     }
 }

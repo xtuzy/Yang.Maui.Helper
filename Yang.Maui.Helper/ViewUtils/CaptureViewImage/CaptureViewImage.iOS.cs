@@ -4,7 +4,7 @@ using UIKit;
 
 namespace Yang.Maui.Helper.ViewUtils
 {
-    internal partial class CaptureViewImage
+    public partial class CaptureViewImage
     {
         /// <summary>
         /// https://social.msdn.microsoft.com/Forums/en-US/34da10e0-1558-4c4e-a51b-84124e49afd8/how-to-convert-the-all-content-in-scroll-view-to-bitmap-in-xamarin-forum?forum=xamarinforms

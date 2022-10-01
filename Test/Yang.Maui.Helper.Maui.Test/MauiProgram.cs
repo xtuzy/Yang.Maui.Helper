@@ -1,4 +1,5 @@
 ﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+using Yang.Maui.Helper.ViewUtils.PlatformImageSource;
 
 namespace Yang.Maui.Helper.Maui.Test
 {
@@ -10,6 +11,7 @@ namespace Yang.Maui.Helper.Maui.Test
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp()
+                .UsePlatformImageSource()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
