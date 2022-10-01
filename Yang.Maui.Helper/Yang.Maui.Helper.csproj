@@ -61,6 +61,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="File\FileHelper.iOS.cs" />
+    <None Remove="Image\ImageHelper.iOS.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="File\FileHelper.iOS.cs" />
+    <Compile Include="Image\ImageHelper.iOS.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Platforms\iOS\Controllers\" />
     <Folder Include="Platforms\Windows\" />
   </ItemGroup>
