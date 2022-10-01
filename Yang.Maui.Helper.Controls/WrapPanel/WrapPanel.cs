@@ -6,7 +6,7 @@ using Microsoft.Maui.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace LightPdfReader.Controls.WrapPanel
+namespace Yang.Maui.Helper.Controls.WrapPanel
 {
     using ElementView = View;
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LightPdfReader.Controls.WrapPanel
+namespace Yang.Maui.Helper.Controls.WrapPanel
 {
     using ElementView = Microsoft.Maui.Controls.View;
     public abstract class BaseLayout : Layout
