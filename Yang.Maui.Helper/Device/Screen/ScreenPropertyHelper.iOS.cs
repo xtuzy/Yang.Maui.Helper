@@ -5,14 +5,14 @@ namespace Yang.Maui.Helper.Device.Screen
 {
     public partial class ScreenPropertyHelper
     {
-        public static float GetScreenDensity()
+        public static double GetScreenDensity()
         {
-            return (float)UIScreen.MainScreen.Scale;
+            return UIScreen.MainScreen.Scale.Value;
         }
 
-        public static float GetScreenHeight(object arg = null)
+        public static double GetScreenHeight(object arg = null)
         {
-            return GetScreenDensity() * (float)UIScreen.MainScreen.Bounds.Height;
+            return GetScreenDensity() * UIScreen.MainScreen.Bounds.Height.Value;
         }
 
         public static DisplayOrientation GetScreenOrientation()
@@ -44,9 +44,9 @@ namespace Yang.Maui.Helper.Device.Screen
             return DisplayRotation.Unknown;
         }
 
-        public static float GetScreenWidth()
+        public static double GetScreenWidth()
         {
-            return GetScreenDensity() * (float)UIScreen.MainScreen.Bounds.Width;
+            return GetScreenDensity() * UIScreen.MainScreen.Bounds.Width.Value;
         }
     }
 }

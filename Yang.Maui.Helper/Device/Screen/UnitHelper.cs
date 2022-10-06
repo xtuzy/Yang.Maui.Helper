@@ -25,7 +25,7 @@ namespace Yang.Maui.Helper.Device.Screen
                 if (density == 0)
                 {
 #if __IOS__ || ANDROID || WINDOWS
-                    density = ScreenPropertyHelper.GetScreenDensity();
+                    density = (float)ScreenPropertyHelper.GetScreenDensity();
 #endif
                 }
                 return density;
