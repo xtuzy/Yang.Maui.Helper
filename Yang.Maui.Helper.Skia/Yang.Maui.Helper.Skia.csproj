@@ -16,7 +16,7 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.5</Version>
+    <Version>1.0.3.6</Version>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android' or '$(TargetFramework)' == 'net6.0-ios' or '$(TargetFramework)' == 'net6.0-maccatalyst'">
     <PackageReference Include="SkiaSharp.Views" Version="2.88.2" />
