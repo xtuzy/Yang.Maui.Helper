@@ -18,7 +18,18 @@ public partial class ViewUtilsTestPage : ContentPage
         {
             ShowResultImage.Source = new PlatformImageSource() { PlatformImage = image };
         });
-
+#elif ANDROID
+        var image = ViewUtils.CaptureViewImage.GetBitmapFromView(NeedTestLabel.Handler.PlatformView as Android.Views.View, (int)ShowResultImage.Width, (int)ShowResultImage.Height);
+        this.Dispatcher.Dispatch(() =>
+        {
+            ShowResultImage.Source = new PlatformImageSource() { PlatformImage = image };
+        });
+#elif IOS || MACCATALYST
+        var image = ViewUtils.CaptureViewImage.GetUIImageFromView(NeedTestLabel.Handler.PlatformView as UIKit.UIView);
+        this.Dispatcher.Dispatch(() =>
+        {
+            ShowResultImage.Source = new PlatformImageSource() { PlatformImage = image };
+        });
 #endif
     }
 }

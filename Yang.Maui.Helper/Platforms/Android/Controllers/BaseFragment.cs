@@ -6,7 +6,6 @@ using Android.Widget;
 using AndroidX.ConstraintLayout.Widget;
 using System;
 using System.Collections.Generic;
-using Yang.Maui.Helper.Log;
 using Yang.Maui.Helper.Platforms.Android.Layouts;
 using Yang.Maui.Helper.Tools;
 using Fragment = AndroidX.Fragment.App.Fragment;
@@ -250,7 +249,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Controllers
             }
             else if (Activity == null)//Reload 时遇到的
             {
-                LogHelper.Debug($"Error: In {this.GetType().Name}, Activity is null");
+                //LogHelper.Debug($"Error: In {this.GetType().Name}, Activity is null");
             }
             else
                 throw new NotImplementedException("当前仅在TabBar中实现回退");

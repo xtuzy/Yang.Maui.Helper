@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 using Path = System.IO.Path;
 using Android.Views;
-using Yang.Maui.Helper.Log;
 
 namespace Yang.Maui.Helper.Image
 {
@@ -60,7 +59,6 @@ namespace Yang.Maui.Helper.Image
                     }
                     catch (Exception e)
                     {
-                        LogHelper.Error("{0} {1}",TAG, "流释放出错");
                         isSaved = false;
                     }
             }

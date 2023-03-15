@@ -59,6 +59,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Update="Pages\ViewPagerTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\ViewUtilsTestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

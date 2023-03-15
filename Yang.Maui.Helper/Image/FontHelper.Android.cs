@@ -2,7 +2,6 @@
 using Android.Content;
 using Android.Graphics;
 using Android.Widget;
-using Yang.Maui.Helper.Log;
 using Bitmap = Android.Graphics.Bitmap;
 
 namespace Yang.Maui.Helper.Image
@@ -78,11 +77,6 @@ namespace Yang.Maui.Helper.Image
         public static Typeface GetFont(Context context, int fontId)
         {
             var font = context.Resources.GetFont(fontId);
-            if (font == null)
-            {
-                LogHelper.Debug("{0} {1}",nameof(FontHelper), nameof(GetFont));
-
-            }
             return font != null ? font : Typeface.Default;
         }
 
@@ -95,10 +89,6 @@ namespace Yang.Maui.Helper.Image
         public static Typeface GetFont(Context context, string fontName)
         {
             Typeface font = Typeface.CreateFromAsset(context.Assets, fontName);
-            if (font == null)
-            {
-                LogHelper.Debug("{0} {1}",nameof(FontHelper), nameof(GetFont));
-            }
             return font != null ? font : Typeface.Default;
         }
     }

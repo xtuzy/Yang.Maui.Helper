@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Yang.Maui.Helper.Log;
 
 namespace Yang.Maui.Helper.File
 {
@@ -33,23 +32,14 @@ namespace Yang.Maui.Helper.File
             }
             catch (Exception e)
             {
-                LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "写入stream出错");
-                isSaved = false;
-            }
-            finally
-            {
+                //LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "写入stream出错");
                 if (stream != null)
-                    try
-                    {
-                        stream.Close();//关闭流
-                    }
-                    catch (Exception e)
-                    {
-                        LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "文件流释放出错");
-                        isSaved = false;
-                    }
+                    stream.Close();//关闭流
+                throw;
             }
-            return isSaved;
+            if (stream != null)
+                stream.Close();//关闭流
+            return true;
         }
 
         /// <summary>
@@ -76,23 +66,15 @@ namespace Yang.Maui.Helper.File
             }
             catch (Exception e)
             {
-                LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "写入bytes出错");
-                isSaved = false;
-            }
-            finally
-            {
+                //LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "写入bytes出错");
                 if (stream != null)
-                    try
-                    {
-                        stream.Close();//关闭流
-                    }
-                    catch (Exception e)
-                    {
-                        LogHelper.Error("{0} {1}", "FileHelper.SaveTo ", "文件流释放出错");
-                        isSaved = false;
-                    }
+                    stream.Close();//关闭流
+                throw;
             }
-            return isSaved;
+
+            if (stream != null)
+                stream.Close();//关闭流
+            return true;
         }
 
         /// <summary>

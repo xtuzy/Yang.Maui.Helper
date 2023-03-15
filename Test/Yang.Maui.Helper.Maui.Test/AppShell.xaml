@@ -10,5 +10,9 @@
         Title="ViewUtils"
         ContentTemplate="{DataTemplate pages:ViewUtilsTestPage}"
         Route="ViewUtilsTestPage" />
+    <ShellContent
+        Title="ViewPager"
+        ContentTemplate="{DataTemplate pages:ViewPagerTestPage}"
+        Route="ViewPagerTestPage" />
 
 </Shell>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Yang.Maui.Helper.Maui.Test.Pages.ViewPagerTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Yang.Maui.Helper.Controls.ViewPagerComponent;assembly=Yang.Maui.Helper.Controls"
+    Title="ViewPagerTestPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <controls:TopTabBar
+            x:Name="topTabBar"
+            Grid.Row="0"
+            BackgroundColor="Black"
+            DefaultTabColor="AliceBlue"
+            SelectedTabColor="LightPink" />
+
+        <controls:ViewPager
+            x:Name="viewPager"
+            Grid.Row="1"
+            BackgroundColor="LightGray" />
+    </Grid>
+</ContentPage>

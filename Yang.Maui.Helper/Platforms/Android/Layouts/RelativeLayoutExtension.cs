@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Yang.Maui.Helper.Log;
 
 namespace Yang.Maui.Helper.Platforms.Android.Layouts
 {
@@ -27,7 +26,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
         {
             if (view.Id == View.NoId)
             {
-                LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
+                //LogHelper.Debug("{0} {1}", view, "No id,will auto generate.");
                 view.Id = View.GenerateViewId();
             }
             lp.AddRule(rule, view.Id);
@@ -40,8 +39,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException("Not RelativeLayout.LayoutParams!");
             }
             else
             {
@@ -70,8 +68,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -93,8 +90,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -123,8 +119,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -146,8 +141,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -169,8 +163,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -192,8 +185,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {
@@ -215,8 +207,7 @@ namespace Yang.Maui.Helper.Platforms.Android.Layouts
             var lp = view.LayoutParameters as RelativeLayout.LayoutParams;
             if (lp == null)
             {
-                LogHelper.Debug("{0} {1}", view, "Not RelativeLayout.LayoutParams!");
-                throw new ArgumentException();
+                throw new ArgumentException($"{view} {"Not RelativeLayout.LayoutParams!"}");
             }
             else
             {

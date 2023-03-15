@@ -2,7 +2,6 @@
 using Foundation;
 using System;
 using UIKit;
-using Yang.Maui.Helper.Log;
 
 namespace Yang.Maui.Helper.Image
 {
@@ -49,11 +48,6 @@ namespace Yang.Maui.Helper.Image
         public static UIFont GetFont(string fontName, float size)
         {
             var font = UIFont.FromName(fontName, size);
-            if (font == null)
-            {
-                LogHelper.Debug(nameof(FontHelper), nameof(GetFont));
-
-            }
             return font != null ? font : UIFont.SystemFontOfSize(size);
         }
     }
