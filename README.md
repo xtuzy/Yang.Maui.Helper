@@ -6,12 +6,22 @@
 ## Yang.Maui.Helper
 
 It store some usual helper when i use MAUI, contain some .net platform ui method.
+- Device/Screen/FrameRateCalculator
+
+    it is simple fps calculator
+- File/CommonFolder
+
+    platforms have different folder for different function, it is a demo
 - Image/FontAwesomeIcons
 
     unicode of icons
 - Image/PlatformImageSource
 
     if you use platform method, sometimes return a platform bitmap, not bytes or stream, you can use this directly show platform bitmap
+    
+- Material/MaterialColorsHelper
+
+    material color is beautiful
 ## Yang.Maui.Helper.Controls
 
 - DrawablwView
