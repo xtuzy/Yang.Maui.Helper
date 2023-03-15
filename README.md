@@ -6,4 +6,9 @@
 It store some usual helper when i use MAUI, contain some .net platform ui method.
 
 ## Yang.Maui.Helper.Controls
-其包含自定义的Maui控件，控件来自我所需，或者来自其它UI库，比如来自WPF的WrapPanel，搬运这些控件到Maui以应对各种需求
+- DrawablwView
+Try expose platform's 'canvas'
+- WrapPanel
+Copy from WinUI Community Toolkit
+- ViewPager
+A Swipe View use platform view(ViewPager2 of Android, UIPageController of iOS, Pivot of Windows)
