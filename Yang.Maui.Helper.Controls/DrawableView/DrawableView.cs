@@ -9,7 +9,7 @@ using Microsoft.Maui.Graphics;
 
 namespace Yang.Maui.Helper.Controls.DrawableView
 {
-    public class DrawableView : ContentView, IDrawableView
+    public class DrawableView : View, IDrawableView
     {
         /// <summary>
         /// <paramref name="sender"/>:
@@ -76,6 +76,11 @@ namespace Yang.Maui.Helper.Controls.DrawableView
         public virtual void OnDraw(object sender, PlatformDrawEventArgs e)
         {
             PaintSurface?.Invoke(sender, e);
+        }
+
+        public virtual Size CustomMeasuredSize(double widthConstraint, double heightConstraint)
+        {
+            return Size.Zero;
         }
     }
 }

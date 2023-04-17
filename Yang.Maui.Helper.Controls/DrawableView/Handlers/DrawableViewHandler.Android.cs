@@ -13,7 +13,7 @@ using Yang.Maui.Helper.Controls.DrawableView.Platform;
 
 namespace Yang.Maui.Helper.Controls.DrawableView.Handlers
 {
-    public partial class DrawableViewHandler : ViewHandler<IDrawableView, PlatformDrawableView>
+    public partial class DrawableViewHandler : ViewHandler<DrawableView, PlatformDrawableView>
     {
         protected override PlatformDrawableView CreatePlatformView()
         {

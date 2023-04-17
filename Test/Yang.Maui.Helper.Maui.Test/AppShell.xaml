@@ -14,5 +14,9 @@
         Title="ViewPager"
         ContentTemplate="{DataTemplate pages:ViewPagerTestPage}"
         Route="ViewPagerTestPage" />
+    <ShellContent
+        Title="DrawableView"
+        ContentTemplate="{DataTemplate pages:DrawableViewTestPage}"
+        Route="DrawableViewTestPage" />
 
 </Shell>

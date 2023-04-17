@@ -26,5 +26,14 @@ namespace Yang.Maui.Helper.Controls.DrawableView.Handlers
         {
 
         }
+
+        public override Size GetDesiredSize(double widthConstraint, double heightConstraint)
+        {
+            var custom = (this.VirtualView as DrawableView).CustomMeasuredSize(widthConstraint, heightConstraint);
+            if(custom == Size.Zero)
+                return base.GetDesiredSize(widthConstraint, heightConstraint);
+            else
+                return custom;
+        }
     }
 }
