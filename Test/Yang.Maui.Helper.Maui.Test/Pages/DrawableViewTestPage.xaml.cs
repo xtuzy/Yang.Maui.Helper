@@ -1,6 +1,5 @@
 using Microsoft.Maui.Controls.Compatibility;
 using SkiaSharp;
-using SkiaSharp.Views.Windows;
 using System.Diagnostics;
 using Yang.Maui.Helper.Controls.DrawableView;
 using Yang.Maui.Helper.Controls.WrapPanel;
@@ -26,6 +25,9 @@ public partial class DrawableViewTestPage : ContentPage
 #if WINDOWS
         var wE = e.PlatformDrawArgs as Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs;
         wE.DrawingSession.Clear(SkiaSharp.Views.Windows.WindowsExtensions.ToColor(SKColors.Red));
+#elif ANDROID
+        var aE = e.PlatformDrawArgs as Android.Graphics.Canvas;
+        aE.DrawColor(Android.Graphics.Color.Red);
 #endif
     }
 

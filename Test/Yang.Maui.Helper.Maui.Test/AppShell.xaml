@@ -18,5 +18,9 @@
         Title="DrawableView"
         ContentTemplate="{DataTemplate pages:DrawableViewTestPage}"
         Route="DrawableViewTestPage" />
+    <ShellContent
+        Title="SKGLView"
+        ContentTemplate="{DataTemplate pages:SKGLViewTestPage}"
+        Route="SKGLViewTestPage" />
 
 </Shell>

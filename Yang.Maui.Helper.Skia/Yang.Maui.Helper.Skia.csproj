@@ -18,19 +18,17 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>1.0.3.6</Version>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android' or '$(TargetFramework)' == 'net6.0-ios' or '$(TargetFramework)' == 'net6.0-maccatalyst'">
-    <PackageReference Include="SkiaSharp.Views" Version="2.88.2" />
-  </ItemGroup>
 
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);__MAUI__</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.88.2" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.2" />
     <PackageReference Include="Svg.Skia" Version="0.5.16" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.19041'">
-    <PackageReference Include="SkiaSharp.Views.WinUI">
-      <Version>2.88.2</Version>
-    </PackageReference>
-  </ItemGroup>
+ 
   <ItemGroup>
     <ProjectReference Include="..\Yang.Maui.Helper\Yang.Maui.Helper.csproj" />
   </ItemGroup>
@@ -61,5 +59,4 @@
     <Compile Remove="**\Windows\**\*.cs" />
     <None Include="**\Windows\**\*.cs" />
   </ItemGroup>
-
 </Project>
