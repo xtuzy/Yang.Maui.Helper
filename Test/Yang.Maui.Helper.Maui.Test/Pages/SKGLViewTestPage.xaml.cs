@@ -9,7 +9,12 @@ public partial class SKGLViewTestPage : ContentPage
 	public SKGLViewTestPage()
 	{
 		InitializeComponent();
-		var glView = new SKGpuView() { HeightRequest = 300, WidthRequest = 300, EnableTransparent = false };
+		var glView = new SkiaSharp.Views.Maui.Controls.SKGLView() {
+            HeightRequest = 300, 
+            WidthRequest = 300, 
+            //EnableTransparent = true, 
+            //HasRenderLoop = true 
+        };
 
         grid.Add(glView);
         glView.PaintSurface += GlView_PaintSurface;
@@ -17,12 +22,32 @@ public partial class SKGLViewTestPage : ContentPage
         {
             glView.InvalidateSurface();
         };
-        grid.Add(new Label() { Text = "Hello", FontSize = 40, VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center });
-        rootLayout.Add(new SkiaTextDrawDemo());
+        
+        var gpuView = new SKGpuView()
+        {
+            HeightRequest = 300,
+            WidthRequest = 300,
+            EnableTransparent = true, 
+            //HasRenderLoop = true 
+        };
+
+        rootLayout.Add(gpuView);
+        gpuView.PaintSurface += GpuView_PaintSurface;
     }
 
-    private void GlView_PaintSurface(object sender, SKPaintGpuSurfaceEventArgs e)
+    private void GpuView_PaintSurface(object sender, SKPaintGpuSurfaceEventArgs e)
     {
+        //var size = (sender as SKGpuView).CanvasSize;
+        var density = DeviceDisplay.Current.MainDisplayInfo.Density;
+        //var viewSize = (sender as SKGpuView).Width;
+        e.Surface.Canvas.Clear(SKColors.Red.WithAlpha(200));
+    }
+
+    private void GlView_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
+    {
+        //var size = (sender as SKGpuView).CanvasSize;
+        var density = DeviceDisplay.Current.MainDisplayInfo.Density;
+        //var viewSize = (sender as SKGpuView).Width;
         e.Surface.Canvas.Clear(SKColors.Red.WithAlpha(200));
     }
 }

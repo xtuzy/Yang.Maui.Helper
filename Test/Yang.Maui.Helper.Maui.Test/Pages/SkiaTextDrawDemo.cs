@@ -34,7 +34,8 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     //WidthRequest = 250,
                     //HeightRequest = 800
                     //BackgroundColor = Colors.Gray
-                    EnableTransparent = true
+                    EnableTransparent = true,
+                    //HasRenderLoop = true
                 };
                 panel.Children.Add(view);
             }
@@ -298,7 +299,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         {
             var size = this.CanvasSize;
             Console.WriteLine($"{this.GetHashCode()} Paint");
-            e.Surface.Canvas.Clear(SKColors.Red.WithAlpha(200));
+            //e.Surface.Canvas.Clear(SKColors.Red.WithAlpha(200));
             DrawSentence(e.Surface.Canvas, (int)size.Width);
         }
     }

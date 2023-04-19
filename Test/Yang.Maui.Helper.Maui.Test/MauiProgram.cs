@@ -1,4 +1,5 @@
-﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+﻿//using SkiaSharp.Views.Maui.Controls.Hosting;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using Yang.Maui.Helper.Controls.DrawableView.Hosting;
 using Yang.Maui.Helper.Controls.ViewPagerComponent;
 using Yang.Maui.Helper.Skia.SKGpuView.Hosting;
@@ -13,7 +14,7 @@ namespace Yang.Maui.Helper.Maui.Test
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseSkiaSharp()
+                .UseSkiaSharp(true)
                 .UsePlatformImageSource()
                 .UseViewPager()
                 .UseDrawableView()

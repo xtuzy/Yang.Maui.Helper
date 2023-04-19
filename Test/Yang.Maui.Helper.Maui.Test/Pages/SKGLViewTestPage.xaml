@@ -18,14 +18,14 @@
             <Label
                 FontSize="50"
                 HorizontalOptions="Center"
-                Text="Background:Welcome to .NET MAUI!"
+                Text="SKGLView"
                 VerticalOptions="Center" />
         </Grid>
         <Grid x:Name="rootLayout" Grid.Row="1">
             <Label
                 FontSize="50"
                 HorizontalOptions="Center"
-                Text="Background"
+                Text="My SKGpuView"
                 VerticalOptions="Center" />
         </Grid>
     </Grid>
