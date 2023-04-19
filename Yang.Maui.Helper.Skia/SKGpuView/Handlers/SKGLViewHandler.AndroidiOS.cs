@@ -150,6 +150,10 @@ namespace Yang.Maui.Helper.Skia.SKGpuView.Handlers
 
 		private void OnPaintSurface(object sender, SKNativePaintGLSurfaceEventArgs e)
 		{
+#if ANDROID
+            if(VirtualView.HasRenderLoop)
+                Thread.Sleep(16);
+#endif
             // the control is being repainted, let the user know
             virtualView?.OnPaintSurface(new SKPaintGpuSurfaceEventArgs(e.Surface, e.BackendRenderTarget));
 		}

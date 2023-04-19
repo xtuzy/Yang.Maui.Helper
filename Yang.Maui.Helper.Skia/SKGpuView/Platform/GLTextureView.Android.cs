@@ -163,14 +163,14 @@ namespace Yang.Maui.Helper.Skia.SKGpuView.Platform
 
 		public void OnSurfaceTextureAvailable(SurfaceTexture surface, int width, int height)
 		{
-			glThread.OnSurfaceCreated();
+            glThread.OnSurfaceCreated(width, height);
 			glThread.RequestRender();
-		}
+        }
 
 		public bool OnSurfaceTextureDestroyed(SurfaceTexture surface)
 		{
-			// Surface will be destroyed when we return
-			glThread.OnSurfaceDestroyed();
+            // Surface will be destroyed when we return
+            glThread.OnSurfaceDestroyed();
 			return true;
 		}
 
@@ -724,7 +724,7 @@ namespace Yang.Maui.Helper.Skia.SKGpuView.Platform
 				renderMode = Rendermode.Continuously;
 				textureViewWeakRef = glTextureViewWeakRef;
 				thread = new Thread(new ThreadStart(Run));
-			}
+            }
 
 			public int Id => thread.ManagedThreadId;
 
@@ -1110,13 +1110,15 @@ namespace Yang.Maui.Helper.Skia.SKGpuView.Platform
 				}
 			}
 
-			public void OnSurfaceCreated()
+			public void OnSurfaceCreated(int w, int h)
 			{
 				lock (threadManager)
 				{
 					LogDebug($"[GLThread {Id}] OnSurfaceCreated");
 
-					hasSurface = true;
+                    width = w;
+                    height = h;
+                    hasSurface = true;
 					finishedCreatingEglSurface = false;
 					Monitor.PulseAll(threadManager);
 					while (waitingForSurface && !finishedCreatingEglSurface && !exited)
