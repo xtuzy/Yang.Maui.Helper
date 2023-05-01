@@ -27,8 +27,7 @@ namespace Yang.Maui.Helper.Controls.ViewPagerComponent.Handlers
                 {
                     CrossPlatformMeasure = (w, h) =>
                     {
-                        (view as IView).Measure(w, h);
-                        return view.DesiredSize;
+                        return (view as IView).Measure(w, h); ;
                     },
                     CrossPlatformArrange = (rect) =>
                     {

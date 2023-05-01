@@ -22,5 +22,9 @@
         Title="SKGLView"
         ContentTemplate="{DataTemplate pages:SKGLViewTestPage}"
         Route="SKGLViewTestPage" />
+    <ShellContent
+        Title="TextWordBlockTestPage"
+        ContentTemplate="{DataTemplate pages:TextWordBlockTestPage}"
+        Route="TextWordBlockTestPage" />
 
 </Shell>

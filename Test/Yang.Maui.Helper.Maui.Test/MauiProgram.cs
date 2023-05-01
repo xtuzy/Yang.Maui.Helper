@@ -1,6 +1,7 @@
 ﻿//using SkiaSharp.Views.Maui.Controls.Hosting;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Yang.Maui.Helper.Controls.DrawableView.Hosting;
+using Yang.Maui.Helper.Controls.EnhanceGraphicsViewComponent;
 using Yang.Maui.Helper.Controls.ViewPagerComponent;
 using Yang.Maui.Helper.Skia.SKGpuView.Hosting;
 using Yang.Maui.Helper.ViewUtils.PlatformImageSource;
@@ -18,6 +19,7 @@ namespace Yang.Maui.Helper.Maui.Test
                 .UsePlatformImageSource()
                 .UseViewPager()
                 .UseDrawableView()
+                .UseEnhanceGraphicsView()
                 .UseSKGpuView(false, true)
                 .ConfigureFonts(fonts =>
                 {

@@ -5,9 +5,9 @@ public partial class ViewPagerTestPage : ContentPage
 	public ViewPagerTestPage()
 	{
 		InitializeComponent();
-        var firstViewPage = new Grid() { BackgroundColor = Colors.Red };
+        var firstViewPage = new Grid() { BackgroundColor = Colors.Red, Children = { new EnhanceGraphicsViewDrawTextDemo() } };
         var secondViewPage = new Grid() { BackgroundColor = Colors.Green };
-        var thirdViewPage = new Grid() { BackgroundColor = Colors.Blue };
+        var thirdViewPage = new Grid() { BackgroundColor = Colors.Blue, Children = { new SkiaTextDrawDemo() } };
 
         List<View> viewPages = new List<View>();
         viewPages.Add(firstViewPage);
