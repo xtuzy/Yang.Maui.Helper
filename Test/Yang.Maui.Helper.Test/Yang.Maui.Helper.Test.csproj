@@ -61,6 +61,7 @@
   <ItemGroup>
     <!--use this you can "hotreload" when use pure code write ui-->
     <PackageReference Include="ReloadPreview" Version="3.0.6" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
   </ItemGroup>
   <!--only ios and maccatalyst have these-->
   <ItemGroup Condition="'$(TargetFramework)'!= 'net6.0-ios' and '$(TargetFramework)' != 'net6.0-maccatalyst'">
@@ -116,6 +117,7 @@
     <Folder Remove="bin\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Yang.Maui.Helper.Controls\Yang.Maui.Helper.Controls.csproj" />
     <ProjectReference Include="..\..\Yang.Maui.Helper\Yang.Maui.Helper.csproj" />
   </ItemGroup>
 </Project>
