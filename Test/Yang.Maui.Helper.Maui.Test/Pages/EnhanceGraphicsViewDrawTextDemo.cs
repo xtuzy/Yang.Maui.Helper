@@ -6,11 +6,7 @@ using Font = Microsoft.Maui.Graphics.Font;
 using Style = Topten.RichTextKit.Style;
 using Yang.Maui.Helper.Graphics;
 using Yang.Maui.Helper.Controls.EnhanceGraphicsViewComponent;
-#if WINDOWS
-using SizeService = Microsoft.Maui.Graphics.Win2D.W2DStringSizeService;
-#else
-using SizeService = Microsoft.Maui.Graphics.Platform.PlatformStringSizeService;
-#endif
+
 namespace Yang.Maui.Helper.Maui.Test.Pages
 {
     /// <summary>
@@ -213,7 +209,6 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                 return base.CustomMeasuredSize(widthConstraint, heightConstraint);
         }
 
-        SizeService sizeService = new();
         private PlatformStyle styleNormal;
 
         public (float w, float h) MeasureParagraph(float w)

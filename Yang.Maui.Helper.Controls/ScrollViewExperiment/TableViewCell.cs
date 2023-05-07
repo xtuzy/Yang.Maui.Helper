@@ -1,47 +1,45 @@
-﻿using CoreGraphics;
-using System.Runtime.InteropServices;
-using UIKit;
+﻿using System.Runtime.InteropServices;
 
 namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 {
-    public enum UITableViewCellAccessoryType
+    public enum TableViewCellAccessoryType
     {
         None, DisclosureIndicator, DetailDisclosureButton, Checkmark
     }
 
-    public enum UITableViewCellSeparatorStyle
+    public enum TableViewCellSeparatorStyle
     {
         None, SingleLine, SingleLineEtched
     }
 
-    public enum UITableViewCellStyle
+    public enum TableViewCellStyle
     {
         Default, Value1, Value2, Subtitle
     }
 
-    public enum UITableViewCellSelectionStyle
+    public enum TableViewCellSelectionStyle
     {
         None, Blue, Gray
     }
 
-    public enum UITableViewCellEditingStyle
+    public enum TableViewCellEditingStyle
     {
         None, Delete, Insert
     }
 
-    public class UITableViewCell : UIView
+    public class TableViewCell : Grid
     {
         public static float _UITableViewDefaultRowHeight;
         #region https://github.com/BigZaphod/Chameleon/blob/master/UIKit/Classes/UITableViewCell.h
 
-        UILabel detailTextLabel;
-        UIView _backgroundView;
-        UIView _selectedBackgroundView;
-        UITableViewCellSelectionStyle _selectionStyle;
+        Label detailTextLabel;
+        View _backgroundView;
+        View _selectedBackgroundView;
+        TableViewCellSelectionStyle _selectionStyle;
         int indentationLevel;
-        UITableViewCellAccessoryType accessoryType;
-        UIView _accessoryView;
-        UITableViewCellAccessoryType editingAccessoryType;
+        TableViewCellAccessoryType accessoryType;
+        View _accessoryView;
+        TableViewCellAccessoryType editingAccessoryType;
         bool _selected;
         bool _highlighted;
         bool editing; // not yet implemented
@@ -52,36 +50,41 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public string ReuseIdentifier => _reuseIdentifier;
         #endregion
 
-        UITableViewCellStyle _style;
-        UITableViewCellSeparator _seperatorView;
-        UIView _contentView;
-        UIImageView _imageView;
-        UILabel _textLabel;
+        TableViewCellStyle _style;
+        TableViewCellSeparator _seperatorView;
+        Layout _contentView;
+        Image _imageView;
+        Label _textLabel;
 
-        public UITableViewCell(CGRect frame) : base(frame)
+        public TableViewCell(Rect frame)
         {
             _indentationWidth = 10;
-            _style = UITableViewCellStyle.Default;
-            _selectionStyle = UITableViewCellSelectionStyle.Blue;
+            _style = TableViewCellStyle.Default;
+            _selectionStyle = TableViewCellSelectionStyle.Blue;
 
-            _seperatorView = new UITableViewCellSeparator();
-            this.AddSubview(_seperatorView);
+            _seperatorView = new TableViewCellSeparator();
+            this.Add(_seperatorView);
 
-            this.accessoryType = UITableViewCellAccessoryType.None;
-            this.editingAccessoryType = UITableViewCellAccessoryType.None;
+            this.accessoryType = TableViewCellAccessoryType.None;
+            this.editingAccessoryType = TableViewCellAccessoryType.None;
         }
 
-        public UITableViewCell(UITableViewCellStyle style, string reuseIdentifier) : this(new CGRect(0, 0, 320, _UITableViewDefaultRowHeight))
+        public TableViewCell(TableViewCellStyle style, string reuseIdentifier) : this(new Rect(0, 0, 320, _UITableViewDefaultRowHeight))
         {
             _style = style;
             _reuseIdentifier = reuseIdentifier;
         }
 
-        public override void LayoutSubviews()
+        protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
         {
-            base.LayoutSubviews();
-            CGRect bounds = this.Bounds;
-            bool showingSeperator = !_seperatorView.Hidden;
+            return base.MeasureOverride(widthConstraint, heightConstraint);
+        }
+
+        /*protected override Size ArrangeOverride(Rect bounds)
+        {
+            return base.ArrangeOverride(bounds);
+        
+            bool showingSeperator = _seperatorView.IsVisible;
 
             CGRect contentFrame = new CGRect(0, 0, bounds.Size.Width, bounds.Size.Height - (showingSeperator ? 1 : 0));
             CGRect accessoryRect = new CGRect(bounds.Size.Width, 0, 0, 0);
@@ -123,7 +126,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 this.BringSubviewToFront(_seperatorView);
             }
 
-            if (_style == UITableViewCellStyle.Default)
+            if (_style == TableViewCellStyle.Default)
             {
                 float padding = 5;
 
@@ -139,72 +142,75 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 if (_textLabel != null)
                     _textLabel.Frame = textRect;
             }
-        }
+        }*/
 
-        public UIView ContentView
+        public Layout ContentView
         {
             get
             {
                 if (_contentView == null)
                 {
-                    _contentView = new UIView();
-                    this.AddSubview(_contentView);
-                    this.LayoutIfNeeded();
+                    _contentView = new Grid();
+                    this.Add(_contentView);
+                    this.InvalidateMeasure();
                 }
 
                 return _contentView;
             }
         }
 
-        public UIImageView ImageView
+        public Image ImageView
         {
             get
             {
                 if (_imageView == null)
                 {
-                    _imageView = new UIImageView();
-                    _imageView.ContentMode = UIViewContentMode.Center;
-                    this.ContentView.AddSubview(_imageView);
-                    this.LayoutIfNeeded();
+                    _imageView = new Image();
+                    _imageView.Aspect = Aspect.Center;
+                    this.ContentView.Add(_imageView);
+                    this.InvalidateMeasure();
                 }
 
                 return _imageView;
             }
         }
 
-        public UILabel TextLabel
+        public Label TextLabel
         {
             get
             {
                 if (_textLabel == null)
                 {
-                    _textLabel = new UILabel();
-                    _textLabel.BackgroundColor = UIColor.Clear;
-                    _textLabel.TextColor = UIColor.Black;
-                    _textLabel.HighlightedTextColor = UIColor.White;
-                    _textLabel.Font = UIFont.BoldSystemFontOfSize(17);
-                    this.ContentView.AddSubview(_textLabel);
-                    this.LayoutIfNeeded();
+                    _textLabel = new Label() { HorizontalOptions = LayoutOptions.Center };
+                    _textLabel.BackgroundColor = Colors.Transparent;
+                    _textLabel.TextColor = Colors.Black;
+                    //_textLabel.HighlightedTextColor = UIColor.White;
+                    _textLabel.FontSize = 17;
+                    _textLabel.FontAttributes = FontAttributes.Bold;
+                    this.ContentView.Add(_textLabel);
+                    this.InvalidateMeasure();
                 }
 
                 return _textLabel;
             }
         }
 
-        void _setSeparatorStyle(UITableViewCellSeparatorStyle theStyle, UIColor theColor)
+        void _setSeparatorStyle(TableViewCellSeparatorStyle theStyle, Color theColor)
         {
             _seperatorView.setSeparatorStyle(theStyle, theColor);
         }
 
-        void _setHighlighted(bool highlighted, UIView[] subviews)
+        void _setHighlighted(bool highlighted, IList<IView> subviews)
         {
-            foreach (UIView view in subviews)
+            foreach (var view in subviews)
             {
                 if (view is IHighlightable)
                 {
                     (view as IHighlightable).setHighlighted(highlighted);
                 }
-                this._setHighlighted(highlighted, view.Subviews);
+
+                if(view is Layout)
+                    this._setHighlighted(highlighted, (view as Layout).Children);
             }
         }
 
@@ -212,13 +218,13 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         {
             bool shouldHighlight = _highlighted || _selected;
             if (_selectedBackgroundView != null)
-                _selectedBackgroundView.Hidden = !shouldHighlight;
-            this._setHighlighted(shouldHighlight, this.Subviews);
+                _selectedBackgroundView.IsVisible = shouldHighlight;
+            this._setHighlighted(shouldHighlight, this.Children);
         }
 
         public void SetSelected(bool selected, bool animated)
         {
-            if (selected != _selected && _selectionStyle != UITableViewCellSelectionStyle.None)
+            if (selected != _selected && _selectionStyle != TableViewCellSelectionStyle.None)
             {
                 _selected = selected;
                 this._updateSelectionState();
@@ -232,7 +238,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 
         public void SetHighlighted(bool highlighted, bool animated)
         {
-            if (_highlighted != highlighted && _selectionStyle != UITableViewCellSelectionStyle.None)
+            if (_highlighted != highlighted && _selectionStyle != TableViewCellSelectionStyle.None)
             {
                 _highlighted = highlighted;
                 this._updateSelectionState();
@@ -241,7 +247,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 
         public bool Highlighted { set => this.SetHighlighted(value, false); get => _highlighted; }
 
-        public UIView BackgroundView
+        public View BackgroundView
         {
             get => _backgroundView;
             set
@@ -250,13 +256,13 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 {
                     _backgroundView.RemoveFromSuperview();
                     _backgroundView = value;
-                    this.AddSubview(_backgroundView);
-                    this.BackgroundColor = UIColor.Clear;
+                    this.Add(_backgroundView);
+                    this.BackgroundColor = Colors.Transparent;
                 }
             }
         }
 
-        public UIView SelectedBackgroundView
+        public View SelectedBackgroundView
         {
             get => _selectedBackgroundView;
             set
@@ -266,8 +272,8 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                     if (_selectedBackgroundView != null)
                         _selectedBackgroundView.RemoveFromSuperview();
                     _selectedBackgroundView = value;
-                    _selectedBackgroundView.Hidden = !_selected;
-                    this.AddSubview(_selectedBackgroundView);
+                    _selectedBackgroundView.IsVisible = _selected;
+                    this.Add(_selectedBackgroundView);
                 }
             }
         }

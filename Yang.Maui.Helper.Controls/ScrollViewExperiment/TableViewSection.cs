@@ -1,16 +1,15 @@
-﻿using UIKit;
-
+﻿
 namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 {
-    public class UITableViewSection
+    public class TableViewSection
     {
         public float rowsHeight;
         public float headerHeight;
         public float footerHeight;
         public int numberOfRows;
         public float[] _rowHeights;
-        public UIView headerView;
-        public UIView footerView;
+        public View headerView;
+        public View footerView;
         public string headerTitle;
         public string footerTitle;
 

@@ -2,9 +2,9 @@
 using Foundation;
 using System;
 using UIKit;
-using Yang.Maui.Helper.Controls.ScrollViewExperiment;
-using UITableViewCell = Yang.Maui.Helper.Controls.ScrollViewExperiment.UITableViewCell;
-using UITableViewCellStyle = Yang.Maui.Helper.Controls.ScrollViewExperiment.UITableViewCellStyle;
+using Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS;
+using UITableViewCell = Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS.UITableViewCell;
+using UITableViewCellStyle = Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS.UITableViewCellStyle;
 
 namespace Yang.Maui.Helper.Test
 {
@@ -13,7 +13,7 @@ namespace Yang.Maui.Helper.Test
         public UIView Page;
         public MainPage(CGRect frame)
         {
-            var tableView = new Yang.Maui.Helper.Controls.ScrollViewExperiment.UITableView(frame)
+            var tableView = new Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS.UITableView(frame)
             {
                 //Axis = UILayoutConstraintAxis.Vertical,
             };
@@ -28,7 +28,7 @@ namespace Yang.Maui.Helper.Test
 
             var scrollToRowTestButton = CreateTestButton("scrollToRowTest", () =>
             {
-                tableView.ScrollToRowAtIndexPath(NSIndexPath.FromRowSection(tableView.DataSource.numberOfRowsInSection(tableView, 0) - 1, 0), Controls.ScrollViewExperiment.UITableViewScrollPosition.None, false);
+                tableView.ScrollToRowAtIndexPath(Controls.ScrollViewExperiment.NSIndexPath.FromRowSection((int)(tableView.DataSource.numberOfRowsInSection(tableView, 0) - 1), 0), Controls.ScrollViewExperiment.iOS.UITableViewScrollPosition.None, false);
             });
             var scrollToSelectedTestButton = CreateTestButton("scrollToSelectedTest", () =>
             {
@@ -53,14 +53,14 @@ namespace Yang.Maui.Helper.Test
             return Page;
         }
 
-        class Delegate : NSObject, Yang.Maui.Helper.Controls.ScrollViewExperiment.IUITableViewDelegate
+        class Delegate : NSObject, Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS.IUITableViewDelegate
         {
             public Delegate()
             {
                 heightForRowAtIndexPath += heightForRowAtIndexPathMethod;
             }
 
-            public float heightForRowAtIndexPathMethod(Controls.ScrollViewExperiment.UITableView tableView, NSIndexPath indexPath)
+            public float heightForRowAtIndexPathMethod(Controls.ScrollViewExperiment.iOS.UITableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
             {
                 return 50;
             }
@@ -90,7 +90,7 @@ namespace Yang.Maui.Helper.Test
             public titleForDeleteConfirmationButtonForRowAtIndexPathDelegate titleForDeleteConfirmationButtonForRowAtIndexPath { get; }
         }
 
-        class Source : NSObject, Yang.Maui.Helper.Controls.ScrollViewExperiment.UITableViewDataSource
+        class Source : NSObject, Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS.UITableViewDataSource
         {
             public numberOfRowsInSectionDelegate numberOfRowsInSection { get; set; }
 
@@ -112,14 +112,14 @@ namespace Yang.Maui.Helper.Test
                 cellForRowAtIndexPath += cellForRowAtIndexPathMethod;
             }
 
-            public nint numberOfRowsInSectionMethod(Controls.ScrollViewExperiment.UITableView tableView, nint section)
+            public int numberOfRowsInSectionMethod(Controls.ScrollViewExperiment.iOS.UITableView tableView, int section)
             {
                 return 100;
             }
             static int newCellCount = 0;
             //给每个cell设置ID号（重复利用时使用）
             static NSString cellID = new NSString("cellID");
-            public UITableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.UITableView tableView, Foundation.NSIndexPath indexPath)
+            public UITableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.iOS.UITableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
             {
                 //从tableView的一个队列里获取一个cell
                 UITableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID);
@@ -134,7 +134,7 @@ namespace Yang.Maui.Helper.Test
                 }
 
                 //使用cell
-                cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Item} newCellIndex={(cell as Cell).NewCellIndex}";
+                cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
                 return cell;
             }
         }

@@ -3,7 +3,7 @@ using Foundation;
 using System.Runtime.InteropServices;
 using UIKit;
 
-namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
+namespace Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS
 {
     public enum UITableViewStyle
     {
@@ -48,13 +48,13 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         titleForDeleteConfirmationButtonForRowAtIndexPathDelegate titleForDeleteConfirmationButtonForRowAtIndexPath { get; }
     }
 
-    public delegate nint numberOfRowsInSectionDelegate(UITableView tableView, nint section);
-    public delegate UITableViewCell cellForRowAtIndexPathDelegate(UITableView tableView, Foundation.NSIndexPath indexPath);
+    public delegate int numberOfRowsInSectionDelegate(UITableView tableView, int section);
+    public delegate UITableViewCell cellForRowAtIndexPathDelegate(UITableView tableView, NSIndexPath indexPath);
     public delegate int numberOfSectionsInTableViewDelegate(UITableView tableView);
-    public delegate string titleForXInSectionDelegate(UITableView tableView, nint section);
-    public delegate string EditintitleForFooterInSectionDelegate(UITableView tableView, nint section);
+    public delegate string titleForXInSectionDelegate(UITableView tableView, int section);
+    public delegate string EditintitleForFooterInSectionDelegate(UITableView tableView, int section);
     public delegate void commitEditingStyleDelegate(UITableView tableView, UITableViewCellEditingStyle editingStyle, Foundation.NSIndexPath indexPath);
-    public delegate bool canEditRowAtIndexPathDelegate(UITableView tableView, Foundation.NSIndexPath indexPath);
+    public delegate bool canEditRowAtIndexPathDelegate(UITableView tableView, NSIndexPath indexPath);
 
     /// <summary>
     /// 最新的Api见
@@ -71,7 +71,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public canEditRowAtIndexPathDelegate canEditRowAtIndexPath { get; }
     }
 
-    public class UITableView : UIKit.UIScrollView
+    public class UITableView : UIScrollView
     {
         // http://stackoverflow.com/questions/235120/whats-the-uitableview-index-magnifying-glass-character
         const string UITableViewIndexSearch = @"{search}";
@@ -668,7 +668,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public nint numberOfRowsInSection(int section)
+        public int numberOfRowsInSection(int section)
         {
             return _dataSource.numberOfRowsInSection(this, section);
         }
@@ -978,7 +978,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 }
 
                 // deferring this because it presents a modal menu and that's what we do everywhere else in Chameleon
-                this.PerformSelector(new ObjCRuntime.Selector(nameof(_showEditMenuForRowAtIndexPath)), indexPath, afterDelay: 0, null);
+                _showEditMenuForRowAtIndexPath(indexPath);//this.PerformSelector(new ObjCRuntime.Selector(nameof(_showEditMenuForRowAtIndexPath)), indexPath, afterDelay: 0, null);
             }
         }
 

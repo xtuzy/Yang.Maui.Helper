@@ -26,5 +26,9 @@
         Title="TextWordBlockTestPage"
         ContentTemplate="{DataTemplate pages:TextWordBlockTestPage}"
         Route="TextWordBlockTestPage" />
+    <ShellContent
+        Title="TableViewTestPage"
+        ContentTemplate="{DataTemplate pages:TableViewTestPage}"
+        Route="TableViewTestPage" />
 
 </Shell>

@@ -1,7 +1,7 @@
 ﻿using CoreGraphics;
 using UIKit;
 
-namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
+namespace Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS
 {
     public class UITableViewCellSeparator : UIView
     {

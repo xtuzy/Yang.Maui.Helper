@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using UIKit;
 
-namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
+namespace Yang.Maui.Helper.Controls.ScrollViewExperiment.iOS
 {
     internal class UITableViewSectionLabel : UILabel
     {
