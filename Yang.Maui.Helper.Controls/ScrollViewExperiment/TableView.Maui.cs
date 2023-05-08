@@ -5,24 +5,24 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 {
     public partial class TableView : ScrollView
     {
-        double InitBoundsHeight;
-        double InitBoundsWidth;
+        
 
         protected ScrollViewContentView ContentView;
         public TableView()
         {
-            InitBoundsHeight = DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density;
-            InitBoundsWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
 
             this.Orientation = ScrollOrientation.Vertical;
-            ContentView = new ScrollViewContentView(this) { BackgroundColor = Colors.Gray };
+            ContentView = new ScrollViewContentView(this) { };
             Content = ContentView;
-            init(TableViewStyle.Plain);
+            Init(TableViewStyle.Plain);
             this.Scrolled += TableView_Scrolled;
         }
-
+        double lastScrollY;
+        double scrollOffset = 0;
         private void TableView_Scrolled(object sender, ScrolledEventArgs e)
         {
+            scrollOffset = e.ScrollY - lastScrollY;
+            lastScrollY = e.ScrollY;
             (this as IView).InvalidateMeasure();
         }
 
@@ -36,6 +36,18 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public partial Size OnMeasure(double widthConstraint, double heightConstraint);
 
         public partial void OnLayoutSubviews();
+
+        /// <summary>
+        /// TableView的高度应该是有限制的, 而它的内容可以是无限高度, 因此提前在这里获取这个值.
+        /// </summary>
+        double initTableViewHeightConstraintWhenMeasure;
+        double initTableViewWidthConstraintWhenMeasure;
+        protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
+        {
+            initTableViewWidthConstraintWhenMeasure = widthConstraint ;
+            initTableViewHeightConstraintWhenMeasure = heightConstraint;
+            return base.MeasureOverride(widthConstraint, heightConstraint);
+        }
     }
 
     public class ScrollViewContentView : Layout
@@ -75,7 +87,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public override Size Measure(double widthConstraint, double heightConstraint)
         {
             var size = container.OnMeasure(widthConstraint, heightConstraint);
-            Console.WriteLine($"Measure Size={(Layout as ScrollViewContentView).ContentSize}");
+            Console.WriteLine($"Measure Size={size}");
             return size;
         }
     }

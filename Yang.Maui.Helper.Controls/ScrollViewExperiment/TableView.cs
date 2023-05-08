@@ -78,7 +78,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         TableViewStyle _style;
         ITableViewDelegate _delegate;
         ITableViewDataSource _dataSource;
-        float _rowHeight;
+
         TableViewCellSeparatorStyle _separatorStyle;
 
         Color separatorColor;
@@ -96,6 +96,9 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         bool _needsReload;
         NSIndexPath _selectedRow;
         NSIndexPath _highlightedRow;
+        /// <summary>
+        /// 当前显示
+        /// </summary>
         Dictionary<NSIndexPath, TableViewCell> _cachedCells;
         List<TableViewCell> _reusableCells;
         List<TableViewSection> _sections;
@@ -134,7 +137,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        void init(TableViewStyle style)
+        void Init(TableViewStyle style)
         {
             this._style = style;
             this._cachedCells = new();
@@ -193,141 +196,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public float RowHeight
-        {
-            get => _rowHeight;
-            set
-            {
-                _rowHeight = value;
-                this.InvalidateMeasure(); //this.SetNeedsLayout();
-            }
-        }
-
-        void _updateSectionsCache()
-        {
-            // uses the dataSource to rebuild the cache.
-            // if there's no dataSource, this can't do anything else.
-            // note that I'm presently caching and hanging on to views and titles for section headers which is something
-            // the real UIKit appears to fetch more on-demand than this. so far this has not been a problem.
-
-            // remove all previous section header/footer views
-            foreach (TableViewSection previousSectionRecord in _sections)
-            {
-                previousSectionRecord.headerView?.RemoveFromSuperview();
-                previousSectionRecord.footerView?.RemoveFromSuperview();
-            }
-
-            // clear the previous cache
-            _sections.Clear();
-
-            if (_dataSource != null)
-            {
-                // compute the heights/offsets of everything
-                float defaultRowHeight = _rowHeight != default ? _rowHeight : _UITableViewDefaultRowHeight;
-                int numberOfSections = this.numberOfSections();
-                for (int section = 0; section < numberOfSections; section++)
-                {
-                    int numberOfRowsInSection = (int)this.numberOfRowsInSection(section);
-
-                    TableViewSection sectionRecord = new TableViewSection();
-
-                    sectionRecord.headerTitle = this._dataSourceHas.titleForHeaderInSection ? this._dataSource.titleForHeaderInSection(this, section) : null;
-
-                    sectionRecord.footerTitle = this._dataSourceHas.titleForFooterInSection ? this._dataSource.titleForFooterInSection(this, section) : null;
-
-                    sectionRecord.headerHeight = this._delegateHas.heightForHeaderInSection ? this._delegate.heightForHeaderInSection(this, section) : _sectionHeaderHeight;
-
-                    sectionRecord.footerHeight = this._delegateHas.heightForFooterInSection ? this._delegate.heightForFooterInSection(this, section) : _sectionFooterHeight;
-
-                    sectionRecord.headerView = sectionRecord.headerHeight > 0 && this._delegateHas.viewForHeaderInSection ? _delegate.viewForHeaderInSection(this, section) : null;
-
-                    sectionRecord.footerView = sectionRecord.footerHeight > 0 && this._delegateHas.viewForFooterInSection ? _delegate.viewForFooterInSection(this, section) : null;
-
-                    // make a default section header view if there's a title for it and no overriding view
-                    if (sectionRecord.headerView != null && sectionRecord.headerHeight > 0 && sectionRecord.headerTitle != default)
-                    {
-                        sectionRecord.headerView = new TableViewSectionLabel(sectionRecord.headerTitle);
-                    }
-
-                    // make a default section footer view if there's a title for it and no overriding view
-                    if (sectionRecord.footerView != null && sectionRecord.footerHeight > 0 && sectionRecord.footerTitle != default)
-                    {
-                        sectionRecord.footerView = new TableViewSectionLabel(sectionRecord.footerTitle);
-                    }
-
-                    if (sectionRecord.headerView != null)
-                    {
-                        this.AddSubview(sectionRecord.headerView);
-                    }
-                    else
-                    {
-                        sectionRecord.headerHeight = 0;
-                    }
-
-                    if (sectionRecord.footerView != null)
-                    {
-                        this.AddSubview(sectionRecord.footerView);
-                    }
-                    else
-                    {
-                        sectionRecord.footerHeight = 0;
-                    }
-
-                    float[] rowHeights = new float[numberOfRowsInSection];
-                    float totalRowsHeight = 0;
-
-                    for (int row = 0; row < numberOfRowsInSection; row++)
-                    {
-                        float rowHeight = _delegateHas.heightForRowAtIndexPath ? _delegate.heightForRowAtIndexPath(this, NSIndexPath.FromRowSection(row, section)) : defaultRowHeight;
-
-                        rowHeights[row] = rowHeight;
-                        totalRowsHeight += rowHeight;
-                    }
-
-                    sectionRecord.rowsHeight = totalRowsHeight;
-                    sectionRecord.setNumberOfRows(numberOfRowsInSection, rowHeights);
-
-                    _sections.Add(sectionRecord);
-                }
-            }
-        }
-
-        void _updateSectionsCacheIfNeeded()
-        {
-            // if there's a cache already in place, this doesn't do anything,
-            // otherwise calls _updateSectionsCache.
-            // this is called from _setContentSize and other places that require access
-            // to the section caches (mostly for size-related information)
-
-            if (_sections.Count == 0)
-            {
-                this._updateSectionsCache();
-            }
-        }
-
-        void _setContentSize()
-        {
-            // first calls _updateSectionsCacheIfNeeded, then sets the scroll view's size
-            // taking into account the size of the header, footer, and all rows.
-            // should be called by reloadData, setFrame, header/footer setters.
-
-            this._updateSectionsCacheIfNeeded();
-
-            var height = _tableHeaderView != null ? _tableHeaderView.Frame.Size.Height : 0;
-
-            foreach (TableViewSection section in _sections)
-            {
-                height += section.sectionHeight();
-            }
-
-            if (_tableFooterView != null)
-            {
-                height += _tableFooterView.Frame.Size.Height;
-            }
-
-            ContentView.SetContentSize(new Size(0, height));
-        }
-
         void _layoutTableView()
         {
             // lays out headers and rows that are visible at the time. this should also do cell
@@ -342,177 +210,193 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 
             if (_tableHeaderView != null)
             {
-                Rect tableHeaderFrame = _tableHeaderView.Frame;
-                tableHeaderFrame.Location = Point.Zero;
-                tableHeaderFrame.Width = boundsSize.Width;
-                LayoutChild(_tableHeaderView, tableHeaderFrame);//_tableHeaderView.Frame = tableHeaderFrame;
-                tableHeight += tableHeaderFrame.Size.Height;
+                LayoutChild(_tableHeaderView, new Rect(0, tableHeight, visibleBounds.Width, _tableHeaderView.DesiredSize.Height));
+                tableHeight += _tableHeaderView.DesiredSize.Height;
             }
 
             // layout sections and rows
-            Dictionary<NSIndexPath, TableViewCell> availableCells = new();
-            foreach (var cell in _cachedCells)
-                availableCells.Add(cell.Key, cell.Value);
             int numberOfSections = _sections.Count;
-            _cachedCells.Clear();
-
             for (int section = 0; section < numberOfSections; section++)
             {
-                Rect sectionRect = this.RectForSection(section);
-                tableHeight += sectionRect.Size.Height;
-                if (sectionRect.IntersectsWith(visibleBounds))
+                TableViewSection sectionRecord = _sections[section];
+                int numberOfRows = sectionRecord.numberOfRows;
+
+                for (int row = 0; row < numberOfRows; row++)
                 {
-                    Rect headerRect = this.RectForHeaderInSection(section);
-                    Rect footerRect = this.RectForFooterInSection(section);
-                    TableViewSection sectionRecord = _sections[section];
-                    int numberOfRows = sectionRecord.numberOfRows;
-
-                    if (sectionRecord.headerView != null)
+                    NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
+                    //尝试用之前测量的值或者预设值估计底部在哪
+                    var rowMaybeTop = tableHeight;
+                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : EstimatedRowHeight);
+                    //如果在可见区域, 就详细测量
+                    if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
+                        || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
+                        || (rowMaybeTop <= visibleBounds.Top && rowMaybeBottom >= visibleBounds.Bottom))
                     {
-                        LayoutChild(sectionRecord.headerView, headerRect);// sectionRecord.headerView.Frame = headerRect;
-                    }
-
-                    if (sectionRecord.footerView != null)
-                    {
-                        LayoutChild(sectionRecord.footerView, footerRect);//  sectionRecord.footerView.Frame = footerRect;
-                    }
-
-                    for (int row = 0; row < numberOfRows; row++)
-                    {
-                        NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
-                        Rect rowRect = this.RectForRowAtIndexPath(indexPath);
-                        if (rowRect.IntersectsWith(visibleBounds) && rowRect.Size.Height > 0)
+                        //获取Cell, 优先获取之前已经被显示的
+                        if (!_cachedCells.ContainsKey(indexPath)) continue;
+                        TableViewCell cell = _cachedCells[indexPath];
+                        if (cell != null)
                         {
-                            TableViewCell cell = availableCells.ContainsKey(indexPath) ? availableCells[indexPath] : this._dataSource.cellForRowAtIndexPath(this, indexPath);
-                            if (cell != null)
-                            {
-                                _cachedCells[indexPath] = cell;
-                                if (availableCells.ContainsKey(indexPath)) availableCells.Remove(indexPath);
-                                cell.Highlighted = _highlightedRow == null ? false : _highlightedRow.IsEqual(indexPath);
-                                cell.Selected = _selectedRow == null ? false : _selectedRow.IsEqual(indexPath);
-                                LayoutChild(cell, rowRect);// cell.Frame = rowRect;
+                            //测量高度
+                            LayoutChild(cell, new Rect(0, tableHeight, visibleBounds.Width, cell.DesiredSize.Height));
 
-                                cell.BackgroundColor = this.BackgroundColor;
-                                //cell.SeparatorStyle:_separatorStyle color:_separatorColor] ;
-                                //this.AddSubview(cell);
-                            }
+                            tableHeight += cell.DesiredSize.Height;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException();
                         }
                     }
-                }
-            }
-
-            // remove old cells, but save off any that might be reusable
-            foreach (TableViewCell cell in availableCells.Values)
-            {
-                if (cell.ReuseIdentifier != default)
-                {
-                    _reusableCells.Add(cell);
-                }
-                else
-                {
-                    cell.RemoveFromSuperview();
-                }
-            }
-
-            // non-reusable cells should end up dealloced after at this point, but reusable ones live on in _reusableCells.
-
-            // now make sure that all available (but unused) reusable cells aren't on screen in the visible area.
-            // this is done becaue when resizing a table view by shrinking it's height in an animation, it looks better. The reason is that
-            // when an animation happens, it sets the frame to the new (shorter) size and thus recalcuates which cells should be visible.
-            // If it removed all non-visible cells, then the cells on the bottom of the table view would disappear immediately but before
-            // the frame of the table view has actually animated down to the new, shorter size. So the animation is jumpy/ugly because
-            // the cells suddenly disappear instead of seemingly animating down and out of view like they should. This tries to leave them
-            // on screen as long as possible, but only if they don't get in the way.
-            var allCachedCells = _cachedCells.Values;
-            foreach (TableViewCell cell in _reusableCells)
-            {
-                if (cell.Frame.IntersectsWith(visibleBounds) && !allCachedCells.Contains(cell))
-                {
-                    cell.RemoveFromSuperview();
+                    else//如果不可见
+                    {
+                        tableHeight = rowMaybeBottom;
+                    }
                 }
             }
 
             if (_tableFooterView != null)
             {
-                Rect tableFooterFrame = _tableFooterView.Frame;
-                tableFooterFrame.Location = new Point(0, tableHeight);
-                tableFooterFrame.Width = boundsSize.Width;
-                LayoutChild(_tableFooterView, tableFooterFrame);//_tableFooterView.Frame = tableFooterFrame;
+                LayoutChild(_tableFooterView, new Rect(0, tableHeight, visibleBounds.Width, _tableFooterView.DesiredSize.Height));
+            }
+
+            foreach (TableViewCell cell in _reusableCells)
+            {
+                LayoutChild(cell, new Rect(0, -3000, cell.DesiredSize.Width, cell.DesiredSize.Height));
             }
         }
 
+        public double EstimatedRowHeight = 20;
+
+        List<NSIndexPath> needRemoveCell = new List<NSIndexPath>();
+        /// <summary>
+        /// Measure思路:
+        /// 总体的高度我们只要一个很大的值, 因为是要保证滑动, 我们只要确定划到最后一个是在最底部就行.
+        /// 那么快速滑动时有来不及计算的Row, 我们直接取一个近似固定值, 这样去确定哪一行Row滑动到了可见部分, 然后对之后的Row进行正确的测量
+        /// </summary>
+        /// <param name="widthConstraint">宽一般为固定值</param>
+        /// <param name="heightConstraint">高一般为无限值</param>
+        /// <returns></returns>
         Size _measureTableView(double widthConstraint, double heightConstraint)
         {
-            // lays out headers and rows that are visible at the time. this should also do cell
-            // dequeuing and keep a list of all existing cells that are visible and those
-            // that exist but are not visible and are reusable
-            // if there's no section cache, no rows will be laid out but the header/footer will (if any).
-
-            Size boundsSize = new Size(widthConstraint, Bounds.Height > 1? Bounds.Height: InitBoundsHeight);
-            var contentOffset = this.ScrollY; //ContentOffset.Y;
-            Rect visibleBounds = new Rect(0, contentOffset, boundsSize.Width, boundsSize.Height);
+            //tableView自身的大小
+            Size tableViewBoundsSize = new Size(widthConstraint, Bounds.Height > 1 ? Bounds.Height : initTableViewHeightConstraintWhenMeasure);
+            //当前可见区域在ContentView中的位置
+            Rect visibleBounds = new Rect(0, this.ScrollY, tableViewBoundsSize.Width, tableViewBoundsSize.Height);
             double tableHeight = 0;
 
+            //表头的View是确定的, 我们可以直接测量
             if (_tableHeaderView != null)
             {
                 var _tableHeaderViewH = MeasureChild(_tableHeaderView, widthConstraint, heightConstraint).Request.Height;
                 tableHeight += _tableHeaderViewH;
             }
 
-            // layout sections and rows
+            // 需要重新布局后, cell会变动, 先将之前显示的cell放入可供使用的cell字典
             Dictionary<NSIndexPath, TableViewCell> availableCells = new();
             foreach (var cell in _cachedCells)
                 availableCells.Add(cell.Key, cell.Value);
             int numberOfSections = _sections.Count;
             _cachedCells.Clear();
 
+            //复用是从_reusableCells获取的, 需要让不可见的先回收
+            var tempCells = availableCells.ToList();
+            if (scrollOffset > 0)//往上滑, 上面的需要回收
+            {
+                foreach (var cell in tempCells)
+                {
+                    if (cell.Value.DesiredSize.Height < scrollOffset)
+                    {
+                        needRemoveCell.Add(cell.Key);
+                        scrollOffset -= cell.Value.DesiredSize.Height;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else//往下滑, 下面的需要回收
+            {
+                scrollOffset = -scrollOffset;
+                for (int i = tempCells.Count - 1; i >= 0; i--)
+                {
+                    var cell = tempCells[i];
+                    if (cell.Value.DesiredSize.Height < scrollOffset)
+                    {
+                        needRemoveCell.Add(cell.Key);
+                        scrollOffset -= cell.Value.DesiredSize.Height;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            foreach (var indexPath in needRemoveCell)
+            {
+                var cell = availableCells[indexPath];
+                _reusableCells.Add(cell);
+                availableCells.Remove(indexPath);
+            }
+            tempCells.Clear();
+            needRemoveCell.Clear();
+            scrollOffset = 0;//重置为0, 避免只更新数据时也移除cell
+
             for (int section = 0; section < numberOfSections; section++)
             {
-                Rect sectionRect = this.RectForSection(section);
-                tableHeight += sectionRect.Size.Height;
-                if (sectionRect.IntersectsWith(visibleBounds))
+                TableViewSection sectionRecord = _sections[section];
+                int numberOfRows = sectionRecord.numberOfRows;
+
+                for (int row = 0; row < numberOfRows; row++)
                 {
-                    Rect headerRect = this.RectForHeaderInSection(section);
-                    Rect footerRect = this.RectForFooterInSection(section);
-                    TableViewSection sectionRecord = _sections[section];
-                    int numberOfRows = sectionRecord.numberOfRows;
-
-                    if (sectionRecord.headerView != null)
+                    NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
+                    //尝试用之前测量的值或者预设值估计底部在哪
+                    var rowMaybeTop = tableHeight;
+                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : EstimatedRowHeight);
+                    //如果在可见区域, 就详细测量
+                    if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
+                       || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
+                       || (rowMaybeTop <= visibleBounds.Top && rowMaybeBottom >= visibleBounds.Bottom))
                     {
-                        MeasureChild(sectionRecord.headerView, headerRect.Width, headerRect.Height);
-                    }
-
-                    if (sectionRecord.footerView != null)
-                    {
-                        MeasureChild(sectionRecord.footerView, footerRect.Width, footerRect.Height);//  sectionRecord.footerView.Frame = footerRect;
-                    }
-
-                    for (int row = 0; row < numberOfRows; row++)
-                    {
-                        NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
-                        Rect rowRect = this.RectForRowAtIndexPath(indexPath);
-                        if (rowRect.IntersectsWith(visibleBounds) && rowRect.Size.Height > 0)
+                        //获取Cell, 优先获取之前已经被显示的, 这里假定已显示的数据没有变化
+                        TableViewCell cell = availableCells.ContainsKey(indexPath) ? availableCells[indexPath] : this._dataSource.cellForRowAtIndexPath(this, indexPath);
+                        if (cell != null)
                         {
-                            TableViewCell cell = availableCells.ContainsKey(indexPath) ? availableCells[indexPath] : this._dataSource.cellForRowAtIndexPath(this, indexPath);
-                            if (cell != null)
-                            {
-                                _cachedCells[indexPath] = cell;
-                                if (availableCells.ContainsKey(indexPath)) availableCells.Remove(indexPath);
-                                cell.Highlighted = _highlightedRow == null ? false : _highlightedRow.IsEqual(indexPath);
-                                cell.Selected = _selectedRow == null ? false : _selectedRow.IsEqual(indexPath);
-                                MeasureChild(cell, rowRect.Width, rowRect.Height);// cell.Frame = rowRect;
+                            //将Cell添加到正在显示的Cell字典
+                            _cachedCells[indexPath] = cell;
+                            if (availableCells.ContainsKey(indexPath)) availableCells.Remove(indexPath);
+                            //Cell是否是正在被选择的
+                            cell.Highlighted = _highlightedRow == null ? false : _highlightedRow.IsEqual(indexPath);
+                            cell.Selected = _selectedRow == null ? false : _selectedRow.IsEqual(indexPath);
 
-                                cell.BackgroundColor = this.BackgroundColor;
-                                //cell.SeparatorStyle:_separatorStyle color:_separatorColor] ;
-                                if(!this.ContentView.Children.Contains(cell))
-                                    this.AddSubview(cell);
+                            //添加到ScrollView, 必须先添加才有测量值
+                            if (!this.ContentView.Children.Contains(cell))
+                                this.AddSubview(cell);
+                            //测量高度
+                            sectionRecord._rowHeights[row] = MeasureChild(cell, tableViewBoundsSize.Width, heightConstraint).Request.Height;
+
+                            //cell.SeparatorStyle:_separatorStyle color:_separatorColor] ;
+
+                            tableHeight += sectionRecord._rowHeights[row];
+                        }
+                    }
+                    else//如果不可见
+                    {
+                        if (availableCells.ContainsKey(indexPath))
+                        {
+                            var cell = availableCells[indexPath];
+                            if (cell.ReuseIdentifier != default)
+                            {
+                                _reusableCells.Add(cell);
+                                availableCells.Remove(indexPath);
                             }
                         }
+                        tableHeight = rowMaybeBottom;
                     }
                 }
             }
 
-            // remove old cells, but save off any that might be reusable
+            // 重新测量后, 需要显示的已经存入缓存的字典, 剩余的放入可重用列表
             foreach (TableViewCell cell in availableCells.Values)
             {
                 if (cell.ReuseIdentifier != default)
@@ -521,7 +405,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 }
                 else
                 {
-                    cell.RemoveFromSuperview();
+                    //cell.RemoveFromSuperview();
                 }
             }
 
@@ -539,78 +423,22 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             {
                 if (cell.Frame.IntersectsWith(visibleBounds) && !allCachedCells.Contains(cell))
                 {
-                    cell.RemoveFromSuperview();
+                    //cell.RemoveFromSuperview();
                 }
             }
 
+            //表尾的View是确定的, 我们可以直接测量
             if (_tableFooterView != null)
             {
-                MeasureChild(_tableFooterView, boundsSize.Width, heightConstraint);//_tableFooterView.Frame = tableFooterFrame;
+                tableHeight += MeasureChild(_tableFooterView, tableViewBoundsSize.Width, heightConstraint).Request.Height;
             }
 
-            return new Size(boundsSize.Width, tableHeight);
+            return new Size(tableViewBoundsSize.Width, tableHeight);
         }
 
         Rect _CGRectFromVerticalOffset(float offset, float height)
         {
-            return new Rect(0, offset, this.Bounds.Width>0? this.Bounds.Width : InitBoundsWidth, height);
-        }
-
-        float _offsetForSection(int index)
-        {
-            float offset = (float)(_tableHeaderView != null ? _tableHeaderView.Frame.Size.Height : 0);
-
-            for (int s = 0; s < index; s++)
-            {
-                offset += _sections[s].sectionHeight();
-            }
-
-            return offset;
-        }
-
-        public Rect RectForSection(int section)
-        {
-            this._updateSectionsCacheIfNeeded();
-            return this._CGRectFromVerticalOffset(this._offsetForSection(section), this._sections[section].sectionHeight());
-        }
-
-        public Rect RectForHeaderInSection(int section)
-        {
-            this._updateSectionsCacheIfNeeded();
-            return this._CGRectFromVerticalOffset(this._offsetForSection(section), this._sections[section].headerHeight);
-        }
-
-        public Rect RectForFooterInSection(int section)
-        {
-            this._updateSectionsCacheIfNeeded();
-            TableViewSection sectionRecord = _sections[section];
-            float offset = this._offsetForSection(section);
-            offset += sectionRecord.headerHeight;
-            offset += sectionRecord.rowsHeight;
-            return this._CGRectFromVerticalOffset(offset, sectionRecord.footerHeight);
-        }
-
-        public Rect RectForRowAtIndexPath(NSIndexPath indexPath)
-        {
-            this._updateSectionsCacheIfNeeded();
-            if (indexPath != null && indexPath.Section < _sections.Count)
-            {
-                TableViewSection sectionRecord = _sections[indexPath.Section];
-                int row = indexPath.Row;
-                if (row < sectionRecord.numberOfRows)
-                {
-                    float[] rowHeights = sectionRecord._rowHeights;
-                    float offset = this._offsetForSection(indexPath.Section);
-                    offset += sectionRecord.headerHeight;
-                    for (int currentRow = 0; currentRow < row; currentRow++)
-                    {
-                        offset += rowHeights[currentRow];
-                    }
-
-                    return this._CGRectFromVerticalOffset(offset, rowHeights[row]);
-                }
-            }
-            return Rect.Zero;
+            return new Rect(0, offset, this.Bounds.Width > 0 ? this.Bounds.Width : initTableViewWidthConstraintWhenMeasure, height);
         }
 
         void beginUpdates() { }
@@ -625,99 +453,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             return _cachedCells.ContainsKey(indexPath) ? _cachedCells[indexPath] : null;
         }
 
-        List<NSIndexPath> indexPathsForRowsInRect(Rect rect)
-        {
-            // This needs to return the index paths even if the cells don't exist in any caches or are not on screen
-            // For now I'm assuming the cells stretch all the way across the view. It's not clear to me if the real
-            // implementation gets anal about this or not (haven't tested it).
-
-            this._updateSectionsCacheIfNeeded();
-
-            List<NSIndexPath> results = new();
-            int numberOfSections = _sections.Count;
-            float offset = (float)(_tableHeaderView != null ? _tableHeaderView.Frame.Size.Height : 0);
-
-            for (int section = 0; section < numberOfSections; section++)
-            {
-                TableViewSection sectionRecord = _sections[section];
-                float[] rowHeights = sectionRecord._rowHeights;
-                int numberOfRows = sectionRecord.numberOfRows;
-                offset += sectionRecord.headerHeight;
-                if (offset + sectionRecord.rowsHeight >= rect.Location.Y)
-                {
-                    for (int row = 0; row < numberOfRows; row++)
-                    {
-                        float height = rowHeights[row];
-                        Rect simpleRowRect = new Rect(rect.Location.X, offset, rect.Size.Width, height);
-
-                        if (rect.IntersectsWith(simpleRowRect))
-                        {
-                            results.Add(NSIndexPath.FromRowSection(row, section));
-                        }
-                        else if (simpleRowRect.Location.Y > rect.Location.Y + rect.Size.Height)
-                        {
-                            break;  // don't need to find anything else.. we are past the end
-                        }
-                        offset += height;
-                    }
-                }
-                else
-                {
-                    offset += sectionRecord.rowsHeight;
-                }
-                offset += sectionRecord.footerHeight;
-            }
-            return results;
-        }
-
-        public NSIndexPath IndexPathForRowAtPoint(Point point)
-        {
-            var paths = this.indexPathsForRowsInRect(new Rect(point.X, point.Y, 1, 1));
-            return (paths.Count > 0) ? paths[0] : null;
-        }
-
-        public List<NSIndexPath> IndexPathsForVisibleRows
-        {
-            get
-            {
-                this._layoutTableView();
-                List<NSIndexPath> indexes = new();
-                Rect bounds = this.Bounds;
-
-                // Special note - it's unclear if UIKit returns these in sorted order. Because we're assuming that visibleCells returns them in order (top-bottom)
-                // and visibleCells uses this method, I'm going to make the executive decision here and assume that UIKit probably does return them sorted - since
-                // there's nothing warning that they aren't. :)
-                var indexPaths = _cachedCells.Keys.ToList();
-                indexPaths.Sort(delegate (NSIndexPath x, NSIndexPath y) { return (int)(x.Compare(y)); });
-                foreach (NSIndexPath indexPath in indexPaths)
-                {
-                    if (bounds.IntersectsWith(this.RectForRowAtIndexPath(indexPath))) ;
-                    {
-                        indexes.Add(indexPath);
-                    }
-                }
-
-                return indexes;
-            }
-        }
-
-        public List<TableViewCell> VisibleCells
-        {
-            get
-            {
-                List<TableViewCell> cells = new();
-                foreach (NSIndexPath index in this.IndexPathsForVisibleRows)
-                {
-                    TableViewCell cell = this.CellForRowAtIndexPath(index);
-                    if (cell != null)
-                    {
-                        cells.Add(cell);
-                    }
-                }
-                return cells;
-            }
-        }
-
         public UIView TableHeaderView
         {
             get => _tableHeaderView;
@@ -727,7 +462,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 {
                     _tableHeaderView = null;// _tableHeaderView?.Dispose();
                     _tableHeaderView = value;
-                    _setContentSize();
                     this.AddSubview(_tableHeaderView);
                 }
             }
@@ -742,7 +476,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 {
                     _tableFooterView = null;//_tableFooterView?.Dispose();
                     _tableFooterView = value;
-                    _setContentSize();
                     this.AddSubview(_tableFooterView);
                 }
             }
@@ -758,7 +491,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public int numberOfSections()
+        public int NumberOfSections()
         {
             if (_dataSourceHas.numberOfSectionsInTableView)
             {
@@ -770,11 +503,14 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public int numberOfRowsInSection(int section)
+        public int NumberOfRowsInSection(int section)
         {
             return _dataSource.numberOfRowsInSection(this, section);
         }
 
+        /// <summary>
+        /// 清空字典里存储的View, 并且从ScrollView里移除, 重新统计高度
+        /// </summary>
         public void ReloadData()
         {
             // clear the caches and remove the cells since everything is going to change
@@ -789,15 +525,15 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             this._highlightedRow = null;
 
             // trigger the section cache to be repopulated
-            this._updateSectionsCache();
-            this._setContentSize();
+            for (var i = 0; i < NumberOfSections(); i++)
+            {
+                var section = new TableViewSection();
+                section.numberOfRows = NumberOfRowsInSection(i);
+                section._rowHeights = new double[section.numberOfRows];
+                _sections.Add(section);
+            }
 
             this._needsReload = false;
-        }
-
-        public void ReloadRowsAtIndexPaths(object[] indexPaths, TableViewRowAnimation animation)
-        {
-            this.ReloadData();
         }
 
         void _reloadDataIfNeeded()
@@ -811,7 +547,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         void _setNeedsReload()
         {
             _needsReload = true;
-            this.InvalidateMeasure();//this.SetNeedsLayout();
+            this.InvalidateMeasure();
         }
 
         public partial Size OnMeasure(double widthConstraint, double heightConstraint)
@@ -828,37 +564,15 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public partial void OnLayoutSubviews()
         {
             if (_backgroundView != null)
-                LayoutChild(_backgroundView, Bounds);// _backgroundView.Frame = this.Bounds;
+                LayoutChild(_backgroundView, Bounds);
 
             this._layoutTableView();
-            //this.InvalidateMeasure();//base.LayoutSubviews();
         }
 
         public void LayoutChild(Element element, Rect rect)
         {
             (element as IView).Arrange(rect);
         }
-
-        /*public override CGRect Frame
-        {
-            get => base.Frame;
-            set
-            {
-                CGRect oldFrame = this.Frame;
-
-                if (!oldFrame.Equals(value))
-                {
-                    base.Frame = value;
-
-                    if (oldFrame.Size.Width != value.Size.Width)
-                    {
-                        this._updateSectionsCache();
-                    }
-
-                    this._setContentSize();
-                }
-            }
-        }*/
 
         public NSIndexPath IndexPathForSelectedRow()
         {
@@ -895,16 +609,18 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             // to maintain a similar delegate and dataSource access pattern to the real thing, I'll do it this way here. :)
             this._reloadDataIfNeeded();
 
-            if (!(_selectedRow == indexPath))
+            if (_selectedRow != indexPath)
             {
                 this.DeselectRowAtIndexPath(_selectedRow, animated);
                 _selectedRow = indexPath;
-                this.CellForRowAtIndexPath(_selectedRow).Selected = true;
+                var cell = this.CellForRowAtIndexPath(_selectedRow);
+                if (cell != null)//TODO:不知道为什么有时候为空
+                    cell.Selected = true;
             }
 
             // I did not verify if the real UIKit will still scroll the selection into view even if the selection itself doesn't change.
             // this behavior was useful for Ostrich and seems harmless enough, so leaving it like this for now.
-            this.ScrollToRowAtIndexPath(_selectedRow, scrollPosition, animated);
+            //this.ScrollToRowAtIndexPath(_selectedRow, scrollPosition, animated);
         }
 
         void _setUserSelectedRowAtIndexPath(NSIndexPath rowToSelect)
@@ -972,14 +688,9 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public void ScrollToNearestSelectedRowAtScrollPosition(TableViewScrollPosition scrollPosition, bool animated)
-        {
-            this._scrollRectToVisible(this.RectForRowAtIndexPath(this.IndexPathForSelectedRow()), scrollPosition, animated);
-        }
-
         public void ScrollToRowAtIndexPath(NSIndexPath indexPath, TableViewScrollPosition scrollPosition, bool animated)
         {
-            this._scrollRectToVisible(this.RectForRowAtIndexPath(indexPath), scrollPosition, animated);
+            throw new NotImplementedException();
         }
 
         public TableViewCell dequeueReusableCellWithIdentifier(string identifier)
@@ -1036,6 +747,59 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public void DeleteRowsAtIndexPaths(NSIndexPath[] indexPaths, TableViewRowAnimation animation)
         {
             this.ReloadData();
+        }
+
+        /// <summary>
+        /// 可见的区域中的点在哪一行
+        /// </summary>
+        /// <param name="point">相对于TableView的位置, 可以是在TableView上设置手势获取的位置</param>
+        /// <returns></returns>
+        public NSIndexPath IndexPathForVisibaleRowAtPointOfTableView(Point point)
+        {
+            var contentOffset = ScrollY;
+            point.Y = point.Y + contentOffset;//相对于content
+            return IndexPathForRowAtPointOfContentView(point);
+        }
+
+        /// <summary>
+        /// 迭代全部内容计算点在哪
+        /// </summary>
+        /// <param name="point">相对与Content的位置</param>
+        /// <returns></returns>
+        public NSIndexPath IndexPathForRowAtPointOfContentView(Point point)
+        {
+            double totalHeight = 0;
+            double tempBottom = 0;
+            if (_tableHeaderView != null)
+            {
+                tempBottom = totalHeight + _tableHeaderView.DesiredSize.Height;
+                if (totalHeight <= point.Y && tempBottom >= point.Y)
+                {
+                    return null;
+                }
+                totalHeight = tempBottom;
+            }
+
+            var number = NumberOfSections();
+            for (int section = 0; section < number; section++)
+            {
+                TableViewSection sectionRecord = _sections[section];
+                int numberOfRows = sectionRecord.numberOfRows;
+                for (int row = 0; row < numberOfRows; row++)
+                {
+                    tempBottom = totalHeight + sectionRecord._rowHeights[row];
+                    if (totalHeight <= point.Y && tempBottom >= point.Y)
+                    {
+                        return NSIndexPath.FromRowSection(row, section);
+                    }
+                    else
+                    {
+                        totalHeight = tempBottom;
+                    }
+                }
+            }
+
+            return null;
         }
 
         /*public override void TouchesBegan(NSSet touches, UIEvent evt)
@@ -1158,17 +922,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 
             // all done
             this._endEditingRowAtIndexPath(indexPath);
-        }
-
-        void rightClick(Point locationInView)
-        {
-            NSIndexPath touchedRow = this.IndexPathForRowAtPoint(locationInView);
-
-            // this is meant to emulate UIKit's swipe-to-delete feature on Mac by way of a right-click menu
-            if (touchedRow != null && this._canEditRowAtIndexPath(touchedRow))
-            {
-                this._beginEditingRowAtIndexPath(touchedRow);
-            }
         }
     }
 }

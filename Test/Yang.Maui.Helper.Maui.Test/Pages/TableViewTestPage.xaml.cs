@@ -1,21 +1,51 @@
+using Microsoft.Maui.Controls;
 using Yang.Maui.Helper.Controls.ScrollViewExperiment;
 
 namespace Yang.Maui.Helper.Maui.Test.Pages;
 
 public partial class TableViewTestPage : ContentPage
 {
-	public TableViewTestPage()
-	{
-		InitializeComponent();
+    public TableViewTestPage()
+    {
+        InitializeComponent();
         var tableView = new Yang.Maui.Helper.Controls.ScrollViewExperiment.TableView();
-		Content = tableView;
-
+        Content = tableView;
+        tableView.VerticalScrollBarVisibility = ScrollBarVisibility.Always;
         tableView.Delegate = new Delegate();
         tableView.DataSource = new Source();
 
-        var headerView = new VerticalStackLayout() { HeightRequest = 50, BackgroundColor = Colors.Green, Spacing = 10 };
+        var click = new TapGestureRecognizer();
+        click.Tapped += (s, e) =>
+        {
+            var p = e.GetPosition(tableView);
+#if IOS
+            var indexPath = tableView.IndexPathForRowAtPointOfContentView(p.Value);
+#else
+            var indexPath = tableView.IndexPathForVisibaleRowAtPointOfTableView(p.Value);
+#endif
+            if(indexPath != null)
+                tableView.SelectRowAtIndexPath(indexPath, false, TableViewScrollPosition.None);
+        };
+        tableView.Content.GestureRecognizers.Add(click);
+        var headerView = new Grid()
+        {
+            HeightRequest = 50,
+            BackgroundColor = Colors.Red,
+            Children =
+            {
+                new Label(){ Text = "Header", VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center },
+            }
+        };
         tableView.TableHeaderView = headerView;
-        tableView.TableFooterView = new ContentView() { HeightRequest = 50, BackgroundColor = Colors.Green };
+        tableView.TableFooterView = new Grid()
+        {
+            HeightRequest = 50,
+            BackgroundColor = Colors.Red,
+            Children =
+            {
+                new Button(){Text = "Footer", VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center } 
+            }
+        };
 
     }
 
@@ -23,12 +53,12 @@ public partial class TableViewTestPage : ContentPage
     {
         public Delegate()
         {
-            heightForRowAtIndexPath += heightForRowAtIndexPathMethod;
+            //heightForRowAtIndexPath += heightForRowAtIndexPathMethod;
         }
 
         public float heightForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
         {
-            return 50;
+            return 100;
         }
 
         public willXRowAtIndexPathDelegate willSelectRowAtIndexPath { get; }
@@ -56,7 +86,7 @@ public partial class TableViewTestPage : ContentPage
         public titleForDeleteConfirmationButtonForRowAtIndexPathDelegate titleForDeleteConfirmationButtonForRowAtIndexPath { get; }
     }
 
-    class Source :  Yang.Maui.Helper.Controls.ScrollViewExperiment.ITableViewDataSource
+    class Source : Yang.Maui.Helper.Controls.ScrollViewExperiment.ITableViewDataSource
     {
         public numberOfRowsInSectionDelegate numberOfRowsInSection { get; set; }
 
@@ -80,28 +110,51 @@ public partial class TableViewTestPage : ContentPage
 
         public int numberOfRowsInSectionMethod(Controls.ScrollViewExperiment.TableView tableView, int section)
         {
-            return 100;
+            return 500;
         }
         static int newCellCount = 0;
         //给每个cell设置ID号（重复利用时使用）
-        static string cellID = "cellID";
+        static string cellID1 = "cellID1";
+        static string cellID2 = "cellID2";
         public TableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
         {
             //从tableView的一个队列里获取一个cell
-            TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID);
-
-            //判断队列里面是否有这个cell 没有自己创建，有直接使用
-            if (cell == null)
+            if (indexPath.Row % 2 == 0)
             {
-                //没有,创建一个
-                cell = new Cell(TableViewCellStyle.Default, cellID) { HeightRequest = 100 };
-                (cell as Cell).NewCellIndex = ++newCellCount;
-                Console.WriteLine($"newCell: {newCellCount}");
-            }
+                TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID1);
 
-            //使用cell
-            cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
-            return cell;
+                //判断队列里面是否有这个cell 没有自己创建，有直接使用
+                if (cell == null)
+                {
+                    //没有,创建一个
+                    cell = new Cell1(TableViewCellStyle.Default, cellID1) { };
+                    (cell as Cell1).NewCellIndex = ++newCellCount;
+                    Console.WriteLine($"newCell: {newCellCount}");
+                }
+
+                //使用cell
+                cell.TextLabel.Text = $"Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
+                (cell as Cell1).Image.Source = "dotnet_bot.png";
+                return cell;
+            }
+            else
+            {
+                TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID2);
+
+                //判断队列里面是否有这个cell 没有自己创建，有直接使用
+                if (cell == null)
+                {
+                    //没有,创建一个
+                    cell = new Cell(TableViewCellStyle.Default, cellID2) { };
+                    cell.IsClippedToBounds = true;
+                    (cell as Cell).NewCellIndex = ++newCellCount;
+                    Console.WriteLine($"newCell: {newCellCount}");
+                }
+
+                //使用cell
+                cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
+                return cell;
+            }
         }
     }
 
@@ -111,7 +164,29 @@ public partial class TableViewTestPage : ContentPage
 
         public Cell(TableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
         {
-            this.SelectedBackgroundView = new Grid() { BackgroundColor = Colors.Green };
+            this.SelectedBackgroundView = new Grid() { BackgroundColor = Colors.Red};
+        }
+
+        public override void PrepareForReuse()
+        {
+            TextLabel.Text = null;
+        }
+    }
+
+    class Cell1 : Cell
+    {
+        public Cell1(TableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
+        {
+            Image = new Microsoft.Maui.Controls.Image() { };
+            this.ContentView.Add(Image);
+        }
+
+        public Microsoft.Maui.Controls.Image Image;
+
+        public override void PrepareForReuse()
+        {
+            base.PrepareForReuse();
+            Image.Source = null;
         }
     }
 }

@@ -181,7 +181,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             {
                 if (_textLabel == null)
                 {
-                    _textLabel = new Label() { HorizontalOptions = LayoutOptions.Center };
+                    _textLabel = new Label() { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center };
                     _textLabel.BackgroundColor = Colors.Transparent;
                     _textLabel.TextColor = Colors.Black;
                     //_textLabel.HighlightedTextColor = UIColor.White;
@@ -278,7 +278,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public void PrepareForReuse()
+        public virtual void PrepareForReuse()
         {
 
         }
