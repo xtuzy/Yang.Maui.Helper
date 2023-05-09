@@ -1,3 +1,5 @@
+using Yang.Maui.Helper.File;
+
 namespace Yang.Maui.Helper.Maui.Test.Pages;
 
 public partial class TextWordBlockTestPage : ContentPage
@@ -7,5 +9,5 @@ public partial class TextWordBlockTestPage : ContentPage
 		InitializeComponent();
 		//this.Content = new SkiaTextDrawDemo();
 		this.Content = new EnhanceGraphicsViewDrawTextDemo();
-	}
+    }
 }

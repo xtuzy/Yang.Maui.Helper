@@ -243,6 +243,21 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                 lineHeightCache = skTextOfBlank.MeasuredHeight;
             }
 
+#if DEBUG
+            var m = new TextBlock() { };
+            m.AddText("m", styleNormal);
+            Console.WriteLine($"m w={m.MeasuredWidth} h={m.MeasuredHeight}");
+            var n = new TextBlock() { };
+            n.AddText("n", styleNormal);
+            Console.WriteLine($"n w={n.MeasuredWidth} h={n.MeasuredHeight}");
+            var space = new TextBlock() { };
+            space.AddText(" ", styleNormal);
+            Console.WriteLine($"space w={space.MeasuredWidth} h={space.MeasuredHeight}");
+            var nm = new TextBlock() { };
+            nm.AddText("n m", styleNormal);
+            Console.WriteLine($"n m w={nm.MeasuredWidth} h={nm.MeasuredHeight}");
+#endif
+
             float wLength = blankW * BegainSpaceCount;//起始位置根据开头空格数
             if (lines == null)
             {
