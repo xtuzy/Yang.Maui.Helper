@@ -46,6 +46,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         {
             List<string> list = new List<string>()
             {
+                "这是一行中文文本, 包含表情符号🤣",
                 paragraph1 + paragraph2 + paragraph1 + paragraph2,
                 paragraph1 + paragraph2 + paragraph1 + paragraph2,
                 paragraph2,
@@ -95,7 +96,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
     }
 
     //[INotifyPropertyChanged]
-    partial class JustifyParagraphLabel1 : EnhanceGraphicsView, IDrawable, IView
+    public partial class JustifyParagraphLabel1 : EnhanceGraphicsView, IDrawable, IView
     {
         static float density;
         static float Density
@@ -133,7 +134,8 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         int fontSize = 14; //Android默认大小
 
         [AutoBindable]
-        string fontFamily;// = "Impact";//"Microsoft YaHei UI"
+        MauiFont font;// = "Impact";//"Microsoft YaHei UI"
+        
         /// <summary>
         /// 行间距
         /// </summary>
@@ -176,7 +178,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         /// <summary>
         /// 空格宽度, px
         /// </summary>
-        private float blankW;
+        private float blankWCache;
         /// <summary>
         /// 空格
         /// </summary>
@@ -213,12 +215,11 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
 
         public (float w, float h) MeasureParagraph(float w)
         {
-            
             // Create normal style
             styleNormal = new PlatformStyle()
             {
                 FontSize = FontSize,
-                Font = Font.Default,
+                Font = Font,
                 FontColor = FontColor,
             };
 
@@ -239,26 +240,27 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             {
                 skTextOfBlank = new TextBlock() { };
                 skTextOfBlank.AddText(" ", styleNormal);
-                blankW = skTextOfBlank.MeasuredWidth;
-                lineHeightCache = skTextOfBlank.MeasuredHeight;
+                //blankW = skTextOfBlank.MeasuredWidth;
+                //lineHeightCache = skTextOfBlank.MeasuredHeight;
+
+                var m = new TextBlock() { };
+                m.AddText("m", styleNormal);
+                var n = new TextBlock() { };
+                n.AddText("n", styleNormal);
+                var nm = new TextBlock() { };
+                nm.AddText("n m", styleNormal);
+
+                blankWCache = nm.MeasuredWidth - n.MeasuredWidth - n.MeasuredWidth;
+                lineHeightCache = nm.MeasuredHeight;
+#if DEBUG
+                Console.WriteLine($"m w={m.MeasuredWidth} h={m.MeasuredHeight}");
+                Console.WriteLine($"n w={n.MeasuredWidth} h={n.MeasuredHeight}");
+                Console.WriteLine($"space w={skTextOfBlank.MeasuredWidth} h={skTextOfBlank.MeasuredHeight}");
+                Console.WriteLine($"n m w={nm.MeasuredWidth} h={nm.MeasuredHeight}");
+#endif
             }
 
-#if DEBUG
-            var m = new TextBlock() { };
-            m.AddText("m", styleNormal);
-            Console.WriteLine($"m w={m.MeasuredWidth} h={m.MeasuredHeight}");
-            var n = new TextBlock() { };
-            n.AddText("n", styleNormal);
-            Console.WriteLine($"n w={n.MeasuredWidth} h={n.MeasuredHeight}");
-            var space = new TextBlock() { };
-            space.AddText(" ", styleNormal);
-            Console.WriteLine($"space w={space.MeasuredWidth} h={space.MeasuredHeight}");
-            var nm = new TextBlock() { };
-            nm.AddText("n m", styleNormal);
-            Console.WriteLine($"n m w={nm.MeasuredWidth} h={nm.MeasuredHeight}");
-#endif
-
-            float wLength = blankW * BegainSpaceCount;//起始位置根据开头空格数
+            float wLength = blankWCache * BegainSpaceCount;//起始位置根据开头空格数
             if (lines == null)
             {
                 lines = new List<(float, List<TextBlock>)>();
@@ -278,7 +280,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     }
 
                     line.Add(skText);
-                    wLength = wLength + skText.MeasuredWidth + blankW;
+                    wLength = wLength + skText.MeasuredWidth + blankWCache;
                 }
                 lines.Add((wLength, line));
             }
@@ -298,7 +300,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                 if (i == 0)
                 {
                     lineSpace = 0;
-                    x = blankW * BegainSpaceCount;//段落起始位置根据开头空格数
+                    x = blankWCache * BegainSpaceCount;//段落起始位置根据开头空格数
                 }
 
                 var lin = lines[i];
@@ -312,7 +314,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     if (i == lines.Count - 1)
                     {
                         t.Paint(canvas, new SKPoint(x, 0 + lineHeightCache * i + lineSpace * i), lineHeightCache);
-                        x = x + t.MeasuredWidth + blankW;
+                        x = x + t.MeasuredWidth + blankWCache;
                     }
                     else
                     {
@@ -331,12 +333,12 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                         {
                             if (gap >= 1)
                             {
-                                x = x + t.MeasuredWidth + blankW + c;
+                                x = x + t.MeasuredWidth + blankWCache + c;
                                 gap = gap - c;
                             }
                             else
                             {
-                                x = x + t.MeasuredWidth + blankW;
+                                x = x + t.MeasuredWidth + blankWCache;
                             }
                         }
                     }
@@ -402,7 +404,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         {
             public Color FontColor;
 
-            public IFont Font;
+            public MauiFont Font;
         }
     }
 }

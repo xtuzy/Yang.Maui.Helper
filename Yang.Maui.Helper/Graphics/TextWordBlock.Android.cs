@@ -21,7 +21,7 @@ namespace Yang.Maui.Helper.Graphics
         //pixel
         int? maxWidth;
 
-        IFont font;
+        MauiFont font;
 
         //pixel
         float fontSize;
@@ -38,7 +38,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <param name="font"></param>
         /// <param name="fontSize">dp</param>
         /// <param name="maxWidth">dp</param>
-        public TextWordBlock(string text, IFont font, float fontSize, Color textColor, int? maxWidth)
+        public TextWordBlock(string text, MauiFont font, float fontSize, Color textColor, int? maxWidth)
         {
             this.maxWidth = maxWidth != null ? (int)(maxWidth.Value * TextLayoutUtils.Density) : null;
             this.font = font;
@@ -46,7 +46,7 @@ namespace Yang.Maui.Helper.Graphics
             this.text = text;
 
             textPaint = new TextPaint { TextSize = this.fontSize };
-            textPaint.SetTypeface(font?.ToTypeface() ?? Typeface.Default);
+            textPaint.SetTypeface(font?.GetPlatformFont() ?? Typeface.Default);
             this.TextColor = textColor;
 
             platformTextLayoutHandler = GetPlatformTextLayoutHandler(text, textPaint, this.maxWidth);
@@ -103,7 +103,7 @@ namespace Yang.Maui.Helper.Graphics
             set
             {
                 var newValue = (int)(value * TextLayoutUtils.Density);
-                
+
                 if (maxWidth == null || (maxWidth != null && maxWidth > newValue))//减小时重建
                 {
                     platformTextLayoutHandler?.Dispose();
@@ -138,9 +138,9 @@ namespace Yang.Maui.Helper.Graphics
             set => textPaint.TextSize = value * TextLayoutUtils.Density;
         }
 
-        public IFont Font
+        public MauiFont Font
         {
-            set => textPaint.SetTypeface(value?.ToTypeface() ?? Typeface.Default);
+            set => textPaint.SetTypeface(value?.GetPlatformFont() ?? Typeface.Default);
         }
     }
 

@@ -3,6 +3,7 @@ using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Win2D;
+using Microsoft.Maui.Platform;
 using Windows.UI.Text;
 using HorizontalAlignment = Microsoft.Maui.Graphics.HorizontalAlignment;
 using VerticalAlignment = Microsoft.Maui.Graphics.VerticalAlignment;
@@ -16,7 +17,7 @@ namespace Yang.Maui.Helper.Graphics
 
         int? maxWidth;
 
-        IFont font;
+        MauiFont font;
 
         float fontSize;
 
@@ -24,7 +25,7 @@ namespace Yang.Maui.Helper.Graphics
 
         string text;
 
-        public TextWordBlock(string text, IFont font, float fontSize, Color textColor, int? maxWidth)
+        public TextWordBlock(string text, MauiFont font, float fontSize, Color textColor, int? maxWidth)
         {
             this.maxWidth = maxWidth;
             this.font = font;
@@ -38,16 +39,18 @@ namespace Yang.Maui.Helper.Graphics
         {
             var format = new CanvasTextFormat
             {
-                FontFamily = font.Name,
                 FontSize = fontSize,
-                FontWeight = new Windows.UI.Text.FontWeight { Weight = (ushort)font.Weight },
-                FontStyle = TextLayoutUtils.ToFontStyle(font),
                 WordWrapping = CanvasWordWrapping.NoWrap
             };
-
+            if (font != null)
+            {
+                format.FontFamily = font.GetPlatformFont()?.Source;
+                format.FontWeight = new Windows.UI.Text.FontWeight { Weight = (ushort)font.VirtualFont.Weight };
+                format.FontStyle = font.VirtualFont.ToFontStyle();
+            }
+            
             var device = CanvasDevice.GetSharedDevice();
             platformTextLayoutHandler = TextLayoutUtils.GetCanvasTextLayout(text, device, maxWidth == null ? 0 : maxWidth.Value, format, HorizontalAlignment.Left, VerticalAlignment.Top);
-
         }
 
         public SizeF MeasuredSize

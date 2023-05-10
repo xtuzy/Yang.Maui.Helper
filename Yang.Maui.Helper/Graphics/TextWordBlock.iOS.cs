@@ -21,7 +21,7 @@ namespace Yang.Maui.Helper.Graphics
 
         int? maxWidth;
 
-        IFont font;
+        MauiFont font;
 
         float fontSize;
 
@@ -76,7 +76,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <param name="font"></param>
         /// <param name="fontSize">dp</param>
         /// <param name="maxWidth">dp</param>
-        public TextWordBlock(string text, IFont font, float fontSize, Color textColor, int? maxWidth)
+        public TextWordBlock(string text, MauiFont font, float fontSize, Color textColor, int? maxWidth)
         {
             this.maxWidth = maxWidth;
             this.font = font;
@@ -146,7 +146,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <summary>
         /// 
         /// </summary>
-        public void UpdateFont(IFont font, float? fontSize, Color textColor)
+        public void UpdateFont(MauiFont font, float? fontSize, Color textColor)
         {
             if (font != null) this.font = font;
             if (fontSize != null) this.fontSize = fontSize.Value;
@@ -161,14 +161,14 @@ namespace Yang.Maui.Helper.Graphics
 
     internal static class TextLayoutUtils
     {
-        public static CTFramesetter GetCTFramesetter(NSMutableAttributedString attributedString, IFont font, float fontSize, Color fontColor, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
+        public static CTFramesetter GetCTFramesetter(NSMutableAttributedString attributedString, MauiFont font, float fontSize, Color fontColor, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             var attributes = new CTStringAttributes();
 
             // Create a color and add it as an attribute to the string.
             attributes.ForegroundColor = new CGColor(fontColor.Red, fontColor.Green, fontColor.Blue, fontColor.Alpha);
 
-            attributes.Font = font?.ToCTFont(fontSize) ?? Microsoft.Maui.Graphics.Platform.FontExtensions.GetDefaultCTFont(fontSize);
+            attributes.Font = font?.GetPlatformFont_CTFont(fontSize) ?? Microsoft.Maui.Graphics.Platform.FontExtensions.GetDefaultCTFont(fontSize);
 
             // Set the horizontal alignment
             var paragraphSettings = new CTParagraphStyleSettings();

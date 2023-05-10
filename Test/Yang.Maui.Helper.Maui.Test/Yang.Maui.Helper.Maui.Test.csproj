@@ -64,6 +64,9 @@
     <MauiXaml Update="Pages\DrawableViewTestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\FontTestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\SKGLViewTestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

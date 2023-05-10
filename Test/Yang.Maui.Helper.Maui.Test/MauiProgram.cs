@@ -25,6 +25,9 @@ namespace Yang.Maui.Helper.Maui.Test
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("YouYuan.ttf", "YouYuan");
+                    fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome6FreeRegular400");
+                    fonts.AddFont("Font Awesome 6 Free-Solid-900.otf", "FontAwesome6FreeSolid900");
                 });
 
             return builder.Build();

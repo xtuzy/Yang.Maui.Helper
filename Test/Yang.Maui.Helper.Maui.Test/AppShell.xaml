@@ -30,5 +30,9 @@
         Title="TableViewTestPage"
         ContentTemplate="{DataTemplate pages:TableViewTestPage}"
         Route="TableViewTestPage" />
+    <ShellContent
+        Title="FontTestPage"
+        ContentTemplate="{DataTemplate pages:FontTestPage}"
+        Route="FontTestPage" />
 
 </Shell>

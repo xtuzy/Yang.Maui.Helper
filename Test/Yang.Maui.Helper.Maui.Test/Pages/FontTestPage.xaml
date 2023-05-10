@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Yang.Maui.Helper.Maui.Test.Pages.FontTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="FontTestPage"
+    BackgroundColor="AliceBlue">
+    <VerticalStackLayout x:Name="layout" Spacing="10">
+        <ImageButton
+            x:Name="catalogManagerButton"
+            BackgroundColor="#333333"
+            HeightRequest="20"
+            WidthRequest="20">
+            <ImageButton.Source>
+                <FontImageSource
+                    FontAutoScalingEnabled="True"
+                    FontFamily="FontAwesome6FreeSolid900"
+                    Glyph=""
+                    Size="18"
+                    Color="White" />
+            </ImageButton.Source>
+        </ImageButton>
+        <Label
+            FontFamily="FontAwesome6FreeSolid900"
+            HorizontalOptions="Center"
+            Text="\uf060"
+            TextColor="Black" />
+        <Label
+            HorizontalOptions="Center"
+            Text="TextWordBlock的字体加载情况"
+            TextColor="Black" />
+    </VerticalStackLayout>
+</ContentPage>
