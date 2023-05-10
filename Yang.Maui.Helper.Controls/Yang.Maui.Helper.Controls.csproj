@@ -16,7 +16,7 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3.8</Version>
+    <Version>1.0.3.9</Version>
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('ios')) == false and $(TargetFramework.Contains('maccatalyst'))==false">
@@ -48,7 +48,7 @@
 
   <ItemGroup>
     <PackageReference Include="M.BindableProperty.Generator" Version="0.9.3" />
-    <PackageReference Include="SharpConstraintLayout.Maui" Version="2.1.3" />
+    <PackageReference Include="SharpConstraintLayout.Maui" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
