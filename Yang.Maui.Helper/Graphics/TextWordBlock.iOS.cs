@@ -10,27 +10,27 @@ namespace Yang.Maui.Helper.Graphics
 {
     public class TextWordBlock
     {
-        const int MaxDPWidth = 1500;
-        const int MaxDPHeight = 1500;
+        protected const int MaxDPWidth = 1500;
+        protected const int MaxDPHeight = 1500;
 
-        NSMutableAttributedString mutableAttributedString;
-        CTFramesetter frameSetter;
-        private CGPath path;
-        CTFrame platformTextLayoutHandler;
+        protected NSMutableAttributedString mutableAttributedString;
+        protected CTFramesetter frameSetter;
+        protected CGPath path;
+        protected CTFrame platformTextLayoutHandler;
         public CTFrame PlatformTextLayoutHandler => platformTextLayoutHandler;
 
-        int? maxWidth;
+        protected int? maxWidth;
 
-        MauiFont font;
+        protected MauiFont font;
 
-        float fontSize;
+        protected float fontSize;
 
-        Color textColor = Colors.Red;
+        protected Color textColor = Colors.Red;
 
-        string text;
+        protected string text;
 
-        float x = 20;
-        float y = -20;
+        protected float x = 20;
+        protected float y = -20;
 
         /// <summary>
         /// 
@@ -38,7 +38,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <param name="iCanvas"></param>
         /// <param name="x">dp</param>
         /// <param name="y">dp</param>
-        public void Paint(ICanvas iCanvas, float x, float y)
+        public virtual void Paint(ICanvas iCanvas, float x, float y)
         {
             var platformCanvas = iCanvas as Microsoft.Maui.Graphics.Platform.PlatformCanvas;
             var canvas = platformCanvas.Context;
@@ -86,7 +86,7 @@ namespace Yang.Maui.Helper.Graphics
             Init();
         }
 
-        void Init()
+        protected virtual void Init()
         {
             mutableAttributedString = new NSMutableAttributedString(text);
 
@@ -146,7 +146,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <summary>
         /// 
         /// </summary>
-        public void UpdateFont(MauiFont font, float? fontSize, Color textColor)
+        public virtual void UpdateFont(MauiFont font, float? fontSize, Color textColor)
         {
             if (font != null) this.font = font;
             if (fontSize != null) this.fontSize = fontSize.Value;
@@ -159,7 +159,7 @@ namespace Yang.Maui.Helper.Graphics
         }
     }
 
-    internal static class TextLayoutUtils
+    public static class TextLayoutUtils
     {
         public static CTFramesetter GetCTFramesetter(NSMutableAttributedString attributedString, MauiFont font, float fontSize, Color fontColor, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {

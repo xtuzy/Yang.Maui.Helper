@@ -6,6 +6,7 @@ using Font = Microsoft.Maui.Graphics.Font;
 using Style = Topten.RichTextKit.Style;
 using Yang.Maui.Helper.Graphics;
 using Yang.Maui.Helper.Controls.EnhanceGraphicsViewComponent;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Yang.Maui.Helper.Maui.Test.Pages
 {
@@ -70,7 +71,12 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                 };
                 panel.Children.Add(view);
             }
-
+            panel.Children.Add(new JustifySingleParagraphLabel()
+            {
+                FontSize = 14,
+                FontColor = Colors.Green,
+                Text = paragraph2
+            });
             /*Task.Run(async () =>
             {
                 while (true)
@@ -95,7 +101,63 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         }
     }
 
-    //[INotifyPropertyChanged]
+    /// <summary>
+    /// 其只创建一个TextWordBlock
+    /// </summary>
+    public partial class JustifySingleParagraphLabel : EnhanceGraphicsView, IDrawable, IView
+    {
+        private double lastWidth;
+        TextWordBlock textBlock;
+
+        public string Text;
+        public MauiFont Font;
+        public float FontSize;
+        public Color FontColor;
+
+        public JustifySingleParagraphLabel()
+        {
+            //this.PaintSurface += View_PaintSurface;
+            this.Drawable = this;
+        }
+
+        public override Size CustomMeasuredSize(double widthConstraint, double heightConstraint)
+        {
+            if (!double.IsInfinity(widthConstraint))
+            {
+                if (lastWidth != widthConstraint)
+                {
+                    OnWidthChanged();
+                }
+                var r = MeasureParagraph((float)widthConstraint);
+                lastWidth = widthConstraint;
+                return new Size(widthConstraint, r.Height);
+            }
+            else
+                return base.CustomMeasuredSize(widthConstraint, heightConstraint);
+        }
+
+        private Size MeasureParagraph(float widthConstraint)
+        {
+            if(textBlock == null)
+                textBlock = new TextWordBlock(Text, Font, FontSize, FontColor, (int?)widthConstraint);
+            return textBlock.MeasuredSize;
+        }
+
+        private void OnWidthChanged()
+        {
+            textBlock = null;
+        }
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            textBlock.Paint(canvas, 0, 0);
+        }
+    }
+
+    /// <summary>
+    /// 其使用空格切割段落, 然后为每个词创建一个TextWordBlock.
+    /// 其目的是看这样使用的性能怎么样, 像Android平台在StaticLayout下还有Spannable, 直接在StaticLayout层就能操作的话, 跨平台实现能简单点.
+    /// </summary>
     public partial class JustifyParagraphLabel1 : EnhanceGraphicsView, IDrawable, IView
     {
         static float density;

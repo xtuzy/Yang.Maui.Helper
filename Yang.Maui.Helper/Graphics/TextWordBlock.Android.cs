@@ -15,20 +15,20 @@ namespace Yang.Maui.Helper.Graphics
     /// </summary>
     public partial class TextWordBlock
     {
-        StaticLayout platformTextLayoutHandler;
+        protected StaticLayout platformTextLayoutHandler;
         public StaticLayout PlatformTextLayoutHandler => platformTextLayoutHandler;
 
         //pixel
-        int? maxWidth;
+        protected int? maxWidth;
 
-        MauiFont font;
+        protected MauiFont font;
 
         //pixel
-        float fontSize;
+        protected float fontSize;
 
-        string text;
+        protected string text;
 
-        private TextPaint textPaint;
+        protected TextPaint textPaint;
         public TextPaint TextPaint => textPaint;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <param name="iCanvas"></param>
         /// <param name="x">dp</param>
         /// <param name="y">dp</param>
-        public void Paint(ICanvas iCanvas, float x, float y)
+        public virtual void Paint(ICanvas iCanvas, float x, float y)
         {
             PlatformCanvas platformCanvas = (iCanvas as ScalingCanvas).ParentCanvas as Microsoft.Maui.Graphics.Platform.PlatformCanvas;
             var canvas = platformCanvas.Canvas;
@@ -86,7 +86,7 @@ namespace Yang.Maui.Helper.Graphics
         /// <param name="value"></param>
         /// <param name="constrainWidth">pixel</param>
         /// <returns></returns>
-        private StaticLayout GetPlatformTextLayoutHandler(string value, TextPaint textPaint, int? constrainWidth)
+        protected virtual StaticLayout GetPlatformTextLayoutHandler(string value, TextPaint textPaint, int? constrainWidth)
         {
             if (value == null)
                 return null;
@@ -144,10 +144,10 @@ namespace Yang.Maui.Helper.Graphics
         }
     }
 
-    internal static class TextLayoutUtils
+    public static class TextLayoutUtils
     {
         static float density;
-        internal static float Density
+        public static float Density
         {
             get
             {

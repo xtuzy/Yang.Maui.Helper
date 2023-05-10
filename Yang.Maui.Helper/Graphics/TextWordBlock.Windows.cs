@@ -12,18 +12,18 @@ namespace Yang.Maui.Helper.Graphics
 {
     public class TextWordBlock
     {
-        CanvasTextLayout platformTextLayoutHandler;
+        protected CanvasTextLayout platformTextLayoutHandler;
         public CanvasTextLayout PlatformTextLayoutHandler => platformTextLayoutHandler;
 
-        int? maxWidth;
+        protected int? maxWidth;
 
-        MauiFont font;
+        protected MauiFont font;
 
-        float fontSize;
+        protected float fontSize;
 
-        Color textColor = Colors.Red;
+        protected Color textColor = Colors.Red;
 
-        string text;
+        protected string text;
 
         public TextWordBlock(string text, MauiFont font, float fontSize, Color textColor, int? maxWidth)
         {
@@ -35,22 +35,25 @@ namespace Yang.Maui.Helper.Graphics
             Init();
         }
 
-        private void Init()
+        protected virtual void Init()
         {
             var format = new CanvasTextFormat
             {
                 FontSize = fontSize,
-                WordWrapping = CanvasWordWrapping.NoWrap
             };
+            if(maxWidth == null)//不限制宽代表测量整个宽, 所以不需要换行
+            {
+                format.WordWrapping = CanvasWordWrapping.NoWrap;
+            }
             if (font != null)
             {
                 format.FontFamily = font.GetPlatformFont()?.Source;
                 format.FontWeight = new Windows.UI.Text.FontWeight { Weight = (ushort)font.VirtualFont.Weight };
                 format.FontStyle = font.VirtualFont.ToFontStyle();
             }
-            
+            var w = maxWidth == null ? 0 : maxWidth.Value;
             var device = CanvasDevice.GetSharedDevice();
-            platformTextLayoutHandler = TextLayoutUtils.GetCanvasTextLayout(text, device, maxWidth == null ? 0 : maxWidth.Value, format, HorizontalAlignment.Left, VerticalAlignment.Top);
+            platformTextLayoutHandler = TextLayoutUtils.GetCanvasTextLayout(text, device, w, format, HorizontalAlignment.Left, VerticalAlignment.Top);
         }
 
         public SizeF MeasuredSize
@@ -61,7 +64,7 @@ namespace Yang.Maui.Helper.Graphics
             }
         }
 
-        public void Paint(ICanvas iCanvas, float x, float y)
+        public virtual void Paint(ICanvas iCanvas, float x, float y)
         {
             var session = (iCanvas as W2DCanvas).Session;
             session.DrawTextLayout(platformTextLayoutHandler,
@@ -70,7 +73,7 @@ namespace Yang.Maui.Helper.Graphics
         }
     }
 
-    internal static class TextLayoutUtils
+    public static class TextLayoutUtils
     {
         public static CanvasTextLayout GetCanvasTextLayout(string value, CanvasDevice device, float limiteWidth, CanvasTextFormat format, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
