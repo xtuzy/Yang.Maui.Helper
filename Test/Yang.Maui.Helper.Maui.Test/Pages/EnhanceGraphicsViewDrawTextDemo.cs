@@ -48,8 +48,59 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             List<string> list = new List<string>()
             {
                 "这是一行中文文本, 包含表情符号🤣",
-                paragraph1 + paragraph2 + paragraph1 + paragraph2,
-                paragraph1 + paragraph2 + paragraph1 + paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
+                paragraph2,
+                paragraph1,
                 paragraph2,
             };
             var scrollView = new ScrollView() { Orientation = ScrollOrientation.Vertical, VerticalScrollBarVisibility = ScrollBarVisibility.Always };
@@ -98,6 +149,11 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
         {
             return base.OnMeasure(widthConstraint, heightConstraint);
+        }
+
+        protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
+        {
+            return base.MeasureOverride(widthConstraint, heightConstraint);
         }
     }
 

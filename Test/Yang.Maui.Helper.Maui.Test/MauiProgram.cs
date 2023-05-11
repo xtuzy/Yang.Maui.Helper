@@ -4,6 +4,7 @@ using Yang.Maui.Helper.Controls.DrawableView.Hosting;
 using Yang.Maui.Helper.Controls.EnhanceGraphicsViewComponent;
 using Yang.Maui.Helper.Controls.ViewPagerComponent;
 using Yang.Maui.Helper.Skia.SKGpuView.Hosting;
+using Yang.Maui.Helper.Skia.EnhanceSKCanvasViewComponent;
 using Yang.Maui.Helper.ViewUtils.PlatformImageSource;
 
 namespace Yang.Maui.Helper.Maui.Test
@@ -20,6 +21,7 @@ namespace Yang.Maui.Helper.Maui.Test
                 .UseViewPager()
                 .UseDrawableView()
                 .UseEnhanceGraphicsView()
+                .UseEnhanceSKCanvasView()
                 .UseSKGpuView(false, true)
                 .ConfigureFonts(fonts =>
                 {

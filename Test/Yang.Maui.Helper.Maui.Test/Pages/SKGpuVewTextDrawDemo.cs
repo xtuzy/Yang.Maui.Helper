@@ -2,18 +2,17 @@
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using System.Diagnostics;
-using Yang.Maui.Helper.Skia.EnhanceSKCanvasViewComponent;
 using Yang.Maui.Helper.Skia.SKGpuView;
 using Style = Topten.RichTextKit.Style;
 using TextBlock = Topten.RichTextKit.TextBlock;
 
 namespace Yang.Maui.Helper.Maui.Test.Pages
 {
-    public partial class SkiaTextDrawDemo : ContentView
+    public partial class SKGpuVewTextDrawDemo : ContentView
     {
         string paragraph1 = "In Cambodia, the choice of a spouse is a complex one for the young male. It may involve not only his parents and his friends, [1] those of the young women, but also a matchmaker. A young man can [2] a likely spouse on his own and them ask his parents to [3] the marriage negotiations, or the young man's parents may make the choice of a spouse, giving the child little to say in the selection. [4] , a girl may veto the spouse her parents have chosen. [5] a spouse has been selected, each family investigates the other to make sure its child is marrying  [6]  a good family.";
         string paragraph2 = "The traditional wedding is a long and colorful affair. Formerly it lasted three days, [7]  by the 1980s it more commonly lasted a day and a half. Buddhist priests offer a short sermon and [8] prayers of blessing. Parts of the ceremony involve ritual hair cutting,  [9]  cotton threads soaked in holy water around the bride's and groom's wrists , and [10] a candle around a circle of happily married and respected couples to bless the [11] . Newlyweds traditionally move in with the wife's parents and may [12] with them up to a year, [13] they can build a flew house nearby.\r\n";
-        public SkiaTextDrawDemo()
+        public SKGpuVewTextDrawDemo()
         {
             List<string> list = new List<string>()
             {
@@ -80,7 +79,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             this.Content = scrollView;
             foreach (var l in list)
             {
-                var view = new JustifyParagraphLabel()
+                var view = new JustifyParagraphLabel_Gpu()
                 {
                     //FontSize = 30,
                     Paragraph = l,
@@ -88,7 +87,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     //WidthRequest = 250,
                     //HeightRequest = 800
                     //BackgroundColor = Colors.Gray
-                    //EnableTransparent = true,
+                    EnableTransparent = true,
                     //HasRenderLoop = true
                 };
                 panel.Children.Add(view);
@@ -119,7 +118,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
     }
 
     //[INotifyPropertyChanged]
-    partial class JustifyParagraphLabel : EnhanceSKCanvasView
+    partial class JustifyParagraphLabel_Gpu : SKGpuView
     {
         static float density;
         static float Density
@@ -132,7 +131,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             }
         }
 
-        public JustifyParagraphLabel()
+        public JustifyParagraphLabel_Gpu()
         {
             this.PaintSurface += View_PaintSurface;
             this.SizeChanged += JustifyParagraphLabel_SizeChanged;
@@ -349,7 +348,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             }
         }
 
-        private void View_PaintSurface(object? sender, SKPaintSurfaceEventArgs e)
+        private void View_PaintSurface(object? sender, SKPaintGpuSurfaceEventArgs e)
         {
             var size = this.CanvasSize;
             Console.WriteLine($"[{this.GetType().Name}] Id={this.Id} Method=View_PaintSurface size={size}");
