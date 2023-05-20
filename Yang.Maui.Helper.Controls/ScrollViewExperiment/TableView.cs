@@ -390,6 +390,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                                 _reusableCells.Add(cell);
                                 availableCells.Remove(indexPath);
                             }
+                            cell.PrepareForReuse();
                         }
                         tableHeight = rowMaybeBottom;
                     }
@@ -405,7 +406,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 }
                 else
                 {
-                    //cell.RemoveFromSuperview();
+                    cell.RemoveFromSuperview();
                 }
             }
 

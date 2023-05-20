@@ -134,7 +134,7 @@ public partial class TableViewTestPage : ContentPage
 
                 // π”√cell
                 cell.TextLabel.Text = $"Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
-                (cell as Cell1).Image.Source = "dotnet_bot.png";
+                (cell as Cell1).Image.Source = "https://ydlunacommon-cdn.nosdn.127.net/cb776e6995f1c703706cf8c4c39a7520.png";
                 return cell;
             }
             else
@@ -178,7 +178,11 @@ public partial class TableViewTestPage : ContentPage
         public Cell1(TableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
         {
             Image = new Microsoft.Maui.Controls.Image() { };
+            var indicator = new ActivityIndicator { Color = new Color(0.5f), HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center };
+            indicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsLoading");
+            indicator.BindingContext = Image;
             this.ContentView.Add(Image);
+            this.ContentView.Add(indicator);
         }
 
         public Microsoft.Maui.Controls.Image Image;

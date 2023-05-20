@@ -87,7 +87,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public override Size Measure(double widthConstraint, double heightConstraint)
         {
             var size = container.OnMeasure(widthConstraint, heightConstraint);
-            Console.WriteLine($"Measure Size={size}");
+            //Console.WriteLine($"Measure Size={size}");
             return size;
         }
     }
