@@ -48,6 +48,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
     public delegate TableViewCell cellForRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath);
     public delegate int numberOfSectionsInTableViewDelegate(TableView tableView);
     public delegate string titleForXInSectionDelegate(TableView tableView, int section);
+    public delegate string cellTypeForRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath);
     public delegate string EditintitleForFooterInSectionDelegate(TableView tableView, int section);
     public delegate void commitEditingStyleDelegate(TableView tableView, TableViewCellEditingStyle editingStyle, NSIndexPath indexPath);
     public delegate bool canEditRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath);
@@ -65,6 +66,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         public titleForXInSectionDelegate titleForFooterInSection { get; }
         public commitEditingStyleDelegate commitEditingStyle { get; }
         public canEditRowAtIndexPathDelegate canEditRowAtIndexPath { get; }
+        public cellTypeForRowAtIndexPathDelegate cellTypeForRowAtIndexPath { get; }
     }
 
     public partial class TableView : ScrollView
@@ -224,9 +226,10 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 for (int row = 0; row < numberOfRows; row++)
                 {
                     NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
+                    string cellType = this._dataSource.cellTypeForRowAtIndexPath(this, indexPath);
                     //尝试用之前测量的值或者预设值估计底部在哪
                     var rowMaybeTop = tableHeight;
-                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : EstimatedRowHeight);
+                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : (EstimatedRowHeightPro.ContainsKey(cellType) ? EstimatedRowHeightPro[cellType] : EstimatedRowHeight));
                     //如果在可见区域, 就详细测量
                     if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
                         || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
@@ -266,7 +269,10 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         }
 
         public double EstimatedRowHeight = 20;
-
+        /// <summary>
+        /// 存储已经显示的Row的行高, 用于估计未显示的行. 这种预估默认是存储同
+        /// </summary>
+        public Dictionary<string, double> EstimatedRowHeightPro = new Dictionary<string, double>();
         List<NSIndexPath> needRemoveCell = new List<NSIndexPath>();
         /// <summary>
         /// Measure思路:
@@ -350,9 +356,11 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                 for (int row = 0; row < numberOfRows; row++)
                 {
                     NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
+                    string cellType = this._dataSource.cellTypeForRowAtIndexPath(this, indexPath);
                     //尝试用之前测量的值或者预设值估计底部在哪
                     var rowMaybeTop = tableHeight;
-                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : EstimatedRowHeight);
+                    var rowMaybeHeight = (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : (EstimatedRowHeightPro.ContainsKey(cellType) ? EstimatedRowHeightPro[cellType] : EstimatedRowHeight));
+                    var rowMaybeBottom = tableHeight + rowMaybeHeight;
                     //如果在可见区域, 就详细测量
                     if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
                        || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
@@ -376,6 +384,17 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                             sectionRecord._rowHeights[row] = MeasureChild(cell, tableViewBoundsSize.Width, heightConstraint).Request.Height;
 
                             //cell.SeparatorStyle:_separatorStyle color:_separatorColor] ;
+                            if (!EstimatedRowHeightPro.ContainsKey(cellType))
+                            { 
+                                EstimatedRowHeightPro.Add(cellType, sectionRecord._rowHeights[row]);
+                            }
+                            else
+                            {
+                                if (EstimatedRowHeightPro[cellType] < sectionRecord._rowHeights[row])
+                                {
+                                    EstimatedRowHeightPro[cellType] = sectionRecord._rowHeights[row];
+                                }
+                            }
 
                             tableHeight += sectionRecord._rowHeights[row];
                         }
@@ -402,7 +421,12 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             {
                 if (cell.ReuseIdentifier != default)
                 {
-                    _reusableCells.Add(cell);
+                    if(_reusableCells.Count > 3)
+                    {
+                        cell.RemoveFromSuperview();
+                    }
+                    else
+                        _reusableCells.Add(cell);
                 }
                 else
                 {

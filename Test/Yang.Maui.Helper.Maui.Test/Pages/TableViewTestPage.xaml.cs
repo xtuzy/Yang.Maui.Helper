@@ -1,4 +1,3 @@
-using Microsoft.Maui.Controls;
 using Yang.Maui.Helper.Controls.ScrollViewExperiment;
 
 namespace Yang.Maui.Helper.Maui.Test.Pages;
@@ -23,7 +22,7 @@ public partial class TableViewTestPage : ContentPage
 #else
             var indexPath = tableView.IndexPathForVisibaleRowAtPointOfTableView(p.Value);
 #endif
-            if(indexPath != null)
+            if (indexPath != null)
                 tableView.SelectRowAtIndexPath(indexPath, false, TableViewScrollPosition.None);
         };
         tableView.Content.GestureRecognizers.Add(click);
@@ -43,7 +42,7 @@ public partial class TableViewTestPage : ContentPage
             BackgroundColor = Colors.Red,
             Children =
             {
-                new Button(){Text = "Footer", VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center } 
+                new Button(){Text = "Footer", VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center }
             }
         };
 
@@ -102,10 +101,25 @@ public partial class TableViewTestPage : ContentPage
 
         public canEditRowAtIndexPathDelegate canEditRowAtIndexPath { get; }
 
+        public cellTypeForRowAtIndexPathDelegate cellTypeForRowAtIndexPath { get; }
+
         public Source()
         {
             numberOfRowsInSection += numberOfRowsInSectionMethod;
             cellForRowAtIndexPath += cellForRowAtIndexPathMethod;
+            cellTypeForRowAtIndexPath += cellTypeForRowAtIndexPathMethod;
+        }
+
+        public string cellTypeForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
+        {
+            if (indexPath.Row % 2 == 0)
+            {
+                return cellID1;
+            }
+            else
+            {
+                return cellID2;
+            }
         }
 
         public int numberOfRowsInSectionMethod(Controls.ScrollViewExperiment.TableView tableView, int section)
@@ -119,7 +133,7 @@ public partial class TableViewTestPage : ContentPage
         public TableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
         {
             //从tableView的一个队列里获取一个cell
-            if (indexPath.Row % 2 == 0)
+            //if (indexPath.Row % 2 == 0)
             {
                 TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID1);
 
@@ -137,7 +151,7 @@ public partial class TableViewTestPage : ContentPage
                 (cell as Cell1).Image.Source = "https://ydlunacommon-cdn.nosdn.127.net/cb776e6995f1c703706cf8c4c39a7520.png";
                 return cell;
             }
-            else
+            /*else
             {
                 TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID2);
 
@@ -154,7 +168,7 @@ public partial class TableViewTestPage : ContentPage
                 //使用cell
                 cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
                 return cell;
-            }
+            }*/
         }
     }
 
@@ -164,7 +178,7 @@ public partial class TableViewTestPage : ContentPage
 
         public Cell(TableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
         {
-            this.SelectedBackgroundView = new Grid() { BackgroundColor = Colors.Red};
+            this.SelectedBackgroundView = new Grid() { BackgroundColor = Colors.Red };
         }
 
         public override void PrepareForReuse()
