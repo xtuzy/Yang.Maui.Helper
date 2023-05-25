@@ -45,7 +45,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
     }
 
     public delegate int numberOfRowsInSectionDelegate(TableView tableView, int section);
-    public delegate TableViewCell cellForRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath);
+    public delegate TableViewCell cellForRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath, bool isEmpty);
     public delegate int numberOfSectionsInTableViewDelegate(TableView tableView);
     public delegate string titleForXInSectionDelegate(TableView tableView, int section);
     public delegate string cellTypeForRowAtIndexPathDelegate(TableView tableView, NSIndexPath indexPath);
@@ -84,8 +84,8 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         TableViewCellSeparatorStyle _separatorStyle;
 
         Color separatorColor;
-        UIView _tableHeaderView;
-        View _tableFooterView;
+        TableViewCell _tableHeaderView;
+        TableViewCell _tableFooterView;
         UIView _backgroundView;
         bool allowsSelection;
         bool allowsSelectionDuringEditing;
@@ -208,58 +208,20 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             Size boundsSize = this.Bounds.Size;
             var contentOffset = this.ScrollY; //ContentOffset.Y;
             Rect visibleBounds = new Rect(0, contentOffset, boundsSize.Width, boundsSize.Height);
-            double tableHeight = 0;
 
             if (_tableHeaderView != null)
             {
-                LayoutChild(_tableHeaderView, new Rect(0, tableHeight, visibleBounds.Width, _tableHeaderView.DesiredSize.Height));
-                tableHeight += _tableHeaderView.DesiredSize.Height;
+                LayoutChild(_tableHeaderView, new Rect(0, _tableHeaderView.PositionInLayout.Y, visibleBounds.Width, _tableHeaderView.DesiredSize.Height));
             }
 
             // layout sections and rows
-            int numberOfSections = _sections.Count;
-            for (int section = 0; section < numberOfSections; section++)
-            {
-                TableViewSection sectionRecord = _sections[section];
-                int numberOfRows = sectionRecord.numberOfRows;
+            foreach (var cell in _cachedCells)
+                LayoutChild(cell.Value, new Rect(0, cell.Value.PositionInLayout.Y, visibleBounds.Width, EstimatedRowHeight));
 
-                for (int row = 0; row < numberOfRows; row++)
-                {
-                    NSIndexPath indexPath = NSIndexPath.FromRowSection(row, section);
-                    string cellType = this._dataSource.cellTypeForRowAtIndexPath(this, indexPath);
-                    //尝试用之前测量的值或者预设值估计底部在哪
-                    var rowMaybeTop = tableHeight;
-                    var rowMaybeBottom = tableHeight + (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : (EstimatedRowHeightPro.ContainsKey(cellType) ? EstimatedRowHeightPro[cellType] : EstimatedRowHeight));
-                    //如果在可见区域, 就详细测量
-                    if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
-                        || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
-                        || (rowMaybeTop <= visibleBounds.Top && rowMaybeBottom >= visibleBounds.Bottom))
-                    {
-                        //获取Cell, 优先获取之前已经被显示的
-                        if (!_cachedCells.ContainsKey(indexPath)) continue;
-                        TableViewCell cell = _cachedCells[indexPath];
-                        if (cell != null)
-                        {
-                            //测量高度
-                            LayoutChild(cell, new Rect(0, tableHeight, visibleBounds.Width, cell.DesiredSize.Height));
-
-                            tableHeight += cell.DesiredSize.Height;
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException();
-                        }
-                    }
-                    else//如果不可见
-                    {
-                        tableHeight = rowMaybeBottom;
-                    }
-                }
-            }
 
             if (_tableFooterView != null)
             {
-                LayoutChild(_tableFooterView, new Rect(0, tableHeight, visibleBounds.Width, _tableFooterView.DesiredSize.Height));
+                LayoutChild(_tableFooterView, new Rect(0, _tableFooterView.PositionInLayout.Y, visibleBounds.Width, _tableFooterView.DesiredSize.Height));
             }
 
             foreach (TableViewCell cell in _reusableCells)
@@ -268,6 +230,10 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
+        /// <summary>
+        /// 屏幕顶部和底部多加载Cell的高度
+        /// </summary>
+        public int ExtendHeight = 50;
         public double EstimatedRowHeight = 20;
         /// <summary>
         /// 存储已经显示的Row的行高, 用于估计未显示的行. 这种预估默认是存储同
@@ -294,6 +260,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             if (_tableHeaderView != null)
             {
                 var _tableHeaderViewH = MeasureChild(_tableHeaderView, widthConstraint, heightConstraint).Request.Height;
+                _tableHeaderView.PositionInLayout = new Point(0, 0);
                 tableHeight += _tableHeaderViewH;
             }
 
@@ -338,12 +305,24 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                     }
                 }
             }
+            //Extend
+            foreach(var cell in tempCells)
+            {
+                if (!needRemoveCell.Contains(cell.Key))
+                {
+                    if (cell.Value.IsEmpty)
+                    {
+                        needRemoveCell.Add(cell.Key);
+                    }
+                }
+            }
             foreach (var indexPath in needRemoveCell)
             {
                 var cell = availableCells[indexPath];
                 _reusableCells.Add(cell);
                 availableCells.Remove(indexPath);
             }
+            
             tempCells.Clear();
             needRemoveCell.Clear();
             scrollOffset = 0;//重置为0, 避免只更新数据时也移除cell
@@ -359,15 +338,26 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                     string cellType = this._dataSource.cellTypeForRowAtIndexPath(this, indexPath);
                     //尝试用之前测量的值或者预设值估计底部在哪
                     var rowMaybeTop = tableHeight;
-                    var rowMaybeHeight = (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : (EstimatedRowHeightPro.ContainsKey(cellType) ? EstimatedRowHeightPro[cellType] : EstimatedRowHeight));
+                    var rowMaybeHeight = (sectionRecord._rowHeights[row] != 0 ? sectionRecord._rowHeights[row] : EstimatedRowHeight);
                     var rowMaybeBottom = tableHeight + rowMaybeHeight;
                     //如果在可见区域, 就详细测量
-                    if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
-                       || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
-                       || (rowMaybeTop <= visibleBounds.Top && rowMaybeBottom >= visibleBounds.Bottom))
+                    if ((rowMaybeTop >= visibleBounds.Top - ExtendHeight && rowMaybeTop <= visibleBounds.Bottom + ExtendHeight)
+                       || (rowMaybeBottom >= visibleBounds.Top - ExtendHeight && rowMaybeBottom <= visibleBounds.Bottom + ExtendHeight)
+                       || (rowMaybeTop <= visibleBounds.Top - ExtendHeight && rowMaybeBottom >= visibleBounds.Bottom + ExtendHeight))
                     {
                         //获取Cell, 优先获取之前已经被显示的, 这里假定已显示的数据没有变化
-                        TableViewCell cell = availableCells.ContainsKey(indexPath) ? availableCells[indexPath] : this._dataSource.cellForRowAtIndexPath(this, indexPath);
+                        TableViewCell cell = availableCells.ContainsKey(indexPath) ? availableCells[indexPath] : this._dataSource.cellForRowAtIndexPath(this, indexPath, false);
+
+                        if ((rowMaybeTop >= visibleBounds.Top && rowMaybeTop <= visibleBounds.Bottom)
+                       || (rowMaybeBottom >= visibleBounds.Top && rowMaybeBottom <= visibleBounds.Bottom)
+                       || (rowMaybeTop <= visibleBounds.Top && rowMaybeBottom >= visibleBounds.Bottom))
+                        {
+                        }
+                        else
+                        {
+                            cell.PrepareForReuse();
+                        }
+
                         if (cell != null)
                         {
                             //将Cell添加到正在显示的Cell字典
@@ -381,11 +371,11 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                             if (!this.ContentView.Children.Contains(cell))
                                 this.AddSubview(cell);
                             //测量高度
-                            sectionRecord._rowHeights[row] = MeasureChild(cell, tableViewBoundsSize.Width, heightConstraint).Request.Height;
+                            var measureSize = MeasureChild(cell, tableViewBoundsSize.Width, EstimatedRowHeight).Request;
+                            sectionRecord._rowHeights[row] = EstimatedRowHeight > measureSize.Height ? EstimatedRowHeight : measureSize.Height;
 
-                            //cell.SeparatorStyle:_separatorStyle color:_separatorColor] ;
                             if (!EstimatedRowHeightPro.ContainsKey(cellType))
-                            { 
+                            {
                                 EstimatedRowHeightPro.Add(cellType, sectionRecord._rowHeights[row]);
                             }
                             else
@@ -395,6 +385,8 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
                                     EstimatedRowHeightPro[cellType] = sectionRecord._rowHeights[row];
                                 }
                             }
+
+                            cell.PositionInLayout = new Point(0, tableHeight);
 
                             tableHeight += sectionRecord._rowHeights[row];
                         }
@@ -421,7 +413,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             {
                 if (cell.ReuseIdentifier != default)
                 {
-                    if(_reusableCells.Count > 3)
+                    if (_reusableCells.Count > 3)
                     {
                         cell.RemoveFromSuperview();
                     }
@@ -455,7 +447,9 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             //表尾的View是确定的, 我们可以直接测量
             if (_tableFooterView != null)
             {
-                tableHeight += MeasureChild(_tableFooterView, tableViewBoundsSize.Width, heightConstraint).Request.Height;
+                var footMeasureSize = MeasureChild(_tableFooterView, tableViewBoundsSize.Width, heightConstraint).Request;
+                _tableFooterView.PositionInLayout = new Point(0, tableHeight);
+                tableHeight += footMeasureSize.Height;
             }
 
             return new Size(tableViewBoundsSize.Width, tableHeight);
@@ -478,7 +472,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             return _cachedCells.ContainsKey(indexPath) ? _cachedCells[indexPath] : null;
         }
 
-        public UIView TableHeaderView
+        public TableViewCell TableHeaderView
         {
             get => _tableHeaderView;
             set
@@ -492,7 +486,7 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
-        public View TableFooterView
+        public TableViewCell TableFooterView
         {
             get => _tableFooterView;
             set

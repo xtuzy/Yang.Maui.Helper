@@ -12,7 +12,8 @@ public partial class TableViewTestPage : ContentPage
         tableView.VerticalScrollBarVisibility = ScrollBarVisibility.Always;
         tableView.Delegate = new Delegate();
         tableView.DataSource = new Source();
-
+        tableView.EstimatedRowHeight = 50;
+        tableView.ExtendHeight = 0;
         var click = new TapGestureRecognizer();
         click.Tapped += (s, e) =>
         {
@@ -26,7 +27,7 @@ public partial class TableViewTestPage : ContentPage
                 tableView.SelectRowAtIndexPath(indexPath, false, TableViewScrollPosition.None);
         };
         tableView.Content.GestureRecognizers.Add(click);
-        var headerView = new Grid()
+        var headerView = new TableViewCell(TableViewCellStyle.Default, "Header")
         {
             HeightRequest = 50,
             BackgroundColor = Colors.Red,
@@ -36,7 +37,7 @@ public partial class TableViewTestPage : ContentPage
             }
         };
         tableView.TableHeaderView = headerView;
-        tableView.TableFooterView = new Grid()
+        tableView.TableFooterView = new TableViewCell(TableViewCellStyle.Default, "Footer")
         {
             HeightRequest = 50,
             BackgroundColor = Colors.Red,
@@ -45,7 +46,6 @@ public partial class TableViewTestPage : ContentPage
                 new Button(){Text = "Footer", VerticalOptions = LayoutOptions.Center, HorizontalOptions = LayoutOptions.Center }
             }
         };
-
     }
 
     class Delegate : Yang.Maui.Helper.Controls.ScrollViewExperiment.ITableViewDelegate
@@ -130,10 +130,10 @@ public partial class TableViewTestPage : ContentPage
         //给每个cell设置ID号（重复利用时使用）
         static string cellID1 = "cellID1";
         static string cellID2 = "cellID2";
-        public TableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath)
+        public TableViewCell cellForRowAtIndexPathMethod(Controls.ScrollViewExperiment.TableView tableView, Controls.ScrollViewExperiment.NSIndexPath indexPath, bool blank)
         {
             //从tableView的一个队列里获取一个cell
-            //if (indexPath.Row % 2 == 0)
+            if (indexPath.Row % 2 == 0)
             {
                 TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID1);
 
@@ -144,14 +144,19 @@ public partial class TableViewTestPage : ContentPage
                     cell = new Cell1(TableViewCellStyle.Default, cellID1) { };
                     (cell as Cell1).NewCellIndex = ++newCellCount;
                     Console.WriteLine($"newCell: {newCellCount}");
+                    cell.BackgroundColor = Colors.Pink;
                 }
 
-                //使用cell
-                cell.TextLabel.Text = $"Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
-                (cell as Cell1).Image.Source = "https://ydlunacommon-cdn.nosdn.127.net/cb776e6995f1c703706cf8c4c39a7520.png";
+                if (!blank)
+                {
+                    //使用cell
+                    cell.TextLabel.Text = $"Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
+                    (cell as Cell1).Image.Source = "dotnet_bot.png";// https://ydlunacommon-cdn.nosdn.127.net/cb776e6995f1c703706cf8c4c39a7520.png";
+                    cell.IsEmpty = false;
+                }
                 return cell;
             }
-            /*else
+            else
             {
                 TableViewCell cell = tableView.dequeueReusableCellWithIdentifier(cellID2);
 
@@ -159,16 +164,22 @@ public partial class TableViewTestPage : ContentPage
                 if (cell == null)
                 {
                     //没有,创建一个
-                    cell = new Cell(TableViewCellStyle.Default, cellID2) { };
+                    cell = new Cell1(TableViewCellStyle.Default, cellID2) { };
                     cell.IsClippedToBounds = true;
                     (cell as Cell).NewCellIndex = ++newCellCount;
                     Console.WriteLine($"newCell: {newCellCount}");
                 }
-
-                //使用cell
-                cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
+                if (!blank)
+                {
+                    //使用cell
+                    cell.TextLabel.Text = $"哈哈哈！！！Position={indexPath.Row} newCellIndex={(cell as Cell).NewCellIndex}";
+                    (cell as Cell1).Image.Source = "https://ydlunacommon-cdn.nosdn.127.net/cb776e6995f1c703706cf8c4c39a7520.png";
+                    cell.IsEmpty = false;
+                }
                 return cell;
-            }*/
+
+
+            }
         }
     }
 
@@ -183,6 +194,7 @@ public partial class TableViewTestPage : ContentPage
 
         public override void PrepareForReuse()
         {
+            base.PrepareForReuse();
             TextLabel.Text = null;
         }
     }

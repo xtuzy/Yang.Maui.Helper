@@ -1,116 +1,49 @@
 ﻿using Android.Content;
+using Android.Graphics;
+using Android.Hardware.Lights;
+using Android.OS;
+using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Microsoft.Maui.Platform;
 using ScrollView = Android.Widget.ScrollView;
 using View = Android.Views.View;
 
 namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 {
-    public class MyScrollView : ScrollView
+    public class MyScrollView : MauiScrollView
     {
-        /// <summary>
-        /// 创建Item和设置数据的适配器
-        /// </summary>
-        Adapter Adapter { get; set; }
-        /// <summary>
-        /// 当前显示的
-        /// </summary>
-        List<ViewHolder> CurrentShowedViewHolder = new();
-        /// <summary>
-        /// 移除后缓存的
-        /// </summary>
-        List<ViewHolder> CachedViewHolder = new();
-
-        public void AddChildToLast(ViewHolder viewHolder)
-        {
-
-        }
-
         public MyScrollView(Context context) : base(context)
         {
-
         }
 
-        protected override void OnScrollChanged(int l, int t, int oldl, int oldt)
+        public MyScrollView(Context context, IAttributeSet attrs) : base(context, attrs)
         {
-            base.OnScrollChanged(l, t, oldl, oldt);
-            ScrollViewContentView view = this.GetChildAt(0) as ScrollViewContentView;
-
-            if (this.Height + this.ScrollY == view.Height)// Scrolled to Botttom
-            {
-
-            }
-            else if (view.Height - (this.Height + this.ScrollY) < 50) //Load more when have a little distance to bottom, let it can still scroll
-            {
-                var currentLastPosition = CurrentShowedViewHolder.Last().BindingAdapterPosition;
-                if (currentLastPosition < Adapter.ItemCount)
-                {
-                    var newLastViewHolder = GetViewHolder(currentLastPosition+1);
-                    CurrentShowedViewHolder.Add(newLastViewHolder);
-                    AddChildToLast(newLastViewHolder);
-                }
-            }
         }
 
-        public ViewHolder GetViewHolder(int position)
+        public MyScrollView(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
         {
-            ViewHolder viewHolder;
-            if (CachedViewHolder.Count == 0)
-            {
-                viewHolder = Adapter.OnCreateViewHolder(this, Adapter.GetItemViewType(position)) as ViewHolder;
-            }
-            else
-            {
-                viewHolder = CachedViewHolder.First();
-            }
-
-            Adapter.BindViewHolder(viewHolder, position);
-            return viewHolder;
         }
 
-        public class ScrollViewContentView : LinearLayout
+        protected MyScrollView(nint javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
-            public ScrollViewContentView(Context context) : base(context)
-            {
-            }
-        }
-    }
-
-    public class Adapter : AndroidX.RecyclerView.Widget.RecyclerView.Adapter
-    {
-        public override int ItemCount => throw new NotImplementedException();
-
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-        {
-            throw new NotImplementedException();
         }
 
-        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+        protected override void OnLayout(bool changed, int left, int top, int right, int bottom)
         {
-            throw new NotImplementedException();
+            base.OnLayout(changed, left, top, right, bottom);
+            var view = GetChildAt(0);
+            view.Layout(0, -ScrollY, view.Width, view.Height - ScrollY);
         }
 
-        public override long GetItemId(int position)
+        protected override void DispatchDraw(Canvas canvas)
         {
-            return base.GetItemId(position);
-        }
-
-        public override int GetItemViewType(int position)
-        {
-            return base.GetItemViewType(position);
-        }
-
-        public override void OnViewRecycled(Java.Lang.Object holder)
-        {
-            base.OnViewRecycled(holder);
-        }
-    }
-
-    public class ViewHolder : RecyclerView.ViewHolder
-    {
-        public ViewHolder(View itemView) : base(itemView)
-        {
+            var count = canvas.Save();
+            canvas.Translate(ScrollX, ScrollY);
+            base.DispatchDraw(canvas);
+            canvas.RestoreToCount(count);
         }
     }
 }

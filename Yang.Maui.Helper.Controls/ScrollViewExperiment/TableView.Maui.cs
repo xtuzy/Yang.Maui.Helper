@@ -10,7 +10,6 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
         protected ScrollViewContentView ContentView;
         public TableView()
         {
-
             this.Orientation = ScrollOrientation.Vertical;
             ContentView = new ScrollViewContentView(this) { };
             Content = ContentView;

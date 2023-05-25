@@ -29,6 +29,11 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
 
     public class TableViewCell : Grid
     {
+        /// <summary>
+        /// 存储Cell的位置, 
+        /// </summary>
+        internal Point PositionInLayout;
+
         public static float _UITableViewDefaultRowHeight;
         #region https://github.com/BigZaphod/Chameleon/blob/master/UIKit/Classes/UITableViewCell.h
 
@@ -278,9 +283,13 @@ namespace Yang.Maui.Helper.Controls.ScrollViewExperiment
             }
         }
 
+        public static Point EmptyPoint = new Point(-1, -1);
+
+        public bool IsEmpty = true;
         public virtual void PrepareForReuse()
         {
-
+            IsEmpty = true;
+            PositionInLayout = EmptyPoint;
         }
     }
 
