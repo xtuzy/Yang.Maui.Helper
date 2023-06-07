@@ -11,19 +11,19 @@ public partial class FontTestPage : ContentPage
 	{
 		InitializeComponent();
         LoadFontFileAsync();
-        var showYouYuan = new JustifyParagraphLabel1()
+        var showYouYuan = new JustifyParagraphLabelNormal()
         {
             
             Paragraph = "落霞与孤鹜齐飞，秋水共长天一色"
         };
         showYouYuan.Font = new MauiFont(showYouYuan, Font.OfSize("YouYuan", 0));
-        var showIconFont = new JustifyParagraphLabel1()
+        var showIconFont = new JustifyParagraphLabelNormal()
         {
             Paragraph = $"{FontAwesomeIcons.ArrowLeft} {FontAwesomeIcons.ArrowRight}"
         };
         showIconFont.Font = new MauiFont(showIconFont, Font.OfSize("Font Awesome 6 Free-Solid-900", 0));
         layout.Add(showYouYuan);
-        layout.Add(showIconFont);
+        layout.Add(showIconFont);     
     }
 
     async Task LoadFontFileAsync()

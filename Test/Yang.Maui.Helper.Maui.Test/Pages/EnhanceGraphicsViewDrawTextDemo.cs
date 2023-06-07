@@ -1,12 +1,10 @@
 ﻿using Maui.BindableProperty.Generator.Core;
 using SkiaSharp;
-using SkiaSharp.Views.Maui;
 using System.Diagnostics;
-using Font = Microsoft.Maui.Graphics.Font;
-using Style = Topten.RichTextKit.Style;
-using Yang.Maui.Helper.Graphics;
 using Yang.Maui.Helper.Controls.EnhanceGraphicsViewComponent;
-using static System.Net.Mime.MediaTypeNames;
+using Yang.Maui.Helper.Graphics;
+using Yang.Maui.Helper.Graphics.Hyphen;
+using Style = Topten.RichTextKit.Style;
 
 namespace Yang.Maui.Helper.Maui.Test.Pages
 {
@@ -110,7 +108,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             this.Content = scrollView;
             foreach (var l in list)
             {
-                var view = new JustifyParagraphLabel1()
+                var view = new JustifyParagraphLabelNormal()
                 {
                     //FontSize = 30,
                     Paragraph = l,
@@ -120,13 +118,15 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     //BackgroundColor = Colors.Gray
                     LineSpace = 10
                 };
-                panel.Children.Add(view);
+                //panel.Children.Add(view);
             }
-            panel.Children.Add(new JustifySingleParagraphLabel()
+            panel.Children.Add(new JustifySingleParagraphLabelByHyphen()
             {
-                FontSize = 14,
+                BegainSpaceCount = 0,
+                FontSize = 20,
                 FontColor = Colors.Green,
-                Text = paragraph2
+                Paragraph = paragraph2 + " " + paragraph1,
+                LineSpace = 10
             });
             /*Task.Run(async () =>
             {
@@ -160,53 +160,177 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
     /// <summary>
     /// 其只创建一个TextWordBlock
     /// </summary>
-    public partial class JustifySingleParagraphLabel : EnhanceGraphicsView, IDrawable, IView
+    public partial class JustifySingleParagraphLabelByHyphen : JustifyParagraphLabelNormal
     {
-        private double lastWidth;
-        TextWordBlock textBlock;
+        private DefaultHyphenator Hyphenator;
 
-        public string Text;
-        public MauiFont Font;
-        public float FontSize;
-        public Color FontColor;
-
-        public JustifySingleParagraphLabel()
+        public JustifySingleParagraphLabelByHyphen() : base()
         {
-            //this.PaintSurface += View_PaintSurface;
-            this.Drawable = this;
+            Hyphenator = Graphics.Hyphen.DefaultHyphenator.getInstance(Graphics.Hyphen.DefaultHyphenator.HyphenPattern.EN_US);
         }
 
-        public override Size CustomMeasuredSize(double widthConstraint, double heightConstraint)
+        public override (float w, float h) MeasureParagraph(float w)
         {
-            if (!double.IsInfinity(widthConstraint))
+            // Create normal style
+            styleNormal = new JustifyParagraphLabelNormal.PlatformStyle()
             {
-                if (lastWidth != widthConstraint)
+                FontSize = FontSize,
+                Font = Font,
+                FontColor = FontColor,
+            };
+
+            //生成全部block
+            if (allBlock == null)
+            {
+                allBlock = new List<TextBlock>();
+                var words = Paragraph.Split(' ');
+                foreach (var word in words)
                 {
-                    OnWidthChanged();
+                    var skText = new TextBlock() { };
+                    skText.AddText(word, styleNormal);
+                    allBlock.Add(skText);
                 }
-                var r = MeasureParagraph((float)widthConstraint);
-                lastWidth = widthConstraint;
-                return new Size(widthConstraint, r.Height);
             }
-            else
-                return base.CustomMeasuredSize(widthConstraint, heightConstraint);
+
+            if (skTextOfBlank == null)
+            {
+                skTextOfBlank = new TextBlock() { };
+                skTextOfBlank.AddText(" ", styleNormal);
+                //blankW = skTextOfBlank.MeasuredWidth;
+                //lineHeightCache = skTextOfBlank.MeasuredHeight;
+
+                var m = new TextBlock() { };
+                m.AddText("m", styleNormal);
+                var n = new TextBlock() { };
+                n.AddText("n", styleNormal);
+                var nm = new TextBlock() { };
+                nm.AddText("n m", styleNormal);
+
+                blankWCache = nm.MeasuredWidth - n.MeasuredWidth - n.MeasuredWidth;
+                lineHeightCache = nm.MeasuredHeight;
+#if DEBUG
+                Console.WriteLine($"m w={m.MeasuredWidth} h={m.MeasuredHeight}");
+                Console.WriteLine($"n w={n.MeasuredWidth} h={n.MeasuredHeight}");
+                Console.WriteLine($"space w={skTextOfBlank.MeasuredWidth} h={skTextOfBlank.MeasuredHeight}");
+                Console.WriteLine($"n m w={nm.MeasuredWidth} h={nm.MeasuredHeight}");
+#endif
+            }
+
+            float wLength = blankWCache * BegainSpaceCount;//起始位置根据开头空格数
+            if (lines == null)
+            {
+                lines = new List<(float, List<TextBlock>)>();
+                var line = new List<TextBlock>();
+                //编排行
+                foreach (var word in allBlock)
+                {
+                    var skText = word;
+                    var tempW = wLength;
+                    //如果该行容不下这个单词
+                    if (wLength + skText.MeasuredWidth > w)
+                    {
+                        var leftWidth = w - wLength;
+                        var maybeLeftCharCount = (int)(leftWidth / blankWCache);
+                        //尝试打断这个单词
+                        var list = Hyphenator.hyphenate(skText.Text);
+                        var count = 0;
+                        if (list.Count > 1)
+                        {
+                            for (var i = 0; i < list.Count - 1; i++)
+                            {
+                                int lastCount = count;
+                                count = lastCount + list[i].Length;
+                                int currentCharCount = count;
+                                int nextCharCount = count + list[i + 1].Length;
+                                var currentBlock = new TextBlock();
+                                currentBlock.AddText(skText.Text.Substring(0, currentCharCount) + '-', styleNormal);
+                                var nextBlock = new TextBlock();
+                                nextBlock.AddText(skText.Text.Substring(0, nextCharCount) + '-', styleNormal);
+                                if (wLength + currentBlock.MeasuredWidth <= w && wLength + nextBlock.MeasuredWidth > w)
+                                {
+                                    line.Add(currentBlock);
+                                    currentBlock.HaveFooter = true;
+                                    wLength = wLength + currentBlock.MeasuredWidth;
+                                    //下一行的
+                                    var oldText = skText.Text;
+                                    skText = new TextBlock();
+                                    skText.AddText(oldText.Substring(currentCharCount, oldText.Length - currentCharCount), styleNormal);
+                                    skText.HaveHeader = true;
+                                    break;
+                                }
+                            }
+                        }
+                        //换行
+                        lines.Add((wLength, line));
+                        line = new List<TextBlock>();
+                        wLength = 0;
+                    }
+
+                    line.Add(skText);
+                    wLength = wLength + skText.MeasuredWidth + blankWCache;
+                }
+                lines.Add((wLength, line));
+            }
+            var h = lineHeightCache * lines.Count + (lines.Count - 1) * LineSpace;
+            Console.WriteLine($"[{this.GetType().Name}] Id={this.Id} Method=MeasureParagraph w={w} h={h}");
+            return (w, h);
         }
 
-        private Size MeasureParagraph(float widthConstraint)
+        public override void DrawSentence(ICanvas canvas, int w)
         {
-            if(textBlock == null)
-                textBlock = new TextWordBlock(Text, Font, FontSize, FontColor, (int?)widthConstraint);
-            return textBlock.MeasuredSize;
-        }
+            //绘制
+            for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)//每行
+            {
+                float lineSpace = LineSpace;
+                float x = 0;//单词位置
 
-        private void OnWidthChanged()
-        {
-            textBlock = null;
-        }
+                if (lineIndex == 0)
+                {
+                    lineSpace = 0;
+                    x = blankWCache * BegainSpaceCount;//段落起始位置根据开头空格数
+                }
 
-        public void Draw(ICanvas canvas, RectF dirtyRect)
-        {
-            textBlock.Paint(canvas, 0, 0);
+                var lin = lines[lineIndex];
+                var gap = w - lin.le;
+                var c = (int)Math.Round(gap / (lin.li.Count - 1) + 0.5);//不舍
+
+                for (var wordIndex = 0; wordIndex < lin.li.Count; wordIndex++)//每词
+                {
+                    var t = lin.li[wordIndex];
+                    //最后一行不拉伸
+                    if (lineIndex == lines.Count - 1)
+                    {
+                        t.Paint(canvas, new SKPoint(x, 0 + lineHeightCache * lineIndex + lineSpace * lineIndex), lineHeightCache);
+                        x = x + t.MeasuredWidth + blankWCache;
+                    }
+                    else
+                    {
+                        //拉伸行的最后一词强制对齐
+                        /*if (j == lin.li.Count - 1)
+                        {
+                            if (x + t.MeasuredWidth != w)
+                            {
+                                t.Paint(canvas, new SKPoint(w - t.MeasuredWidth, 0 + lineHeightCache * i + lineSpace * i), lineHeightCache);
+                                continue;
+                            }
+                        }*/
+
+                        t.Paint(canvas, new SKPoint(x, 0 + lineHeightCache * lineIndex + lineSpace * lineIndex), lineHeightCache);
+                        if (x < w)
+                        {
+                            if (gap >= 1)
+                            {
+                                x = x + t.MeasuredWidth + blankWCache + c;
+                                gap = gap - c;
+                            }
+                            else
+                            {
+                                x = x + t.MeasuredWidth + blankWCache;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -214,7 +338,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
     /// 其使用空格切割段落, 然后为每个词创建一个TextWordBlock.
     /// 其目的是看这样使用的性能怎么样, 像Android平台在StaticLayout下还有Spannable, 直接在StaticLayout层就能操作的话, 跨平台实现能简单点.
     /// </summary>
-    public partial class JustifyParagraphLabel1 : EnhanceGraphicsView, IDrawable, IView
+    public partial class JustifyParagraphLabelNormal : EnhanceGraphicsView, IDrawable, IView
     {
         static float density;
         static float Density
@@ -227,7 +351,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             }
         }
 
-        public JustifyParagraphLabel1()
+        public JustifyParagraphLabelNormal()
         {
             //this.PaintSurface += View_PaintSurface;
             this.Drawable = this;
@@ -253,7 +377,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
 
         [AutoBindable]
         MauiFont font;// = "Impact";//"Microsoft YaHei UI"
-        
+
         /// <summary>
         /// 行间距
         /// </summary>
@@ -269,7 +393,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         /// <summary>
         /// 段落切分后的全部block. 用于存储字符串数据.
         /// </summary>
-        List<TextBlock> allBlock;
+        protected List<TextBlock> allBlock;
 
         /// <summary>
         /// 段落的文本
@@ -288,24 +412,24 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
         /// <summary>
         /// 用于排版的数据
         /// </summary>
-        List<(float le, List<TextBlock> li)> lines;
+        protected List<(float le, List<TextBlock> li)> lines;
         /// <summary>
         /// 缓存计算的单行高度, px
         /// </summary>
-        private float lineHeightCache;
+        protected float lineHeightCache;
         /// <summary>
         /// 空格宽度, px
         /// </summary>
-        private float blankWCache;
+        protected float blankWCache;
         /// <summary>
         /// 空格
         /// </summary>
-        private TextBlock skTextOfBlank;
+        protected TextBlock skTextOfBlank;
 
         /// <summary>
         /// 上一次的宽, 如果宽改变, 需要重新布局, dp
         /// </summary>
-        double lastWidth;
+        protected double lastWidth;
 
         void OnWidthChanged()
         {
@@ -329,9 +453,9 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                 return base.CustomMeasuredSize(widthConstraint, heightConstraint);
         }
 
-        private PlatformStyle styleNormal;
+        protected PlatformStyle styleNormal;
 
-        public (float w, float h) MeasureParagraph(float w)
+        public virtual (float w, float h) MeasureParagraph(float w)
         {
             // Create normal style
             styleNormal = new PlatformStyle()
@@ -407,7 +531,7 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             return (w, h);
         }
 
-        public void DrawSentence(ICanvas canvas, int w)
+        public virtual void DrawSentence(ICanvas canvas, int w)
         {
             //绘制
             for (int i = 0; i < lines.Count; i++)
@@ -471,16 +595,20 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
             canvas.FillColor = Colors.Red;
             canvas.DrawRectangle(dirtyRect);
             //MeasureParagraph((int)dirtyRect.Width);
-            if(lines != null)
-                DrawSentence(canvas, (int)(dirtyRect.Width ) );
+            if (lines != null)
+                DrawSentence(canvas, (int)(dirtyRect.Width));
         }
 
-        class TextBlock : IDisposable
+        public class TextBlock : IDisposable
         {
+            public static bool DrawDebugBounds = false;
+            public bool HaveHeader = false;
+            public bool HaveFooter = false;
+
             TextWordBlock wordBlock;
             public TextBlock()
             {
-                
+
             }
 
             public float MeasuredWidth
@@ -498,27 +626,31 @@ namespace Yang.Maui.Helper.Maui.Test.Pages
                     return wordBlock.MeasuredSize.Height;
                 }
             }
-
+            public string Text;
             internal void AddText(string word, PlatformStyle styleNormal)
             {
+                Text = word;
                 this.wordBlock = new TextWordBlock(word, styleNormal.Font, styleNormal.FontSize, styleNormal.FontColor, null);
             }
 
             internal void Paint(ICanvas canvas, SKPoint sKPoint, float lineHeight)
             {
                 //canvas.FillColor = styleNormal.TextColor.ToMauiColor().WithAlpha(0.5f);
-                canvas.StrokeColor = Colors.Red;
-                canvas.DrawRectangle(sKPoint.X, sKPoint.Y, MeasuredWidth - 1, MeasuredHeight - 1);
+                if (DrawDebugBounds)
+                {
+                    canvas.StrokeColor = Colors.Red;
+                    canvas.DrawRectangle(sKPoint.X, sKPoint.Y, MeasuredWidth - 1, MeasuredHeight - 1);
+                }
                 wordBlock.Paint(canvas, sKPoint.X, sKPoint.Y);
             }
 
             public void Dispose()
             {
-                
+
             }
         }
 
-        class PlatformStyle : Style
+        public class PlatformStyle : Style
         {
             public Color FontColor;
 
